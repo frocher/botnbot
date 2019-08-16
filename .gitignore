@@ -2,16 +2,18 @@
 node_modules
 .env
 .DS_Store
-/tmp
+docker/influxdb
+docker/mysql
 
 # Backend ignore rules
 backend/.bundle
+backend/config/application.yml
 backend/db/*.sqlite3
 backend/db/*.sqlite3-journal
 backend/reports/*
 backend/log/*
 !backend/log/.keep
-backend/config/application.yml
+backend/tmp
 
 # Frontend ignore rules
 frontend/dist
