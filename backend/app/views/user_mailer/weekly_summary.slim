@@ -1,0 +1,66 @@
+table cellpadding="0" cellspacing="0" border="0" width="100%"
+  tr
+    td
+      h1 style="font-size:28px;margin-top:20px;margin-bottom:10px" Weekly botnbot metrics
+      p style="margin:0 0 10px;"  #{@context.period_start.strftime("%A %m/%d/%Y")} through #{@context.period_end.strftime("%A %m/%d/%Y")}
+      - @context.pages.each do |page|
+        h2 style="margin-top:20px;margin-bottom:10px;padding:4px;color:#fff;background-color:#424242;" = page.name
+        - if page.empty
+          p style="margin: 0 0 10px;" Not enough data
+        - else
+          table width="100%"
+            tbody
+              tr
+                th align="center" PWA
+                th align="center" Performance
+                th align="center" Accessibility
+                th align="center" Best practices
+              tr.metrics
+                td align="center" = number_with_precision(page.pwa, precision: 0)
+                td align="center" = number_with_precision(page.performance, precision: 0)
+                td align="center" = number_with_precision(page.accessibility, precision: 0)
+                td align="center" = number_with_precision(page.best_practices, precision: 0)
+              tr
+                td align="center"
+                  - unless page.last_pwa.nil?
+                    span style=(page.pwa_delta >= 0 ? 'color:#388e3c;' : 'color:#c62828;') = sprintf('%+-.0f%%', page.pwa_delta)
+                    small = ' (' + page.last_pwa.to_s + ')'
+                td align="center"
+                  - unless page.last_performance.nil?
+                    span style=(page.performance_delta >= 0 ? 'color:#388e3c;' : 'color:#c62828;') = sprintf('%+-.0f%%', page.performance_delta)
+                    small = ' (' + page.last_performance.to_s + ')'
+                td align="center"
+                  - unless page.last_accessibility.nil?
+                    span style=(page.accessibility_delta >= 0 ? 'color:#388e3c;' : 'color:#c62828;') = sprintf('%+-.0f%%', page.accessibility_delta)
+                    small = ' (' + page.last_accessibility.to_s + ')'
+                td align="center"
+                  - unless page.last_best_practices.nil?
+                    span style=(page.best_practices_delta >= 0 ? 'color:#388e3c;' : 'color:#c62828;') = sprintf('%+-.0f%%', page.best_practices_delta)
+                    small = ' (' + page.last_best_practices.to_s + ')'
+              tr
+                th align="center" Speed Index
+                th align="center" Uptime
+                th align="center" Assets count
+                th align="center" Assets size
+              tr.metrics
+                td align="center" = number_with_precision(page.speed_index, precision: 0)
+                td align="center" = number_to_percentage(page.uptime, precision: 2, strip_insignificant_zeros: true)
+                td align="center" = number_with_precision(page.assets_count, precision: 0)
+                td align="center" = number_with_precision(page.assets_size, precision: 0) + ' Kb'
+              tr
+                td align="center"
+                  - unless page.last_speed_index.nil?
+                    span style=(page.speed_index_delta <= 0 ? 'color:#388e3c;' : 'color:#c62828;') = sprintf('%+-.0f%%', page.speed_index_delta)
+                    small = ' (' + page.last_speed_index.to_s + ')'
+                td align="center"
+                  - unless page.last_uptime.nil?
+                    span style=(page.uptime_delta >= 0 ? 'color:#388e3c;' : 'color:#c62828;') = sprintf('%+-.0f%%', page.uptime_delta)
+                    small = ' (' + number_to_percentage(page.last_uptime, precision: 2, strip_insignificant_zeros: true) + ')'
+                td align="center"
+                  - unless page.last_assets_count.nil?
+                    span style=(page.assets_count_delta <= 0 ? 'color:#388e3c;' : 'color:#c62828;') = sprintf('%+-.0f%%', page.assets_count_delta)
+                    small = sprintf(' (%d)', page.last_assets_count)
+                td align="center"
+                  - unless page.last_assets_size.nil?
+                    span style=(page.assets_size_delta <= 0 ? 'color:#388e3c;' : 'color:#c62828;') = sprintf('%+-.0f%%', page.assets_size_delta)
+                    small = sprintf(' (%d Kb)', page.last_assets_size)

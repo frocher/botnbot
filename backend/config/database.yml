@@ -1,0 +1,24 @@
+
+default: &default
+  adapter: mysql2
+  pool: <%= ENV.fetch("DB_POOL") { 20 } %>
+  database: <%= ENV.fetch("DB_NAME") { "botnbot" } %>
+  username: <%= ENV.fetch("DB_USERNAME") { "root" } %>
+  password: <%= ENV.fetch("DB_PASSWORD") { "" } %>
+  host: <%= ENV.fetch("DB_HOST") { "localhost" } %>
+  port: <%= ENV.fetch("DB_PORT") { 3306 } %>
+  encoding: utf8
+  secure_auth: false
+
+development:
+  <<: *default
+
+# Warning: The database defined as "test" will be erased and
+# re-generated from your development database when you run "rake".
+# Do not set this db to the same as development or production.
+test:
+  <<: *default
+  database: <%= ENV.fetch("DB_TEST_NAME") { "botnbot_test" } %>
+
+production:
+  <<: *default

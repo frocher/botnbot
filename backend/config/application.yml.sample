@@ -1,0 +1,29 @@
+# Add configuration values here, as shown below.
+
+DEVISE_SECRET_KEY: <Your long devise secret key>
+SECRET_TOKEN: <Rails needs a secret token>
+
+# You can define many Probes with a json formatted string
+# Here is an example with one probe running on localhost
+probes: '[{ "name": "mylocalhost", "host":"localhost", "port":3333, "token": "my probe token" }]'
+
+# You can add a google analytics key if you want user tracking
+#GOOGLE_ANALYTICS_KEY: "UA-something"
+
+# Omniauth keys and secrets
+FACEBOOK_KEY: <Your facebook key>
+FACEBOOK_SECRET: <Your facebook secret>
+GITHUB_KEY: <Your github key>
+GITHUB_SECRET: <Your github secret>
+GOOGLE_KEY: <Your google key>
+GOOGLE_SECRET: <Your google secret>
+
+# InfluxDB configuration
+INFLUXDB_DATABASE: botnbot
+INFLUXDB_USER: root
+INFLUXDB_PASSWORD: root
+
+# Push notification keys : use https://web-push-codelab.glitch.me/ for push notification keys
+PUSH_SUBJECT:
+PUSH_PUBLIC_KEY:
+PUSH_PRIVATE_KEY:
