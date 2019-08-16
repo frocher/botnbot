@@ -40,14 +40,6 @@ And you are finally ready to start the API server:
 rails s
 ```
 
-## The docker way
-
-TODO...
-
-```sh
-docker run -p 3000:3000 -d bnb_back bundle exec rails
-```
-
 
 ## Configuration
 
