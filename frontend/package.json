@@ -52,7 +52,7 @@
     "chartjs-plugin-annotation": "^0.5.7",
     "command-line-args": "^4.0.7",
     "date-fns": "^2.0.0-alpha.22",
-    "lodash-es": "^4.17.11",
+    "lodash-es": "^4.17.15",
     "pwa-helpers": "^0.8.4",
     "range-datepicker": "github:frocher/range-datepicker#master",
     "redux": "^3.7.0",
@@ -83,7 +83,7 @@
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.2",
     "webpack-dev-server": "^3.2.1",
-    "workbox-build": "^3.6.2",
-    "workbox-webpack-plugin": "^3.6.2"
+    "workbox-build": "^4.3.1",
+    "workbox-webpack-plugin": "^4.3.1"
   }
 }
