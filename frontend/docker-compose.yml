@@ -1,0 +1,9 @@
+version: "3"
+services:
+  app:
+    build: .
+    container_name: botnbot_app
+    volumes:
+      - .:/bnb_app
+    ports:
+      - "8080:8080"

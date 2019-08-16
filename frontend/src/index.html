@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+    <base href="/">
+
+    <title>Botnbot</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="description" content="Botnbot application">
+    <meta name="theme-color" content="#303030">
+    <link rel="shortcut icon" sizes="32x32" href="images/icon-32x32.png">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+
+    <style>
+      body {
+        margin: 0;
+        font-family: 'Roboto', 'Noto', sans-serif;
+        font-size: 13px;
+        line-height: 1.5;
+        min-height: 100vh;
+        color: #ffffff;
+        background-color: #303030;
+      }
+
+      /* styling for render while resources are loading */
+      bnb-app[unresolved] {
+        display: block;
+        min-height: 101vh;
+        line-height: 68px;
+        text-align: center;
+        font-size: 16px;
+        font-weight: 600;
+        letter-spacing: 0.3em;
+        color: #303030;
+        padding: 0 16px;
+        overflow: visible;
+        background-image:
+        url(data:image/png;base64,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);
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-position: center;
+      }
+    </style>
+  </head>
+  <body>
+    <bnb-app unresolved>BOTNBOT</bnb-app>
+
+    <script>
+      // Register service worker if supported.
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/service-worker.js');
+        });
+      }
+
+      // HACK(keanulee): The Redux package assumes `process` exists - mock it here before
+      // the module is loaded.
+      window.process = {
+        env: {
+          NODE_ENV: 'production'
+        }
+      };
+    </script>
+
+
+    <script src="<%= htmlWebpackPlugin.options.paths.webcomponents %>"></script>
+    <script src="<%= htmlWebpackPlugin.options.paths.webanimations %>" defer></script>
+    <script src="<%= htmlWebpackPlugin.options.paths.chartjs %>" defer></script>
+    <script src="<%= htmlWebpackPlugin.options.paths.chartjsannotation %>" defer></script>
+    <script type="module" src="<%= htmlWebpackPlugin.files.chunks['main'].entry %>"></script>
+    <noscript>Please enable JavaScript to view this website.</noscript>
+  </body>
+</html>

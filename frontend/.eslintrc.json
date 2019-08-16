@@ -1,0 +1,20 @@
+{
+    "parser": "babel-eslint",
+    "extends": "airbnb-base",
+    "env": {
+      "browser": true,
+      "es6": true
+    },
+    "rules": {
+      "no-underscore-dangle": "off",
+      "class-methods-use-this": "off",
+      "default-case": "off"
+    },
+    "globals": {
+      "ga": true,
+      "Chart": true,
+      "Color": true,
+      "Polymer": true
+    }
+
+}

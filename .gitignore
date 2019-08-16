@@ -12,3 +12,9 @@ backend/reports/*
 backend/log/*
 !backend/log/.keep
 backend/config/application.yml
+
+# Frontend ignore rules
+frontend/dist
+frontend/.sass-cache
+frontend/.tmp
+frontend/*.bak
