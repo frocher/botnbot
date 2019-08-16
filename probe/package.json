@@ -1,0 +1,37 @@
+{
+  "name": "bnb-probe",
+  "version": "0.2.0",
+  "license": "Apache-2.0",
+  "description": "Botnbot Probe",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frocher/bnb_probe.git"
+  },
+  "homepage": "https://github.com/frocher/bnb_probe#readme",
+  "bugs": {
+    "url": "https://github.com/frocher/bnb_probe/issues"
+  },
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "chrome-har-capturer": "^0.10.0",
+    "chrome-launcher": "^0.10.7",
+    "compression": "^1.7.4",
+    "debug": "^3.2.6",
+    "dotenv": "^4.0.0",
+    "express": "^4.17.1",
+    "lighthouse": "^5.2.0",
+    "morgan": "^1.9.1",
+    "puppeteer": "^1.19.0",
+    "superagent": "^5.1.0"
+  },
+  "devDependencies": {
+    "eslint": "^6.1.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-node": "^9.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.0"
+  }
+}
