@@ -46,9 +46,9 @@ Rails.application.configure do
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
   # Mailer
-  config.action_mailer.delivery_method = :letter_opener
-  config.action_mailer.perform_deliveries = true
-  config.action_mailer.logger = ActiveSupport::Logger.new(STDOUT)
+  config.action_mailer.default_url_options = { host: "localhost", port: 8080 }
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = { address: "mail", port: 25, enable_starttls_auto: false }
 
   # Jobs start
   config.x.jobs.har_start = 3
