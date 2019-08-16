@@ -21,6 +21,8 @@ scheduler.cron('0 1 * * 1', WeeklyReportJob.new)
 scheduler.cron('0 3 * * *', BudgetJob.new)
 
 # Create jobs
-Page.all.each do |page|
-  page.init_jobs
+if ActiveRecord::Base.connection.table_exists? 'pages'
+  Page.all.each do |page|
+    page.init_jobs
+  end
 end
