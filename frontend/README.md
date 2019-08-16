@@ -1,15 +1,15 @@
-# \<Botnbot App\>
+# Botnbot Frontend
 
 ## Usage
 
 ### Dependencies
 
-Botnbot App depends on the [Botnbot Nexus](https://github.com/frocher/bnb_nexus) : the API and the core of the application.
+Botnbot Frontend depends on the [Botnbot Backend](../backend/README.md) : the API and the core of the application.
 You have to start it before starting the app. 
 
-### Developing
+### Quickstart
 
-Start the webpack-dev-server on localhost http://localhost:8081 with hot-reload.
+For development, you just avec to start the webpack-dev-server on localhost http://localhost:8081 with hot-reload.
 
 ```
 npm run dev
