@@ -1,0 +1,56 @@
+# This is an example for development.
+# DO NOT USE in production
+version: "3.3"
+services:
+  proxy:
+    image: nginx:1.15
+    ports:
+      - "8080:80"
+    volumes:
+      - "/home/fred/dev/botnbot/docker/nginx.conf:/etc/nginx/nginx.conf:ro"
+    links:
+      - app
+      - api
+
+  app:
+    build: ./frontend
+    container_name: botnbot_app
+    volumes:
+      - "./frontend:/myapp"
+    links:
+      - api
+    env_file:
+      - ./docker/app.env
+
+  api:
+    build: ./backend
+    container_name: botnbot_api
+    command: bundle exec rails s -b 0.0.0.0
+    volumes:
+      - ./backend:/myapp
+    links:
+      - db
+      - influx
+      - mail
+    env_file:
+      - ./docker/api.env
+
+  db:
+    image: mysql:5.7
+    volumes:
+      - ./docker/mysql:/var/lib/mysql
+    env_file:
+      - ./docker/mysql.env
+
+  influx:
+    image: influxdb:1.5
+    volumes:
+      - ./docker/influxdb:/var/lib/influxdb
+    env_file:
+      - ./docker/influxdb.env
+      
+  mail:
+    image: djfarrelly/maildev
+    ports:
+      - "8081:80"
+

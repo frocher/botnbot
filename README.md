@@ -12,4 +12,10 @@ The Botnbot application contains 3 components :
 
 ## Quickstart guide
 
-TODO
+For an easy quickstart, you must have Docker and docker-compose installed on your computer.
+
+```sh
+docker-compose build
+docker-compose run api rake db:migrate
+docker-compose up
+```
