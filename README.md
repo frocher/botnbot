@@ -19,3 +19,4 @@ docker-compose build
 docker-compose run api rake db:migrate
 docker-compose up
 ```
+You can then open your browser and enter the url : http://localhost:8080 to run the application.
