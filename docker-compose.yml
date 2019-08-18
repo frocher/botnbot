@@ -15,12 +15,13 @@ services:
   app:
     build: ./frontend
     container_name: botnbot_app
-#    volumes:
-#      - ./frontend:/myapp
+    command: npm run dev
+    volumes:
+      - ./frontend/src:/myapp/src
     links:
       - api
-    env_file:
-      - ./docker/app.env
+    environment:
+      - API=http://api:3000
 
   api:
     build: ./backend
@@ -32,22 +33,46 @@ services:
       - db
       - influx
       - mail
-    env_file:
-      - ./docker/api.env
+    environment:
+      - DB_HOST=${DB_HOST-db}
+      - DB_NAME=${DB_NAME-botnbot}
+      - DB_USERNAME=${DB_USERNAME-root}
+      - DB_PASSWORD=${DB_PASSWORD-root}
+      - FACEBOOK_KEY=${FACEBOOK_KEY}
+      - FACEBOOK_SECRET=${FACEBOOK_SECRET}
+      - GITHUB_KEY=${GITHUB_KEY}
+      - GITHUB_SECRET=${GITHUB_SECRET}
+      - GOOGLE_ANALYTICS_KEY=${GOOGLE_ANALYTICS_KEY}
+      - GOOGLE_KEY=${GOOGLE_KEY}
+      - GOOGLE_SECRET=${GOOGLE_SECRET}
+      - INFLUXDB_HOST=${INFLUXDB_HOST-influx}
+      - INFLUXDB_DATABASE=${INFLUXDB_DATABASE-botnbot}
+      - INFLUXDB_USER=${INFLUXDB_USER-root}
+      - INFLUXDB_PASSWORD=${INFLUXDB_USER-root}
+      - PROBES=[{ "name":"local", "host":"probe", "port":3000, "token":"no token" }]
+      - PUSH_SUBJECT=${PUSH_SUBJECT}
+      - PUSH_PUBLIC_KEY=${PUSH_PUBLIC_KEY}
+      - PUSH_PRIVATE_KEY=${PUSH_PRIVATE_KEY}
+      - RAILS_ENV=${RAILS_ENV-development}
+      - SECRET_TOKEN=${SECRET_TOKEN-rails_secret_token}
+      - STRIPE_PUBLIC_KEY=${STRIPE_PUBLIC_KEY}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - STRIPE_PLANS=${STRIPE_PLANS}
 
   db:
     image: mysql:5.7
     volumes:
       - ./docker/mysql:/var/lib/mysql
-    env_file:
-      - ./docker/mysql.env
+    environment:
+      - MYSQL_DATABASE=${DB_NAME-botnbot}
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD-root}
 
   influx:
     image: influxdb:1.5
     volumes:
       - ./docker/influxdb:/var/lib/influxdb
-    env_file:
-      - ./docker/influxdb.env
+    environment:
+      - INFLUXDB_DB=${INFLUXDB_DATABASE-botnbot}
 
   mail:
     image: djfarrelly/maildev
