@@ -77,7 +77,7 @@ services:
   mail:
     image: djfarrelly/maildev
     ports:
-      - "8081:80"
+      - "8082:80"
 
   probe:
     build: ./probe
