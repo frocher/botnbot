@@ -22,6 +22,8 @@ services:
       - api
     environment:
       - API=http://api:3000
+    ports:
+      - "8081:8081"
 
   api:
     build: ./backend
