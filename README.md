@@ -3,7 +3,7 @@
 ## Summary
 
 Botnbot is an uptime and front-end performance monitoring tool.
-For more information about its features, visite [https://www.botnbot.com](https://www.botnbot.com).
+For more information about its features, visit [https://www.botnbot.com](https://www.botnbot.com).
 
 The Botnbot application contains 3 components :
 * [The front end](frontend/README.md) : the Single Page Application written with [Polymer](https://www.polymer-project.org/) components.
