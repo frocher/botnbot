@@ -1,6 +1,6 @@
 {
-  "name": "bnb_app",
-  "description": "Botnbot Application",
+  "name": "bnb_frontend",
+  "description": "Botnbot Frontend Application",
   "flat": true,
   "version": "1.0.0",
   "scripts": {
@@ -9,13 +9,13 @@
     "dev": "webpack-dev-server --hot --inline",
     "serve": "node ./start.js"
   },
-  "repository": "frocher/bnb_app",
+  "repository": "frocher/botnbot",
   "author": "Fred Rocher",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/frocher/bnb_app/issues"
+    "url": "https://github.com/frocher/botnbot/issues"
   },
-  "homepage": "https://github.com/frocher/bnb_app#readme",
+  "homepage": "https://github.com/frocher/botnbot#readme",
   "dependencies": {
     "@polymer/app-layout": "^3.0.1",
     "@polymer/app-route": "^3.0.2",
