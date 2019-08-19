@@ -1,15 +1,15 @@
 {
-  "name": "bnb-probe",
+  "name": "bnb_probe",
   "version": "0.2.0",
   "license": "Apache-2.0",
   "description": "Botnbot Probe",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/frocher/bnb_probe.git"
+    "url": "git+https://github.com/frocher/botnbot.git"
   },
-  "homepage": "https://github.com/frocher/bnb_probe#readme",
+  "homepage": "https://github.com/frocher/botnbot#readme",
   "bugs": {
-    "url": "https://github.com/frocher/bnb_probe/issues"
+    "url": "https://github.com/frocher/botnbot/issues"
   },
   "scripts": {
     "start": "node ./bin/www"
