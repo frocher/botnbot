@@ -7,13 +7,14 @@ import '@polymer/paper-input/paper-input';
 import '@polymer/paper-toggle-button/paper-toggle-button';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
-import { updateRoute, updateUser, saveSubscription } from '../actions/app';
+import { updateRoute } from '../actions/app';
+import { updateUser, savePushSubscription } from '../actions/user';
 import './bnb-collapse';
-import './bnb-common-styles';
 import './bnb-divider';
 import { BnbFormElement } from './bnb-form-element';
 import './bnb-icons';
 import './bnb-install-button';
+import './bnb-subscriptions';
 
 class BnbUserPreferences extends connect(store)(BnbFormElement(PolymerElement)) {
   static get template() {
@@ -54,6 +55,10 @@ class BnbUserPreferences extends connect(store)(BnbFormElement(PolymerElement)) 
             <paper-toggle-button id="pushButton" disabled="[[!isNotificationsEnabled()]]">Send me notifications on this device</paper-toggle-button>
           </bnb-collapse>
           <bnb-divider></bnb-divider>
+          <bnb-collapse icon="bnb:credit-card" header="Subscription" hidden$="[[!canSubscribe]]">
+            <bnb-subscriptions></bnb-subscriptions>
+          </bnb-collapse>
+          <bnb-divider></bnb-divider>
           <bnb-install-button></bnb-install-button>
         </div>
       </div>
@@ -73,6 +78,7 @@ class BnbUserPreferences extends connect(store)(BnbFormElement(PolymerElement)) 
     return {
       user: Object,
       target: Object,
+      canSubscribe: Boolean,
       pushKey: {
         type: String,
         observer: 'pushKeyChanged',
@@ -88,6 +94,7 @@ class BnbUserPreferences extends connect(store)(BnbFormElement(PolymerElement)) 
     this.user = state.app.user;
     this.pushKey = state.app.pushKey;
     this.errors = state.app.errors;
+    this.canSubscribe = state.app.stripeKey !== undefined;
   }
 
   ready() {
@@ -227,7 +234,7 @@ class BnbUserPreferences extends connect(store)(BnbFormElement(PolymerElement)) 
   }
 
   sendSubscriptionToBackEnd(subscription) {
-    store.dispatch(saveSubscription(subscription));
+    store.dispatch(savePushSubscription(subscription));
   }
 
   urlB64ToUint8Array(base64String) {

@@ -63,36 +63,24 @@ class BnbPageCard extends connect(store)(GestureEventListeners(PolymerElement)) 
         text-decoration: underline;
       }
 
-      .hurt {
-        position:absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left:0;
-
-        -webkit-animation: pulse 5s infinite;
-        animation: pulse 5s infinite;
-
-        opacity: 1;
-        background-color: red;
+      .locked {
+        filter: blur(3px);
       }
 
-      @-webkit-keyframes pulse {
-        0% {opacity: 0}
-        50% {opacity: 0.3}
-        100% {opacity: 0}
+      .hurt {
+        animation: pulse 5s infinite;
+        filter: grayscale(0);
       }
 
       @keyframes pulse {
-        0% {opacity: 0}
-        50% {opacity: 0.3}
-        100% {opacity: 0}
+        0% {filter: grayscale(0)}
+        50% {filter: grayscale(100%)}
+        100% {filter: grayscale(0)}
       }
     </style>
 
-    <paper-card placeholder-image="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAADwAQMAAABL4y8oAAAAA1BMVEW9vb2OR09dAAAAIElEQVR4Xu3AgQAAAADDoPtTX2EAtQAAAAAAAAAAAAAOJnAAAZexSsoAAAAASUVORK5CYII=" fade-image preload-image image="[[_computeScreenshotUrl(page)]]" animated="true" on-tap="cardTapped">
+    <paper-card placeholder-image="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAADwAQMAAABL4y8oAAAAA1BMVEW9vb2OR09dAAAAIElEQVR4Xu3AgQAAAADDoPtTX2EAtQAAAAAAAAAAAAAOJnAAAZexSsoAAAAASUVORK5CYII=" fade-image preload-image image="[[_computeScreenshotUrl(page)]]" animated="true" on-tap="cardTapped" class$="[[_computeCardClass(page)]]">
       <div class="card-content">
-        <div class$="[[_computeHurt(page)]]"></div>
         <h2><iron-icon icon="[[_computeIcon(page)]]"></iron-icon> [[page.name]]</h2>
         <a href="[[page.url]]" on-tap="urlTapped" target="_blank" title="Open url in a new tab" rel="noopener">[[page.url]]</a>
       </div>
@@ -131,8 +119,11 @@ class BnbPageCard extends connect(store)(GestureEventListeners(PolymerElement)) 
     return item.device === 'mobile' ? 'bnb:smartphone' : 'bnb:computer';
   }
 
-  _computeHurt(item) {
-    if (item.uptime_status === 0) {
+  _computeCardClass(item) {
+    if (item.locked) {
+      return 'locked';
+    }
+    else if (item.uptime_status === 0) {
       return 'hurt';
     }
     return '';

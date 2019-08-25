@@ -6,10 +6,12 @@ import '@polymer/app-route/app-route';
 import '@polymer/iron-pages/iron-pages';
 import '@polymer/paper-toast/paper-toast';
 import { store } from '../store';
-import {
-  updateRoute, loadEnvironment, loadPages, loadPage, loadPageMembers, loadPageStats, loadBudgets,
-  loadLighthouseDetails, loadAssetsDetails, loadUptimeDetails, loadUser, showInstallPrompt,
-} from '../actions/app';
+import { updateRoute, loadEnvironment, loadSubscriptionPlans, showInstallPrompt } from '../actions/app';
+import { loadBudgets } from '../actions/budgets';
+import { loadPageMembers } from '../actions/members';
+import { loadPages, loadPage } from '../actions/pages';
+import { loadPageStats, loadLighthouseDetails, loadAssetsDetails, loadUptimeDetails } from '../actions/stats';
+import { loadStripeSubscription, loadUser } from '../actions/user';
 import { isLogged, storeCredentials } from '../common';
 import './bnb-analytics';
 import './bnb-common-styles';
@@ -159,6 +161,7 @@ class BnbApp extends connect(store)(PolymerElement) {
     super.ready();
     this.removeAttribute('unresolved');
     store.dispatch(loadEnvironment());
+    store.dispatch(loadSubscriptionPlans());
     this.scrollPositions = new Map();
 
     window.addEventListener('beforeinstallprompt', (e) => {
@@ -274,6 +277,9 @@ class BnbApp extends connect(store)(PolymerElement) {
   }
 
   _loadCurrentViewData() {
+    if (store && !store.getState().app.stripeSubscription) {
+      store.dispatch(loadStripeSubscription());
+    }
     if (this.view === 'home') {
       store.dispatch(loadPages());
     } else if (this.view === 'user-preferences') {

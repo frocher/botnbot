@@ -11,9 +11,8 @@ import '@vaadin/vaadin-grid/vaadin-grid';
 import { find } from 'lodash-es';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
-import {
-  updateRoute, createPageMember, updatePageMember, deletePageMember,
-} from '../actions/app';
+import { updateRoute } from '../actions/app';
+import { createPageMember, updatePageMember, deletePageMember } from '../actions/members';
 import './bnb-grid-styles';
 import './bnb-icons';
 

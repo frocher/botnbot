@@ -5,7 +5,7 @@ import '@polymer/paper-input/paper-input';
 import { connect } from 'pwa-helpers';
 import { getFullPath } from '../common';
 import { store } from '../store';
-import { signup } from '../actions/app';
+import { signup } from '../actions/auth';
 import { BnbFormElement } from './bnb-form-element';
 import './bnb-auth-form';
 

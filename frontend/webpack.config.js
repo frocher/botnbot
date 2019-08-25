@@ -136,7 +136,7 @@ module.exports = {
     path: OUTPUT_PATH,
     filename: '[name].[hash].bundle.js'
   },
-  devtool: 'cheap-source-map',
+  devtool: 'source-map',
   module: {
     rules: [
       {

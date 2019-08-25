@@ -64,6 +64,12 @@ const app = (state = initial, action) => {
       return Object.assign({}, state, {
         analyticsKey: action.analyticsKey,
         pushKey: action.pushKey,
+        stripeKey: action.stripeKey,
+      });
+
+    case 'PLANS_FETCH_SUCCESS':
+      return Object.assign({}, state, {
+        subscriptionPlans: action.plans,
       });
 
     case 'UPDATE_MESSAGE':
@@ -84,11 +90,13 @@ const app = (state = initial, action) => {
       });
 
     case 'ENVIRONMENT_FETCH_ERROR':
+    case 'PLANS_FETCH_ERROR':
     case 'SIGN_IN_ERROR':
     case 'USER_FETCH_ERROR':
     case 'PAGES_FETCH_ERROR':
     case 'PAGE_FETCH_ERROR':
     case 'PAGE_MEMBERS_FETCH_ERROR':
+    case 'STRIPE_SUBSCRIPTION_CREATE_ERROR':
     case 'PAGE_STATS_FETCH_ERROR': {
       const message = action.errors !== undefined ? action.errors[0] : 'Oops something went wrong.';
       return Object.assign({}, state, {
@@ -154,6 +162,16 @@ const app = (state = initial, action) => {
     case 'USER_UPDATE_ERROR':
       return Object.assign({}, state, {
         errors: action.errors,
+      });
+
+    case 'STRIPE_SUBSCRIPTION_FETCH_SUCCESS':
+      return Object.assign({}, state, {
+        stripeSubscription: action.subscription,
+      });
+
+    case 'STRIPE_SUBSCRIPTION_CREATE_SUCCESS':
+      return Object.assign({}, state, {
+        stripeSubscription: action.subscription,
       });
 
     case 'PAGES_FETCH_SUCCESS':
@@ -266,7 +284,7 @@ const app = (state = initial, action) => {
     case 'PAGE_MEMBER_CREATE_ERROR':
     case 'PAGE_MEMBER_UPDATE_ERROR':
     case 'PAGE_MEMBER_DELETE_ERROR':
-    case 'SUBSCRIPTION_ERROR':
+    case 'PUSH_SUBSCRIPTION_ERROR':
       return Object.assign({}, state, {
         message: { text: action.message, counter: state.message.counter + 1 },
       });

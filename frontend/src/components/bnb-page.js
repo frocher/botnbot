@@ -9,9 +9,9 @@ import '@polymer/paper-tabs/paper-tab';
 import '@polymer/paper-tabs/paper-tabs';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
-import {
-  updateRoute, deletePage, deletePageMember,
-} from '../actions/app';
+import { updateRoute } from '../actions/app';
+import { deletePageMember } from '../actions/members';
+import { deletePage } from '../actions/pages';
 import './bnb-common-styles';
 import './bnb-divider';
 import './bnb-icons';

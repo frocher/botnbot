@@ -2,7 +2,7 @@ import { PolymerElement, html } from '@polymer/polymer/polymer-element';
 import '@polymer/app-layout/app-layout';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
-import { createBudget, deleteBudget } from '../actions/app';
+import { createBudget, deleteBudget } from '../actions/budgets';
 import './bnb-budget-bar';
 import './bnb-budget-card';
 
