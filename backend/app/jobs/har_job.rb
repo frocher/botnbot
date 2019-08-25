@@ -23,6 +23,11 @@ class HarJob < StatisticsJob
   end
 
   def perform(page, probe)
+    if page.locked == 0
+      Rails.logger.info "Har job not done because #{page.url} is locked"
+      return
+    end
+
     if page.uptime_status == 0
       Rails.logger.info "Har job not done because #{page.url} is down"
       return
@@ -91,13 +96,13 @@ class HarJob < StatisticsJob
   end
 
   def find_mime_type(url, mime_type)
-    return "other" if mime_type.nil? or url.nil?
+    return "other" if mime_type.nil? || url.nil?
     return "html"  if mime_type.include?("text/html")
-    return "js"    if mime_type.include?("javascript") or mime_type.include? "/ecmascript"
+    return "js"    if mime_type.include?("javascript") || mime_type.include?("/ecmascript")
     return "css"   if mime_type.include?("text/css")
     return "image" if mime_type.include?("image/")
-    return "font"  if mime_type.include?("font-") or mime_type.include?("ms-font") or mime_type.include?("font/")
-    return "font"  if url.ends_with?(".woff") or url.ends_with?(".woff2")
+    return "font"  if mime_type.include?("font-") || mime_type.include?("ms-font") || mime_type.include?("font/")
+    return "font"  if url.ends_with?(".woff") || url.ends_with?(".woff2")
 
     Rails.logger.debug "Other mime type : #{mime_type} for url #{url}"
     return "other"

@@ -59,7 +59,7 @@ services:
       - SECRET_TOKEN=${SECRET_TOKEN-rails_secret_token}
       - STRIPE_PUBLIC_KEY=${STRIPE_PUBLIC_KEY}
       - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
-      - STRIPE_PLANS=${STRIPE_PLANS}
+      - STRIPE_PLANS=${STRIPE_PLANS:-"[{ 'id':-1, 'name':'Free', 'amount':0, 'uptime':15, 'pages':3, 'members':3 }]"
 
   db:
     image: mysql:5.7

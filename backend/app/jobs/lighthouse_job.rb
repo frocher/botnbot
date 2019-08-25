@@ -23,6 +23,11 @@ class LighthouseJob < StatisticsJob
   end
 
   def perform(page, probe)
+    if page.locked == 0
+      Rails.logger.info "Lighthouse job not done because #{page.url} is locked"
+      return
+    end
+
     if page.uptime_status == 0
       Rails.logger.info "Lighthouse job not done because #{page.url} is down"
       return

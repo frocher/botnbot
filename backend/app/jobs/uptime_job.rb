@@ -14,7 +14,7 @@ class UptimeJob < StatisticsJob
     probe = job.opts[:probe]
     Rails.logger.info "Starting job #{self.class.name} for page #{page_id} on probe #{probe['name']}"
     second_chance = perform(page_id, job.opts[:is_second_chance] || false, probe)
-    delay = second_chance ? Rails.configuration.x.jobs.second_chanche_interval : Rails.configuration.x.jobs.uptime_interval
+    delay = second_chance ? Rails.configuration.x.jobs.second_chanche_interval : page_delay(page_id)
     UptimeJob.schedule_next(delay, job.handler, page_id, second_chance)
   end
 
@@ -67,6 +67,20 @@ class UptimeJob < StatisticsJob
   end
 
   private
+
+  def page_delay(page_id)
+    delay = Rails.configuration.x.jobs.uptime_interval
+
+    ActiveRecord::Base.connection_pool.with_connection do
+      if Figaro.env.stripe_api_key? && Page.exists?(page_id)
+        page = Page.find(page_id)
+        subscription = page.owner.stripe_subscription
+        delay = "#{subscription['uptime']}m"
+      end
+    end
+
+    delay
+  end
 
   def write_metrics(probe, page, status, code, message, content)
     metric = UptimeMetrics.new page_id: page.id, probe: probe["name"]
@@ -128,9 +142,7 @@ class UptimeJob < StatisticsJob
   def send_push_message(page, message)
     page.page_members.each do |member|
       user = member.user
-      user.subscriptions.each do |subscription|
-        send_webpush(subscription, page.url, message)
-      end
+      user.subscriptions.each { |subscription| send_webpush(subscription, page.url, message) }
     end
   rescue Exception => e
     Rails.logger.error e.to_s
@@ -164,7 +176,7 @@ class UptimeJob < StatisticsJob
   end
 
   def send_slack_message(page, message)
-    unless page.slack_webhook.nil? or page.slack_webhook.blank?
+    unless page.slack_webhook.nil? || page.slack_webhook.blank?
       notifier = Slack::Notifier.new page.slack_webhook, channel: page.slack_channel, username: "jeeves.thebot"
       notifier.ping message
     end

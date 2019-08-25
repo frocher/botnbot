@@ -21,7 +21,7 @@ RUN set -ex; \
     libsqlite3-dev \
     libxml2-dev \
     libxslt1-dev \
-    libcurl4-openssl-dev \   
+    libcurl4-openssl-dev \
     libfontconfig1 \
     libfontconfig1-dev \
     libicu-dev \
@@ -49,8 +49,8 @@ RUN git clone https://github.com/sstephenson/ruby-build.git /usr/local/rbenv/plu
 ENV RBENV_ROOT /usr/local/rbenv
 ENV PATH $RBENV_ROOT/bin:$RBENV_ROOT/shims:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
-RUN rbenv install -v 2.6.2
-RUN rbenv global 2.6.2
+RUN rbenv install -v 2.6.3
+RUN rbenv global 2.6.3
 
 RUN ruby -v
 RUN echo "gem: --no-document" > ~/.gemrc

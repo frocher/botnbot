@@ -8,7 +8,13 @@ class Pages::MembersController < ApplicationController
 
   def create
     @page = Page.find(params[:page_id])
+
+    # Check abilities
     return not_found! unless can?(current_user, :create_page_member, @page)
+
+    # Check subscription rights
+    return render_api_error!("Your current subscription doesn't allow you to create more members", 403) unless can_create_member(@page)
+
     if params[:role] == "admin"
       return not_found! unless can?(current_user, :create_page_member_admin, @page)
     end
@@ -95,12 +101,21 @@ class Pages::MembersController < ApplicationController
 
   private
 
+  def can_create_member(page)
+    resu = true
+    if Figaro.env.stripe_public_key?
+      max_members = current_user.stripe_subscription["members"]
+      resu = max_members > 0 && page.members.count < max_members
+    end
+    resu
+  end
+
   def has_a_remaining_admin(page, member)
     found_admin = false
     logger.error "Entrez ici"
     page.page_members.each do |current|
       logger.error current.to_s
-      if current.id != member.id and current.role == "admin"
+      if current.id != member.id && current.role == "admin"
         found_admin = true
         break
       end

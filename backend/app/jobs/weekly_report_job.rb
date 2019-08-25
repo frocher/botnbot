@@ -11,9 +11,7 @@ class WeeklyReportJob
   def perform
     ActiveRecord::Base.connection_pool.with_connection do
       users = User.all
-      users.each do |user|
-        process_user(user)
-      end
+      users.each { |user| process_user(user) }
     end
   end
 

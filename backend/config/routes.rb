@@ -2,7 +2,6 @@ Rails.application.routes.draw do
   mount_devise_token_auth_for 'User', at: 'auth', :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
 
   resources :environment, only: [:index]
-  resources :users, only: [:show, :update]
 
   resources :pages do
     scope module: :pages do
@@ -14,6 +13,15 @@ Rails.application.routes.draw do
       resources :uptime, only: [:index, :show]
     end
   end
+
+  resources :plans, only: [:index]
+
+  resources :users, only: [:show, :update] do
+    scope module: :users do
+      resource :subscription
+    end
+  end
+
   get "/pages/:id/screenshot" => "pages#screenshot"
   post "/users/:id/save-subscription" => "users#save_subscription"
 end

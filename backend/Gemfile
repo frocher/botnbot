@@ -45,6 +45,9 @@ gem 'webpush'
 # Cron jobs
 gem 'rufus-scheduler'
 
+# payment
+gem 'stripe'
+
 # Use Puma as the app server
 gem 'puma', '~> 3.7'
 

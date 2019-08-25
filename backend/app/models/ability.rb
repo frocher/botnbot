@@ -43,7 +43,14 @@ class Ability
 
       # An user can only show and update itself
       if user.id == subject.id
-        rules << [:show_user, :update_user]
+        rules << [
+          :show_user,
+          :update_user,
+          :read_subscription,
+          :create_subscription,
+          :update_subscription,
+          :delete_subscription
+        ]
       end
 
       rules.flatten
