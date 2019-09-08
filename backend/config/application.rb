@@ -28,7 +28,11 @@ module BnbNexus
     config.probes = JSON.parse(ENV.fetch("PROBES") { '[{ "name":"localhost", "host":"localhost", "port":3333, "token":"helloman" }]' })
 
     # Array of stripe plans
-    config.stripe_plans = JSON.parse(ENV.fetch("STRIPE_PLANS") { '[{ "id":-1, "name":"Free", "amount":0, "uptime":15, "pages":3, "members":3 }]' })
+    stripe_plans = ENV.fetch("STRIPE_PLANS")
+    if stripe_plans.blank?
+      stripe_plans = '[{ "id":-1, "name":"Free", "amount":0, "uptime":15, "pages":3, "members":3 }]'
+    end
+    config.stripe_plans = JSON.parse(stripe_plans)
 
     # Omniauth middleware
     config.session_store :cookie_store, key: '_interslice_session'
