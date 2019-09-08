@@ -60,8 +60,9 @@ export const createPageSuccess = () => ({
   type: 'PAGE_CREATE_SUCCESS',
 });
 
-export const createPageError = errors => ({
+export const createPageError = (message, errors) => ({
   type: 'PAGE_CREATE_ERROR',
+  message,
   errors,
 });
 
@@ -75,7 +76,7 @@ export const createPage = (name, url, device) => (dispatch) => {
         if (e.target.status === 200) {
           dispatch(createPageSuccess());
         } else {
-          dispatch(createPageError(response.errors));
+          dispatch(createPageError(response.message, response.errors));
         }
       },
     });

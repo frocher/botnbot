@@ -285,10 +285,6 @@ const app = (state = initial, action) => {
     case 'PAGE_MEMBER_UPDATE_ERROR':
     case 'PAGE_MEMBER_DELETE_ERROR':
     case 'PUSH_SUBSCRIPTION_ERROR':
-      return Object.assign({}, state, {
-        message: { text: action.message, counter: state.message.counter + 1 },
-      });
-
     case 'PAGE_CREATE_ERROR':
     case 'PAGE_UPDATE_ERROR':
     case 'PAGE_DELETE_ERROR':
@@ -297,10 +293,14 @@ const app = (state = initial, action) => {
           errors: action.errors,
         });
       }
+      if (action.message) {
+        return Object.assign({}, state, {
+          message: { text: action.message, counter: state.message.counter + 1 },
+        });
+      }
       return Object.assign({}, state, {
         message: { text: 'Unknown error.', counter: state.message.counter + 1 },
       });
-
 
     default:
       return state;
