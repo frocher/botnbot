@@ -57,7 +57,7 @@ RUN echo "gem: --no-document" > ~/.gemrc
 RUN gem install bundler
 
 ### Install node
-RUN curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - &&\
+RUN curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash - &&\
 sudo apt-get install -y nodejs
 
 # for paperclip image manipulation

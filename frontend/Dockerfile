@@ -6,7 +6,7 @@ apt-get update && \
 apt-get install -y sudo gnupg curl xz-utils git
 
 # node
-RUN curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - && \
+RUN curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash - && \
 sudo apt-get install -y nodejs
 
 # Copy app
