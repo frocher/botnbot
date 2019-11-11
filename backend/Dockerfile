@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM debian:stretch-slim
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV INITRD No
@@ -15,7 +15,7 @@ RUN set -ex; \
     build-essential \
     libssl-dev \
     libreadline-dev \
-    libmysqlclient-dev \
+    libmariadbclient-dev \
     mysql-client \
     libyaml-dev \
     libsqlite3-dev \
@@ -31,7 +31,7 @@ RUN set -ex; \
     libxft-dev \
     libpng-dev \
     libjpeg-dev \
-    python-software-properties \
+    software-properties-common \
     libffi-dev
 
 ### Install rbenv
