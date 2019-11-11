@@ -4,7 +4,7 @@ import '@polymer/paper-icon-button/paper-icon-button';
 import '@vaadin/vaadin-grid/vaadin-grid';
 import '@vaadin/vaadin-grid/vaadin-grid-sorter';
 import { connect } from 'pwa-helpers';
-import { format } from 'date-fns/esm';
+import { format } from 'date-fns';
 import { store } from '../store';
 import { updateRoute } from '../actions/app';
 import { getRequestUrl } from '../common';
@@ -111,7 +111,7 @@ class BnbBytesDetails extends connect(store)(PolymerElement) {
   }
 
   _formatTime(time) {
-    return format(time, 'MMM dd, yyyy HH:mm');
+    return format(new Date(time), 'MMM dd, yyyy HH:mm');
   }
 
   _formatBytes(bytes) {
