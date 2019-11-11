@@ -3,7 +3,7 @@
 version: "3.3"
 services:
   proxy:
-    image: nginx:1.15
+    image: nginx:latest
     ports:
       - "8080:80"
     volumes:
