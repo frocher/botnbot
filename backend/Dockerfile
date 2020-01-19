@@ -73,8 +73,7 @@ WORKDIR $APP_HOME
 # Gems
 COPY Gemfile Gemfile
 COPY Gemfile.lock Gemfile.lock
-RUN gem install bundler
-RUN bundle install --without test
+RUN bundle install
 RUN rbenv rehash
 
 # All app
