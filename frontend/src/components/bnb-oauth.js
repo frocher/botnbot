@@ -105,8 +105,28 @@ class BnbOAuth extends PolymerElement {
 
   _callService(service) {
     const origin = `${window.location.protocol}//${window.location.host}`;
-    const url = getRequestUrl(`auth/${service}?auth_origin_url=${origin}`);
-    window.location.replace(url);
+    const url = getRequestUrl(`auth/${service}`);
+    this._post(url, { 'auth_origin_url': origin });
+  }
+
+  _post(path, params, method = 'post') {
+    const form = document.createElement('form');
+    form.method = method;
+    form.action = path;
+
+    for (const key in params) {
+      if (params.hasOwnProperty(key)) {
+        const hiddenField = document.createElement('input');
+        hiddenField.type = 'hidden';
+        hiddenField.name = key;
+        hiddenField.value = params[key];
+
+        form.appendChild(hiddenField);
+      }
+    }
+
+    document.body.appendChild(form);
+    form.submit();
   }
 }
 

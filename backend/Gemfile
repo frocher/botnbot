@@ -31,6 +31,7 @@ gem 'chronic_duration'
 
 # Auth
 gem 'devise_token_auth', '>= 0.1.42'
+gem 'omniauth-rails_csrf_protection', '~> 0.1'
 gem 'omniauth-github'
 gem 'omniauth-facebook'
 gem 'omniauth-google-oauth2'
