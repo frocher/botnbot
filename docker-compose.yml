@@ -62,7 +62,7 @@ services:
       - STRIPE_PLANS=${STRIPE_PLANS}
 
   db:
-    image: mysql:5.7
+    image: mariadb:10.4
     volumes:
       - ./docker/mysql:/var/lib/mysql
     environment:
