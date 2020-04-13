@@ -70,7 +70,7 @@ services:
       - MYSQL_ROOT_PASSWORD=${DB_PASSWORD-root}
 
   influx:
-    image: influxdb:1.5
+    image: influxdb:1.7
     volumes:
       - ./docker/influxdb:/var/lib/influxdb
     environment:
