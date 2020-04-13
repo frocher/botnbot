@@ -5,9 +5,10 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
-gem 'rails', '~> 5.1.4'
+gem 'rails', '~> 5.2'
 
 gem 'rack-cors', :require => 'rack/cors'
+gem 'bootsnap', require: false
 
 # Database access
 gem 'mysql2'
