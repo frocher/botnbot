@@ -33,6 +33,8 @@ require "stripe"
 class User < ActiveRecord::Base
   include DeviseTokenAuth::Concerns::User
 
+  devise :database_authenticatable, :registerable, :recoverable, :validatable, :confirmable, :trackable
+
   before_create :record_first_admin
 
   alias_attribute :nickname, :name
