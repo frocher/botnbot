@@ -10,7 +10,7 @@ import 'range-datepicker/range-datepicker';
 import {
   addDays, addMonths, addWeeks, format, endOfDay, endOfMonth, endOfWeek,
   startOfDay, startOfMonth, startOfWeek,
-} from 'date-fns/esm';
+} from 'date-fns';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
 import { updatePeriod } from '../actions/app';

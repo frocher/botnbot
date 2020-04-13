@@ -3,7 +3,7 @@
 version: "3.3"
 services:
   proxy:
-    image: nginx:1.15
+    image: nginx:latest
     ports:
       - "8080:80"
     volumes:
@@ -62,7 +62,7 @@ services:
       - STRIPE_PLANS=${STRIPE_PLANS}
 
   db:
-    image: mysql:5.7
+    image: mariadb:10.4
     volumes:
       - ./docker/mysql:/var/lib/mysql
     environment:
@@ -70,7 +70,7 @@ services:
       - MYSQL_ROOT_PASSWORD=${DB_PASSWORD-root}
 
   influx:
-    image: influxdb:1.5
+    image: influxdb:1.7
     volumes:
       - ./docker/influxdb:/var/lib/influxdb
     environment:
@@ -80,6 +80,15 @@ services:
     image: djfarrelly/maildev
     ports:
       - "8082:80"
+
+  admin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8083:80"
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD-root}
+    links:
+      - db
 
   probe:
     build: ./probe

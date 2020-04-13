@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM debian:stretch-slim
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV INITRD No
@@ -15,7 +15,7 @@ RUN set -ex; \
     build-essential \
     libssl-dev \
     libreadline-dev \
-    libmysqlclient-dev \
+    libmariadbclient-dev \
     mysql-client \
     libyaml-dev \
     libsqlite3-dev \
@@ -31,7 +31,7 @@ RUN set -ex; \
     libxft-dev \
     libpng-dev \
     libjpeg-dev \
-    python-software-properties \
+    software-properties-common \
     libffi-dev
 
 ### Install rbenv
@@ -49,15 +49,15 @@ RUN git clone https://github.com/sstephenson/ruby-build.git /usr/local/rbenv/plu
 ENV RBENV_ROOT /usr/local/rbenv
 ENV PATH $RBENV_ROOT/bin:$RBENV_ROOT/shims:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
-RUN rbenv install -v 2.6.3
-RUN rbenv global 2.6.3
+RUN rbenv install -v 2.7.0
+RUN rbenv global 2.7.0
 
 RUN ruby -v
 RUN echo "gem: --no-document" > ~/.gemrc
 RUN gem install bundler
 
 ### Install node
-RUN curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash - &&\
+RUN curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash - &&\
 sudo apt-get install -y nodejs
 
 # for paperclip image manipulation
@@ -73,8 +73,7 @@ WORKDIR $APP_HOME
 # Gems
 COPY Gemfile Gemfile
 COPY Gemfile.lock Gemfile.lock
-RUN gem install bundler
-RUN bundle install --without test
+RUN bundle install
 RUN rbenv rehash
 
 # All app

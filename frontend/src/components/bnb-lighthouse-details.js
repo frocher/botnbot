@@ -3,7 +3,7 @@ import '@polymer/app-layout/app-layout';
 import '@polymer/paper-icon-button/paper-icon-button';
 import '@vaadin/vaadin-grid/vaadin-grid';
 import '@vaadin/vaadin-grid/vaadin-grid-sorter';
-import { format } from 'date-fns/esm';
+import { format } from 'date-fns';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
 import { updateRoute } from '../actions/app';
@@ -107,7 +107,7 @@ class BnbLighthouseDetails extends connect(store)(PolymerElement) {
   }
 
   _formatTime(time) {
-    return format(time, 'MMM dd, yyyy HH:mm');
+    return format(new Date(time), 'MMM dd, yyyy HH:mm');
   }
 
   _computeUrl(key) {
