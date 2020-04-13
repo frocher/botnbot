@@ -81,6 +81,15 @@ services:
     ports:
       - "8082:80"
 
+  admin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8083:80"
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD-root}
+    links:
+      - db
+
   probe:
     build: ./probe
     container_name: botnbot_probe
