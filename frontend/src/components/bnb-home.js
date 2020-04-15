@@ -113,8 +113,7 @@ class BnbHome extends connect(store)(PolymerElement) {
           <paper-menu-button horizontal-align="right">
             <paper-icon-button icon="bnb:more-vert" slot="dropdown-trigger"></paper-icon-button>
             <paper-listbox slot="dropdown-content">
-              <paper-item on-tap="_preferencesTapped">User preferences</paper-item>
-              <paper-item on-tap="_accountTapped" hidden$="[[!canSubscribe]]">Account</paper-item>
+              <paper-item on-tap="_accountTapped">My account</paper-item>
               <bnb-divider></bnb-divider>
               <paper-item on-tap="_signoutTapped">Log out</paper-item>
             </paper-listbox>
@@ -166,8 +165,8 @@ class BnbHome extends connect(store)(PolymerElement) {
     store.dispatch(updateRoute('add-page'));
   }
 
-  _preferencesTapped() {
-    store.dispatch(updateRoute('user-preferences'));
+  _accountTapped() {
+    store.dispatch(updateRoute('account'));
   }
 
   _signoutTapped() {

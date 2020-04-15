@@ -1,6 +1,6 @@
 import { getRequestUrl, getResource } from '../common';
 
-// ***** User management
+// ***** User account management
 
 export const fetchUserSuccess = user => ({
   type: 'USER_FETCH_SUCCESS',

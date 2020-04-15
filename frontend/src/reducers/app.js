@@ -155,7 +155,7 @@ const app = (state = initial, action) => {
 
     case 'USER_UPDATE_SUCCESS':
       return Object.assign({}, state, {
-        message: { text: 'User preferences have been updated', counter: state.message.counter + 1 },
+        message: { text: 'Account informations have been updated', counter: state.message.counter + 1 },
         route: 'home',
       });
 

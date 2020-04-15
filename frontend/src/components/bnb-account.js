@@ -8,7 +8,7 @@ import '@polymer/paper-toggle-button/paper-toggle-button';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
 import { updateRoute } from '../actions/app';
-import { updateUser, savePushSubscription } from '../actions/user';
+import { updateUser, savePushSubscription } from '../actions/account';
 import './bnb-collapse';
 import './bnb-divider';
 import { BnbFormElement } from './bnb-form-element';
@@ -16,7 +16,7 @@ import './bnb-icons';
 import './bnb-install-button';
 import './bnb-subscriptions';
 
-class BnbUserPreferences extends connect(store)(BnbFormElement(PolymerElement)) {
+class BnbAccount extends connect(store)(BnbFormElement(PolymerElement)) {
   static get template() {
     return html`
     <style include="bnb-common-styles">
@@ -43,7 +43,7 @@ class BnbUserPreferences extends connect(store)(BnbFormElement(PolymerElement)) 
       <app-header slot="header" fixed condenses shadow>
         <app-toolbar>
           <paper-icon-button icon="bnb:close" on-tap="closeTapped"></paper-icon-button>
-          <span class="title">User preferences</span>
+          <span class="title">My account</span>
           <span class="flex"></span>
           <paper-button on-tap="saveTapped">Save</paper-button>
         </app-toolbar>
@@ -55,7 +55,7 @@ class BnbUserPreferences extends connect(store)(BnbFormElement(PolymerElement)) 
             <paper-toggle-button id="pushButton" disabled="[[!isNotificationsEnabled()]]">Send me notifications on this device</paper-toggle-button>
           </bnb-collapse>
           <bnb-divider></bnb-divider>
-          <bnb-collapse icon="bnb:credit-card" header="Subscription" hidden$="[[!canSubscribe]]">
+          <bnb-collapse icon="bnb:credit-card" header="Subscription" opened hidden$="[[!canSubscribe]]">
             <bnb-subscriptions></bnb-subscriptions>
           </bnb-collapse>
           <bnb-divider></bnb-divider>
@@ -249,4 +249,4 @@ class BnbUserPreferences extends connect(store)(BnbFormElement(PolymerElement)) 
   }
 }
 
-window.customElements.define('bnb-user-preferences', BnbUserPreferences);
+window.customElements.define('bnb-account', BnbAccount);

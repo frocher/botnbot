@@ -5,7 +5,7 @@ import '@polymer/paper-card/paper-card';
 import '@polymer/paper-dialog/paper-dialog';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
-import { createStripeSubscription, updateStripeSubscription, deleteStripeSubscription } from '../actions/user';
+import { createStripeSubscription, updateStripeSubscription, deleteStripeSubscription } from '../actions/account';
 import './bnb-common-styles';
 
 class BnbSubscriptions extends connect(store)(PolymerElement) {
