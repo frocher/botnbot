@@ -94,7 +94,7 @@ class BnbAccount extends connect(store)(BnbFormElement(PolymerElement)) {
     this.user = state.app.user;
     this.pushKey = state.app.pushKey;
     this.errors = state.app.errors;
-    this.canSubscribe = state.app.stripeKey !== undefined;
+    this.canSubscribe = state.app.stripeKey;
   }
 
   ready() {
