@@ -40,6 +40,8 @@ class BnbSubscriptions extends connect(store)(PolymerElement) {
       }
       .card-current {
         margin-top: 8px;
+        font-weight: bold;
+        color: var(--google-blue-300);
       }
       @media (max-width: 850px) {
         .plans {
@@ -75,20 +77,20 @@ class BnbSubscriptions extends connect(store)(PolymerElement) {
           </div>
           <div class="card-actions">
             <paper-button hidden$="[[_computeHideSubscribe(item, currentPlan)]]" on-tap="_subscribeTapped">Subscribe</paper-button>
-            <div class="card-current" hidden$="[[!_computeHideSubscribe(item, currentPlan)]]">Your current Plan</div>
+            <div class="card-current" hidden$="[[!_computeHideSubscribe(item, currentPlan)]]">YOUR CURRENT PLAN</div>
           </div>
         </paper-card>
       </template>
     </div>
     <paper-dialog id="downgradeDlg" modal>
-    <p>You are downgrading your current plan.
-      If you have more pages than the future plan allows, you will not loose your current data
-      but the monitoring for the more recent pages will be stopped.
-      Are you sure to downgrade ?</p>
-    <div class="buttons">
-      <paper-button dialog-dismiss autofocus>No</paper-button>
-      <paper-button dialog-confirm on-tap="_confirmDowngradeTapped">Yes, sure !</paper-button>
-    </div>
+      <p>You are downgrading your current plan.
+        If you have more pages than the future plan allows, you will not loose your current data
+        but the monitoring for the more recent pages will be stopped.
+        Are you sure to downgrade ?</p>
+      <div class="buttons">
+        <paper-button dialog-dismiss autofocus>No</paper-button>
+        <paper-button dialog-confirm on-tap="_confirmDowngradeTapped">Yes, sure !</paper-button>
+      </div>
     </paper-dialog>
     <paper-dialog id="upgradeDlg" modal>
     <p>Thank you for choosing a better plan. Can you please confirm your choice to upgrade your subscription ?</p>
