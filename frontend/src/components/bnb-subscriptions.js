@@ -186,7 +186,7 @@ class BnbSubscriptions extends connect(store)(PolymerElement) {
       key: this.stripeKey,
       zipCode: true,
       token: (token) => {
-        store.dispatch(createStripeSubscription(token.email, token.id, this.selectedPlan));
+        store.dispatch(createStripeSubscription(token.email, token.id, this.selectedPlan.id));
       },
     });
   }
