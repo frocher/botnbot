@@ -88,8 +88,8 @@ class User < ActiveRecord::Base
   end
 
   def update_pages_lock()
-    if Figaro.env.stripe_api_key?
-      max_pages = @user.stripe_subscription["pages"]
+    if Figaro.env.stripe_public_key?
+      max_pages = stripe_subscription["pages"]
       index = 0
       owned_pages.each do |page|
         page.locked = index >= max_pages
