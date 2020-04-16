@@ -116,9 +116,6 @@ private
   def can_create_page
     resu = true
     if Figaro.env.stripe_public_key?
-      Rails.logger.debug("*******")
-      Rails.logger.debug(current_user.stripe_subscription)
-
       max_pages = current_user.stripe_subscription["pages"]
       resu = max_pages > 0 && current_user.owned_pages.count < max_pages
     end
