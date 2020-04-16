@@ -26,7 +26,9 @@ class WeeklyReportJob
       @context.period_end = (Date.today - 7).at_end_of_week.end_of_day
 
       pages.each do |page|
-        @context.pages << construct_page(page, @context.period_start, @context.period_end)
+        unless page.locked
+          @context.pages << construct_page(page, @context.period_start, @context.period_end)
+        end
       end
 
       send_mail(user, generate_title(@context.period_start, @context.period_end))

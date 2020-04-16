@@ -20,9 +20,16 @@ class UptimeJob < StatisticsJob
 
   def perform(page_id, is_second_chance, probe)
     second_chance = false
+
     ActiveRecord::Base.connection_pool.with_connection do
       if Page.exists?(page_id)
         page = Page.find(page_id)
+
+        if page.locked
+          Rails.logger.info "Uptime job not done because #{page.url} is locked"
+          return false
+        end
+
         begin
           res = launch_probe(probe, page)
           result = JSON.parse(res.body)

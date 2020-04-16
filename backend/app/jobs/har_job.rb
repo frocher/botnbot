@@ -23,7 +23,7 @@ class HarJob < StatisticsJob
   end
 
   def perform(page, probe)
-    if page.locked == 0
+    if page.locked
       Rails.logger.info "Har job not done because #{page.url} is locked"
       return
     end
