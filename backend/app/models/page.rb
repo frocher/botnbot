@@ -53,7 +53,7 @@ class Page < ActiveRecord::Base
   end
 
   def owner
-    users = User.joins("INNER JOIN page_members ON page_members.user_id = users.id WHERE page_members.page_id = #{id} AND page_members.role = 3 ORDER BY page_members.created_at").take
+    User.joins("INNER JOIN page_members ON page_members.user_id = users.id WHERE page_members.page_id = #{id} AND page_members.role = 3 ORDER BY page_members.created_at").take
   end
 
   def last_downtime_duration

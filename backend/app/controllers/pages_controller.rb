@@ -49,7 +49,7 @@ class PagesController < ApplicationController
         @page.url = params[:url]
         @page.device = params[:device]
         @page.uptime_status = 1
-        @page.lock = false
+        @page.locked = false
         @page.uptime_keyword = ""
         @page.uptime_keyword_type = "presence"
         @page.mail_notify = true
@@ -115,7 +115,7 @@ class PagesController < ApplicationController
 private
   def can_create_page
     resu = true
-    if Figaro.env.stripe_public_key?
+    unless Figaro.env.stripe_public_key.blank?
       max_pages = current_user.stripe_subscription["pages"]
       resu = max_pages > 0 && current_user.owned_pages.count < max_pages
     end

@@ -79,10 +79,12 @@ class UptimeJob < StatisticsJob
     delay = Rails.configuration.x.jobs.uptime_interval
 
     ActiveRecord::Base.connection_pool.with_connection do
-      if Figaro.env.stripe_public_key? && Page.exists?(page_id)
-        page = Page.find(page_id)
-        subscription = page.owner.stripe_subscription
-        delay = "#{subscription['uptime']}m"
+      unless Figaro.env.stripe_public_key.blank?
+        if Page.exists?(page_id)
+          page = Page.find(page_id)
+          subscription = page.owner.stripe_subscription
+          delay = "#{subscription['uptime']}m"
+        end
       end
     end
 
