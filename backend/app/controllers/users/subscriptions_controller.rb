@@ -26,6 +26,8 @@ class Users::SubscriptionsController < ApplicationController
     @user.subscription = subscription.id
     @user.save!
 
+    @user.update_pages_lock
+
     render json: @user.stripe_subscription
   end
 
