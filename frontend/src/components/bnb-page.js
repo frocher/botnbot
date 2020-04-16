@@ -16,6 +16,7 @@ import './bnb-common-styles';
 import './bnb-divider';
 import './bnb-icons';
 import './bnb-page-budget';
+import './bnb-page-locked-card';
 import './bnb-page-stats';
 
 class BnbPage extends connect(store)(PolymerElement) {
@@ -61,6 +62,7 @@ class BnbPage extends connect(store)(PolymerElement) {
 
       <div id="content" class="fit">
         <div id="charts">
+          <bnb-page-locked-card hidden$="[[!page.locked]]"></bnb-page-locked-card>
           <iron-pages selected="[[selectedTab]]">
             <bnb-page-stats></bnb-page-stats>
             <bnb-page-budget></bnb-page-budget>
