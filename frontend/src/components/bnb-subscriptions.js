@@ -1,8 +1,9 @@
+import '@material/mwc-button/mwc-button';
+import '@material/mwc-dialog';
 import { PolymerElement, html } from '@polymer/polymer/polymer-element';
 import '@polymer/polymer/lib/elements/dom-repeat';
 import '@polymer/paper-button/paper-button';
 import '@polymer/paper-card/paper-card';
-import '@polymer/paper-dialog/paper-dialog';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
 import { createStripeSubscription, updateStripeSubscription, deleteStripeSubscription } from '../actions/account';
@@ -82,35 +83,29 @@ class BnbSubscriptions extends connect(store)(PolymerElement) {
         </paper-card>
       </template>
     </div>
-    <paper-dialog id="downgradeDlg" modal>
+    <mwc-dialog id="downgradePlanDlg" heading="Downgrading your plan">
       <p>You are downgrading your current plan.
         If you have more pages than the future plan allows, you will not loose your current data
         but the monitoring for the more recent pages will be stopped.
         Are you sure to downgrade ?</p>
-      <div class="buttons">
-        <paper-button dialog-dismiss autofocus>No</paper-button>
-        <paper-button dialog-confirm on-tap="_confirmDowngradeTapped">Yes, sure !</paper-button>
-      </div>
-    </paper-dialog>
-    <paper-dialog id="upgradeDlg" modal>
-    <p>Thank you for choosing a better plan. Can you please confirm your choice to upgrade your subscription ?</p>
-    <div class="buttons">
-      <paper-button dialog-dismiss>No</paper-button>
-      <paper-button dialog-confirm autofocus on-tap="_confirmUpgradeTapped">Yes, I confirm</paper-button>
-    </div>
-    </paper-dialog>
-    <paper-dialog id="freePlanDlg" modal>
-    <p>You have chosen to go back to free plan.
-      If you have more pages than the free plan allows, you will not loose your current data
-      but the monitoring for the more recent pages will be stopped.
-      Are you sure to downgrade to free plan ?
-      If you confirm, your paiement informations will be deleted and there will be no more billing.
-    </p>
-    <div class="buttons">
-      <paper-button dialog-dismiss autofocus>No</paper-button>
-      <paper-button dialog-confirm on-tap="_confirmFreePlanTapped">Yes, I confirm !</paper-button>
-    </div>
-    </paper-dialog>
+      <mwc-button dialogAction="ok" slot="primaryAction">Yes, sure !</mwc-button>
+      <mwc-button dialogAction="cancel" slot="secondaryAction">No</mwc-button>
+    </mwc-dialog>
+    <mwc-dialog id="upgradePlanDlg" heading="Upgrading your plan">
+      <p>Thank you for choosing a better plan. Can you please confirm your choice to upgrade your subscription ?</p>
+      <mwc-button dialogAction="ok" slot="primaryAction">Yes, I confirm</mwc-button>
+      <mwc-button dialogAction="cancel" slot="secondaryAction">No</mwc-button>
+    </mwc-dialog>
+    <mwc-dialog id="freePlanDlg" heading="Free Plan">
+      <p>You have chosen to go back to free plan.
+        If you have more pages than the free plan allows, you will not loose your current data
+        but the monitoring for the more recent pages will be stopped.
+        Are you sure to downgrade to free plan ?
+        If you confirm, your paiement informations will be deleted and there will be no more billing.
+      </p>
+      <mwc-button dialogAction="ok" slot="primaryAction">Yes, I confirm !</mwc-button>
+      <mwc-button dialogAction="cancel" slot="secondaryAction">No</mwc-button>
+    </mwc-dialog>
     `;
   }
 
@@ -126,6 +121,9 @@ class BnbSubscriptions extends connect(store)(PolymerElement) {
     super.ready();
     this.checkout = this._initCheckout();
     window.addEventListener('popstate', () => this.checkout.close());
+    this.$.freePlanDlg.addEventListener('closed', (e) => this._onFreePlanDialogClosed(e.detail.action));
+    this.$.upgradePlanDlg.addEventListener('closed', (e) => this._onUpgradePlanDialogClosed(e.detail.action));
+    this.$.downgradePlanDlg.addEventListener('closed', (e) => this._onDowngradePlanDialogClosed(e.detail.action));
   }
 
   _stateChanged(state) {
@@ -157,25 +155,31 @@ class BnbSubscriptions extends connect(store)(PolymerElement) {
         };
         this.checkout.open(config);
       } else if (this.currentPlan.pages > this.selectedPlan.pages) {
-        this.$.downgradeDlg.open();
+        this.$.downgradePlanDlg.show();
       } else {
-        this.$.upgradeDlg.open();
+        this.$.upgradePlanDlg.show();
       }
     } else {
-      this.$.freePlanDlg.open();
+      this.$.freePlanDlg.show();
     }
   }
 
-  _confirmDowngradeTapped() {
-    store.dispatch(updateStripeSubscription(this.selectedPlan));
+  _onFreePlanDialogClosed(action) {
+    if (action === 'ok') {
+      store.dispatch(deleteStripeSubscription());
+    }
   }
 
-  _confirmUpgradeTapped() {
-    store.dispatch(updateStripeSubscription(this.selectedPlan));
+  _onUpgradePlanDialogClosed(action) {
+    if (action === 'ok') {
+      store.dispatch(updateStripeSubscription(this.selectedPlan.id));
+    }
   }
 
-  _confirmFreePlanTapped() {
-    store.dispatch(deleteStripeSubscription());
+  _onDowngradePlanDialogClosed(action) {
+    if (action === 'ok') {
+      store.dispatch(updateStripeSubscription(this.selectedPlan.id));
+    }
   }
 
   _initCheckout() {

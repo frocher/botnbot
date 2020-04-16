@@ -35,6 +35,12 @@ class BnbApp extends connect(store)(PolymerElement) {
         --divider-color: #B6B6B6;
         --error-color: #db4437;
 
+        --mdc-theme-primary: var(--google-blue-300);
+        --mdc-theme-on-primary: var(--paper-grey-900);
+        --mdc-theme-surface: var(--paper-grey-900);
+        --mdc-dialog-heading-ink-color: var(--text-primary-color);
+        --mdc-dialog-content-ink-color: var(--text-primary-color);
+
         --paper-card-background-color: var(--paper-grey-800);
         --paper-card-header-color: var(--text-primary-color);
         --paper-dialog-button-color: var(--google-blue-300);

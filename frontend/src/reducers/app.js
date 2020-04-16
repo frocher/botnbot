@@ -172,6 +172,19 @@ const app = (state = initial, action) => {
     case 'STRIPE_SUBSCRIPTION_CREATE_SUCCESS':
       return Object.assign({}, state, {
         stripeSubscription: action.subscription,
+        message: { text: 'Your paid subscription has been created', counter: state.message.counter + 1 },
+      });
+
+    case 'STRIPE_SUBSCRIPTION_UPDATE_SUCCESS':
+      return Object.assign({}, state, {
+        stripeSubscription: action.subscription,
+        message: { text: 'Your paid subscription has been updated', counter: state.message.counter + 1 },
+      });
+
+    case 'STRIPE_SUBSCRIPTION_DELETE_SUCCESS':
+      return Object.assign({}, state, {
+        stripeSubscription: action.subscription,
+        message: { text: 'Your paid subscription has been deleted', counter: state.message.counter + 1 },
       });
 
     case 'PAGES_FETCH_SUCCESS':
