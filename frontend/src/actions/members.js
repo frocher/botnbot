@@ -70,7 +70,7 @@ export const updatePageMemberError = message => ({
 export const updatePageMember = (pageId, member) => (dispatch) => {
   dispatch((dispatch) => {
     getResource({
-      url: this.getRequestUrl(`/pages/${pageId}/members/${member.id}`, member),
+      url: getRequestUrl(`/pages/${pageId}/members/${member.id}`, member),
       method: 'PUT',
       onLoad(e) {
         const response = JSON.parse(e.target.responseText);
