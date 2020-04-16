@@ -105,7 +105,7 @@ class Pages::MembersController < ApplicationController
     resu = true
     if Figaro.env.stripe_public_key?
       max_members = current_user.stripe_subscription["members"]
-      resu = max_members > 0 && page.members.count < max_members
+      resu = max_members > 0 && page.page_members.count < max_members
     end
     resu
   end

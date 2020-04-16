@@ -47,7 +47,7 @@ export const createPageMember = (pageId, member) => (dispatch) => {
       onLoad(e) {
         const response = JSON.parse(e.target.responseText);
         if (e.target.status === 200) {
-          this.loadPageMembers(pageId);
+          dispatch(loadPageMembers(pageId));
           dispatch(createPageMemberSuccess(response));
         } else {
           dispatch(createPageMemberError(response.message));
