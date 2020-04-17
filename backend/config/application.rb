@@ -28,7 +28,7 @@ module BnbNexus
     config.probes = JSON.parse(ENV.fetch("PROBES") { '[{ "name":"localhost", "host":"localhost", "port":3333, "token":"helloman" }]' })
 
     # Array of stripe plans
-    stripe_plans = ENV.fetch("STRIPE_PLANS")
+    stripe_plans = ENV.fetch("STRIPE_PLANS") { [] }
     if stripe_plans.blank?
       stripe_plans = '[{ "id":-1, "name":"Free", "amount":0, "uptime":15, "pages":3, "members":3 }]'
     end
