@@ -34,6 +34,8 @@ class Page < ActiveRecord::Base
       thumb: '-resize "360x" +repage -crop "360x270+0+0" -gravity North -quality 80 -interlace Plane'
     }
 
+  belongs_to :owner, class_name: 'User'
+
   has_many :budgets, dependent: :destroy
   has_many :page_members, dependent: :destroy
 
@@ -49,7 +51,9 @@ class Page < ActiveRecord::Base
   validates :slack_channel, presence: true, if: Proc.new { |a| a.slack_notify? }
 
   def as_json(options={})
-    super({only: [:id, :name, :url, :device, :uptime_keyword, :uptime_keyword_type, :mail_notify, :slack_notify, :push_notify, :slack_webhook, :slack_channel, :uptime_status, :created_at, :updated_at]}.merge(options || {}))
+    h = super({only: [:id, :name, :url, :device, :locked, :uptime_keyword, :uptime_keyword_type, :mail_notify, :slack_notify, :push_notify, :slack_webhook, :slack_channel, :uptime_status, :created_at, :updated_at]}.merge(options || {}))
+    h[:owner] = owner.as_json
+    h
   end
 
   def last_downtime_duration

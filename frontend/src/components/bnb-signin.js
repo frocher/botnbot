@@ -4,7 +4,7 @@ import '@polymer/paper-button/paper-button';
 import '@polymer/paper-input/paper-input';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
-import { signin } from '../actions/app';
+import { signin } from '../actions/auth';
 import './bnb-auth-form';
 import './bnb-oauth';
 

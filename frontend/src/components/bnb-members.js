@@ -1,3 +1,5 @@
+import '@material/mwc-button/mwc-button';
+import '@material/mwc-dialog';
 import { PolymerElement, html } from '@polymer/polymer/polymer-element';
 import '@polymer/app-layout/app-layout';
 import '@polymer/iron-pages/iron-pages';
@@ -11,9 +13,9 @@ import '@vaadin/vaadin-grid/vaadin-grid';
 import { find } from 'lodash-es';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
-import {
-  updateRoute, createPageMember, updatePageMember, deletePageMember,
-} from '../actions/app';
+import { updateRoute } from '../actions/app';
+import { createPageMember, updatePageMember, deletePageMember, updatePageOwner } from '../actions/members';
+import './bnb-collapse';
 import './bnb-grid-styles';
 import './bnb-icons';
 
@@ -21,13 +23,10 @@ class BnbMembers extends connect(store)(PolymerElement) {
   static get template() {
     return html`
     <style>
-      h3 {
-        color: var(--secondary-text-color);
-      }
-
       #content {
-        @apply --layout-horizontal;
-        @apply --layout-center-justified;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
       }
 
       #container {
@@ -36,9 +35,22 @@ class BnbMembers extends connect(store)(PolymerElement) {
         padding: 10px 22px 10px 22px;
       }
 
+      #form {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        margin-top: -16px;
+        margin-bottom: 8px;
+      }
+
       #email {
-        min-width: 200px;
+        min-width: 280px;
         margin-right: 16px;
+      }
+
+      #roleMenu {
+        min-width: 200px;
       }
 
       #members {
@@ -54,52 +66,57 @@ class BnbMembers extends connect(store)(PolymerElement) {
       </app-header>
       <div id="content">
         <div id="container">
-          <div class="layout horizontal wrap end">
-            <paper-input id="email" class="flex" label="E-mail" on-input="emailChanged" required="true" error-message="You should enter a valid email address"></paper-input>
-            <paper-dropdown-menu id="roleMenu" label="Role" required="true" error-message="You should select a role">
-              <paper-listbox id="role" slot="dropdown-content" attr-for-selected="role">
-                <paper-item role="admin">Administrator</paper-item>
-                <paper-item role="master">Master</paper-item>
-                <paper-item role="editor">Editor</paper-item>
-                <paper-item role="guest">Guest</paper-item>
-              </paper-listbox>
-            </paper-dropdown-menu>
+          <bnb-collapse icon="bnb:people" header="Members" opened>
+            <div id="form">
+              <paper-input id="email" label="E-mail" on-input="emailChanged" required="true" disabled="[[!page.can_add_member]]" error-message="You should enter a valid email address"></paper-input>
+              <paper-dropdown-menu id="roleMenu" label="Role" required="true" disabled="[[!page.can_update_member]]" error-message="You should select a role">
+                <paper-listbox id="role" slot="dropdown-content" attr-for-selected="role">
+                  <paper-item role="admin">Administrator</paper-item>
+                  <paper-item role="master">Master</paper-item>
+                  <paper-item role="editor">Editor</paper-item>
+                  <paper-item role="guest">Guest</paper-item>
+                </paper-listbox>
+              </paper-dropdown-menu>
 
-            <iron-pages id="buttons" selected="0">
-              <section>
-                <paper-button id="addBtn" hidden$="[[!page.can_add_member]]" on-tap="addTapped">Add</paper-button>
-              </section>
-              <section>
-                <paper-button id="updateBtn" hidden$="[[!page.can_update_member]]" on-tap="updateTapped">Update</paper-button>
-                <paper-button id="removeBtn" hidden$="[[!page.can_remove_member]]" on-tap="removeTapped">Remove</paper-button>
-              </section>
-            </iron-pages>
-          </div>
+              <iron-pages id="buttons" selected="0">
+                <section>
+                  <paper-button id="addBtn" hidden$="[[!page.can_add_member]]" on-tap="addTapped">Add</paper-button>
+                </section>
+                <section>
+                  <paper-button id="updateBtn" hidden$="[[!page.can_update_member]]" on-tap="updateTapped">Update</paper-button>
+                  <paper-button id="removeBtn" hidden$="[[!page.can_remove_member]]" on-tap="removeTapped">Remove</paper-button>
+                  <paper-button id="transferBtn" hidden$="[[!page.can_update_member]]" on-tap="transferTapped">Transfer ownership</paper-button>
+                </section>
+              </iron-pages>
+            </div>
 
-          <h3>Members</h3>
-          <vaadin-grid id="membersGrid" theme="bnb-grid" items="[[_computeMembers(members)]]" active-item="{{activeMember}}">
-            <vaadin-grid-column>
-              <template class="header">Name</template>
-              <template>
-                <div>[[item.username]]</div>
-              </template>
-            </vaadin-grid-column>
-            <vaadin-grid-column>
-              <template class="header">Email</template>
-              <template>
-                <div>[[item.email]]</div>
-              </template>
-            </vaadin-grid-column>
-            <vaadin-grid-column>
-              <template class="header">Role</template>
-              <template>
-                <div>[[item.role]]</div>
-              </template>
-            </vaadin-grid-column>
-          </vaadin-grid>
+            <vaadin-grid id="membersGrid" theme="bnb-grid" items="[[_computeMembers(members)]]" active-item="{{activeMember}}">
+              <vaadin-grid-column>
+                <template class="header">Name</template>
+                <template>
+                  <div>[[item.username]]</div>
+                </template>
+              </vaadin-grid-column>
+              <vaadin-grid-column>
+                <template class="header">Email</template>
+                <template>
+                  <div>[[item.email]]</div>
+                </template>
+              </vaadin-grid-column>
+              <vaadin-grid-column id="roleColumn">
+                <template class="header">Role</template>
+              </vaadin-grid-column>
+            </vaadin-grid>
+          </bnb-collapse>
         </div>
       </div>
     </app-header-layout>
+    <mwc-dialog id="confirmTransferDlg" heading="Transfering ownership">
+      <p>Are-you sure to you want to loose ownership of this page ?</p>
+      <mwc-button dialogAction="ok" slot="primaryAction">Yes, sure !</mwc-button>
+      <mwc-button dialogAction="cancel" slot="secondaryAction">No</mwc-button>
+    </mwc-dialog>
+
     `;
   }
 
@@ -118,6 +135,9 @@ class BnbMembers extends connect(store)(PolymerElement) {
   }
 
   _stateChanged(state) {
+    if (state.app.credentials) {
+      this.currentUser = state.app.credentials.uid;
+    }
     this.page = state.app.page;
     this.members = state.app.page_members;
     this.uptimeDetails = state.app.uptimeDetails;
@@ -126,6 +146,28 @@ class BnbMembers extends connect(store)(PolymerElement) {
   ready() {
     super.ready();
     this.target = this.$.content;
+    this.$.confirmTransferDlg.addEventListener('closed', (e) => this._onConfirmTransferDialogClosed(e.detail.action));
+
+    this.$.roleColumn.renderer = function(root, column, rowData) {
+      const item = rowData.item;
+      let text = 'unknown';
+      if (item.isOwner) {
+        text = 'Owner';
+      }
+      else if (item.role === 'admin') {
+        text = 'Administrator';
+      }
+      else if (item.role === 'master') {
+        text = 'Master';
+      }
+      else if (item.role === 'editor') {
+        text = 'Editor';
+      }
+      else if (item.role === 'guest') {
+        text = 'Guest';
+      }
+      root.textContent = text;
+    };
   }
 
   closeTapped() {
@@ -142,6 +184,14 @@ class BnbMembers extends connect(store)(PolymerElement) {
       this.$.buttons.selected = 0;
     } else {
       this.$.buttons.selected = 1;
+
+      let display;
+
+      display = (this._isCurrentUserOwner() && member.email !== this.currentUser) ? 'inline' : 'none';
+      this.$.transferBtn.style.display = display;
+
+      display = !member.isOwner ? 'inline' : 'none';
+      this.$.removeBtn.style.display = display;
     }
   }
 
@@ -170,10 +220,31 @@ class BnbMembers extends connect(store)(PolymerElement) {
     }
   }
 
+  transferTapped() {
+    this.$.confirmTransferDlg.show();
+  }
+
   validateInputs() {
     const emailOK = this.$.email.validate();
     const roleOK = this.$.roleMenu.validate();
     return emailOK && roleOK;
+  }
+
+  _onConfirmTransferDialogClosed(action) {
+    if (action === 'ok') {
+      const email = this.$.email.value;
+      const member = find(this.members, o => o.email === email);
+      store.dispatch(updatePageOwner(this.page.id, member.id));
+    }
+  }
+
+  _isCurrentUserOwner() {
+    const owner = this._findOwner();
+    return owner.email === this.currentUser;
+  }
+
+  _findOwner() {
+    return find(this.members, m => m.isOwner);
   }
 
   _membersChanged() {

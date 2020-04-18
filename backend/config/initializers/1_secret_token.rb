@@ -16,4 +16,4 @@
 # Using secret_token for rails3 compatibility. Change to secret_key_base
 # to avoid deprecation warning.
 # Can be safely removed in a rails3 api-only application.
-BnbNexus::Application.config.secret_token = ENV.fetch("SECRET_TOKEN")
+BnbNexus::Application.config.secret_token = ENV.fetch("SECRET_TOKEN") { "_NO_SECRET_" }

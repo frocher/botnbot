@@ -14,7 +14,8 @@
       "ga": true,
       "Chart": true,
       "Color": true,
-      "Polymer": true
+      "Polymer": true,
+      "StripeCheckout": true
     }
 
 }

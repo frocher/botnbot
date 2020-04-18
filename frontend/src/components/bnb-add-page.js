@@ -9,7 +9,8 @@ import '@polymer/paper-radio-button/paper-radio-button';
 import '@polymer/paper-radio-group/paper-radio-group';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
-import { updateRoute, createPage } from '../actions/app';
+import { updateRoute } from '../actions/app';
+import { createPage } from '../actions/pages';
 import './bnb-common-styles';
 import { BnbFormElement } from './bnb-form-element';
 

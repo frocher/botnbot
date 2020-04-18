@@ -5,7 +5,7 @@ import '@polymer/paper-input/paper-input';
 import './bnb-auth-form';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
-import { forgotPassword } from '../actions/app';
+import { forgotPassword } from '../actions/auth';
 import { getFullPath } from '../common';
 
 class BnbForgotPassword extends connect(store)(PolymerElement) {

@@ -9,7 +9,8 @@ import '@polymer/paper-menu-button/paper-menu-button';
 import '@polymer/paper-spinner/paper-spinner';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
-import { updateRoute, signout } from '../actions/app';
+import { updateRoute } from '../actions/app';
+import { signout } from '../actions/auth';
 import './bnb-common-styles';
 import './bnb-divider';
 import './bnb-icons';
@@ -19,6 +20,9 @@ class BnbHome extends connect(store)(PolymerElement) {
   static get template() {
     return html`
     <style include="bnb-common-styles">
+      paper-listbox {
+        line-height: 0;
+      }
 
       paper-item {
         cursor: pointer;
@@ -109,7 +113,7 @@ class BnbHome extends connect(store)(PolymerElement) {
           <paper-menu-button horizontal-align="right">
             <paper-icon-button icon="bnb:more-vert" slot="dropdown-trigger"></paper-icon-button>
             <paper-listbox slot="dropdown-content">
-              <paper-item on-tap="_preferencesTapped">User preferences</paper-item>
+              <paper-item on-tap="_accountTapped">My account</paper-item>
               <bnb-divider></bnb-divider>
               <paper-item on-tap="_signoutTapped">Log out</paper-item>
             </paper-listbox>
@@ -134,6 +138,7 @@ class BnbHome extends connect(store)(PolymerElement) {
 
   static get properties() {
     return {
+      canSubscribe: Boolean,
       pages: {
         type: Array,
         observer: '_pagesChanged',
@@ -147,6 +152,7 @@ class BnbHome extends connect(store)(PolymerElement) {
 
   _stateChanged(state) {
     this.pages = state.app.pages;
+    this.canSubscribe = state.app.stripeKey !== undefined;
   }
 
   _sortPages(first, second) {
@@ -159,8 +165,8 @@ class BnbHome extends connect(store)(PolymerElement) {
     store.dispatch(updateRoute('add-page'));
   }
 
-  _preferencesTapped() {
-    store.dispatch(updateRoute('user-preferences'));
+  _accountTapped() {
+    store.dispatch(updateRoute('account'));
   }
 
   _signoutTapped() {

@@ -26,7 +26,9 @@
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #  image                  :string(255)
+#  subscription           :string(255)
 #
+require "stripe"
 
 class User < ActiveRecord::Base
   include DeviseTokenAuth::Concerns::User
@@ -37,6 +39,7 @@ class User < ActiveRecord::Base
 
   alias_attribute :nickname, :name
 
+  has_many :owned_pages, foreign_key: :owner_id, class_name: 'Page'
   has_many :page_members, dependent: :destroy
   has_many :pages, through: :page_members
   has_many :identities, dependent: :destroy
@@ -59,6 +62,35 @@ class User < ActiveRecord::Base
     ApplicationController.helpers.avatar_icon(email)
   end
 
+  def stripe_subscription
+    plan_id = -1
+
+    unless subscription.nil?
+      Stripe.api_key = Figaro.env.stripe_secret_key
+      subscription_object = Stripe::Subscription.retrieve(subscription)
+      if subscription_object.status != "canceled" && subscription_object.status != "unpaid"
+        plan_id = subscription_object.plan.id
+      end
+    end
+
+    plan = find_plan(plan_id)
+    resu = Hash.new
+    resu["planId"] = plan_id
+    resu["pages"] = plan["pages"]
+    resu["members"] = plan["members"]
+    resu["uptime"] = plan["uptime"]
+    resu["ownedPages"] = owned_pages.count
+
+    resu
+  end
+
+  def update_pages_lock()
+    max_pages = Figaro.env.stripe_public_key.blank? ? 99999 : stripe_subscription["pages"]
+    owned_pages.each_with_index do |page, index|
+      page.locked = index >= max_pages
+      page.save
+    end
+  end
 
   #
   # Class methods
@@ -80,6 +112,11 @@ class User < ActiveRecord::Base
 
 
   private
+
+  def find_plan(id)
+    plans = Rails.application.config.stripe_plans.select{ |o| o["id"] == id }
+    plans.first
+  end
 
   # First user is always super admin
   def record_first_admin

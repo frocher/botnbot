@@ -27,6 +27,13 @@ module BnbNexus
     # Array of probes for pages checks and measures
     config.probes = JSON.parse(ENV.fetch("PROBES") { '[{ "name":"localhost", "host":"localhost", "port":3333, "token":"helloman" }]' })
 
+    # Array of stripe plans
+    stripe_plans = ENV.fetch("STRIPE_PLANS") { [] }
+    if stripe_plans.blank?
+      stripe_plans = '[{ "id":-1, "name":"Free", "amount":0, "uptime":15, "pages":3, "members":3 }]'
+    end
+    config.stripe_plans = JSON.parse(stripe_plans)
+
     # Omniauth middleware
     config.session_store :cookie_store, key: '_interslice_session'
     config.middleware.use ActionDispatch::Cookies # Required for all session management

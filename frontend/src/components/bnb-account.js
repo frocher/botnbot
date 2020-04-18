@@ -7,15 +7,16 @@ import '@polymer/paper-input/paper-input';
 import '@polymer/paper-toggle-button/paper-toggle-button';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
-import { updateRoute, updateUser, saveSubscription } from '../actions/app';
+import { updateRoute } from '../actions/app';
+import { updateUser, savePushSubscription } from '../actions/account';
 import './bnb-collapse';
-import './bnb-common-styles';
 import './bnb-divider';
 import { BnbFormElement } from './bnb-form-element';
 import './bnb-icons';
 import './bnb-install-button';
+import './bnb-subscriptions';
 
-class BnbUserPreferences extends connect(store)(BnbFormElement(PolymerElement)) {
+class BnbAccount extends connect(store)(BnbFormElement(PolymerElement)) {
   static get template() {
     return html`
     <style include="bnb-common-styles">
@@ -42,7 +43,7 @@ class BnbUserPreferences extends connect(store)(BnbFormElement(PolymerElement)) 
       <app-header slot="header" fixed condenses shadow>
         <app-toolbar>
           <paper-icon-button icon="bnb:close" on-tap="closeTapped"></paper-icon-button>
-          <span class="title">User preferences</span>
+          <span class="title">My account</span>
           <span class="flex"></span>
           <paper-button on-tap="saveTapped">Save</paper-button>
         </app-toolbar>
@@ -52,6 +53,10 @@ class BnbUserPreferences extends connect(store)(BnbFormElement(PolymerElement)) 
           <bnb-collapse icon="bnb:info" header="General" opened>
             <paper-input id="name" label="Name" value="[[user.name]]" autofocus="true"></paper-input>
             <paper-toggle-button id="pushButton" disabled="[[!isNotificationsEnabled()]]">Send me notifications on this device</paper-toggle-button>
+          </bnb-collapse>
+          <bnb-divider></bnb-divider>
+          <bnb-collapse icon="bnb:credit-card" header="Subscription" opened hidden$="[[!canSubscribe]]">
+            <bnb-subscriptions></bnb-subscriptions>
           </bnb-collapse>
           <bnb-divider></bnb-divider>
           <bnb-install-button></bnb-install-button>
@@ -73,6 +78,7 @@ class BnbUserPreferences extends connect(store)(BnbFormElement(PolymerElement)) 
     return {
       user: Object,
       target: Object,
+      canSubscribe: Boolean,
       pushKey: {
         type: String,
         observer: 'pushKeyChanged',
@@ -88,6 +94,7 @@ class BnbUserPreferences extends connect(store)(BnbFormElement(PolymerElement)) 
     this.user = state.app.user;
     this.pushKey = state.app.pushKey;
     this.errors = state.app.errors;
+    this.canSubscribe = state.app.stripeKey;
   }
 
   ready() {
@@ -227,7 +234,7 @@ class BnbUserPreferences extends connect(store)(BnbFormElement(PolymerElement)) 
   }
 
   sendSubscriptionToBackEnd(subscription) {
-    store.dispatch(saveSubscription(subscription));
+    store.dispatch(savePushSubscription(subscription));
   }
 
   urlB64ToUint8Array(base64String) {
@@ -242,4 +249,4 @@ class BnbUserPreferences extends connect(store)(BnbFormElement(PolymerElement)) 
   }
 }
 
-window.customElements.define('bnb-user-preferences', BnbUserPreferences);
+window.customElements.define('bnb-account', BnbAccount);

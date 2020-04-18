@@ -69,6 +69,8 @@
     <script src="<%= htmlWebpackPlugin.options.paths.chartjs %>" defer></script>
     <script src="<%= htmlWebpackPlugin.options.paths.chartjsannotation %>" defer></script>
     <script type="module" src="<%= htmlWebpackPlugin.files.chunks['main'].entry %>"></script>
+    <script src="https://js.stripe.com/v3/" defer></script>
+    <script src="https://checkout.stripe.com/checkout.js" defer></script>
     <noscript>Please enable JavaScript to view this website.</noscript>
   </body>
 </html>

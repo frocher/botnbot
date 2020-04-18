@@ -14,6 +14,16 @@ class ScreenshotJob
   end
 
   def perform(page, probe)
+    if page.locked
+      Rails.logger.info "Screenshot job not done because #{page.url} is locked"
+      return
+    end
+
+    if page.uptime_status == 0
+      Rails.logger.info "Screenshot job not done because #{page.url} is down"
+      return
+    end
+
     begin
       res = launch_probe(probe, page)
       if res.is_a?(Net::HTTPSuccess)

@@ -6,10 +6,12 @@ import '@polymer/app-route/app-route';
 import '@polymer/iron-pages/iron-pages';
 import '@polymer/paper-toast/paper-toast';
 import { store } from '../store';
-import {
-  updateRoute, loadEnvironment, loadPages, loadPage, loadPageMembers, loadPageStats, loadBudgets,
-  loadLighthouseDetails, loadAssetsDetails, loadUptimeDetails, loadUser, showInstallPrompt,
-} from '../actions/app';
+import { updateRoute, loadEnvironment, loadSubscriptionPlans, showInstallPrompt } from '../actions/app';
+import { loadBudgets } from '../actions/budgets';
+import { loadPageMembers } from '../actions/members';
+import { loadPages, loadPage } from '../actions/pages';
+import { loadPageStats, loadLighthouseDetails, loadAssetsDetails, loadUptimeDetails } from '../actions/stats';
+import { loadStripeSubscription, loadUser } from '../actions/account';
 import { isLogged, storeCredentials } from '../common';
 import './bnb-analytics';
 import './bnb-common-styles';
@@ -32,6 +34,12 @@ class BnbApp extends connect(store)(PolymerElement) {
         --disabled-text-color: #bdbdbd;
         --divider-color: #B6B6B6;
         --error-color: #db4437;
+
+        --mdc-theme-primary: var(--google-blue-300);
+        --mdc-theme-on-primary: var(--paper-grey-900);
+        --mdc-theme-surface: var(--paper-grey-900);
+        --mdc-dialog-heading-ink-color: var(--text-primary-color);
+        --mdc-dialog-content-ink-color: var(--text-primary-color);
 
         --paper-card-background-color: var(--paper-grey-800);
         --paper-card-header-color: var(--text-primary-color);
@@ -90,7 +98,7 @@ class BnbApp extends connect(store)(PolymerElement) {
       <bnb-signin              name="signin"              class="view"></bnb-signin>
       <bnb-signup              name="signup"              class="view"></bnb-signup>
       <bnb-uptime-details      name="uptime-details"      class="view"></bnb-uptime-details>
-      <bnb-user-preferences    name="user-preferences"    class="view"></bnb-user-preferences>
+      <bnb-account             name="account"             class="view"></bnb-account>
       <bnb-404-warning         name="404"                 class="view"></bnb-404-warning>
     </iron-pages>
 
@@ -159,6 +167,7 @@ class BnbApp extends connect(store)(PolymerElement) {
     super.ready();
     this.removeAttribute('unresolved');
     store.dispatch(loadEnvironment());
+    store.dispatch(loadSubscriptionPlans());
     this.scrollPositions = new Map();
 
     window.addEventListener('beforeinstallprompt', (e) => {
@@ -247,8 +256,8 @@ class BnbApp extends connect(store)(PolymerElement) {
           case 'uptime-details':
             import('./bnb-uptime-details.js').then(cb);
             break;
-          case 'user-preferences':
-            import('./bnb-user-preferences.js').then(cb);
+          case 'account':
+            import('./bnb-account.js').then(cb);
             break;
           default:
             this._viewLoaded(Boolean(oldView));
@@ -274,9 +283,12 @@ class BnbApp extends connect(store)(PolymerElement) {
   }
 
   _loadCurrentViewData() {
+    if (store && !store.getState().app.stripeSubscription) {
+      store.dispatch(loadStripeSubscription());
+    }
     if (this.view === 'home') {
       store.dispatch(loadPages());
-    } else if (this.view === 'user-preferences') {
+    } else if (this.view === 'account') {
       store.dispatch(loadUser());
     } else if (this.view === 'page') {
       const pageId = Number(this.subroute.path.substring(1));
