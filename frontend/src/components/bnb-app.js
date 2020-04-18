@@ -1,10 +1,10 @@
+import '@material/mwc-snackbar';
 import { PolymerElement, html } from '@polymer/polymer/polymer-element';
 import { afterNextRender } from '@polymer/polymer/lib/utils/render-status';
 import { connect } from 'pwa-helpers';
 import '@polymer/app-route/app-location';
 import '@polymer/app-route/app-route';
 import '@polymer/iron-pages/iron-pages';
-import '@polymer/paper-toast/paper-toast';
 import { store } from '../store';
 import { updateRoute, loadEnvironment, loadSubscriptionPlans, showInstallPrompt } from '../actions/app';
 import { loadBudgets } from '../actions/budgets';
@@ -102,7 +102,7 @@ class BnbApp extends connect(store)(PolymerElement) {
       <bnb-404-warning         name="404"                 class="view"></bnb-404-warning>
     </iron-pages>
 
-    <paper-toast id="message-toast" duration="4000"></paper-toast>
+    <mwc-snackbar id="messageSnack"></mwc-snackbar>
     `;
   }
 
@@ -345,8 +345,9 @@ class BnbApp extends connect(store)(PolymerElement) {
 
   _messageChanged(newVal) {
     if (newVal && newVal.text) {
-      const toast = this.$['message-toast'];
-      toast.show(newVal.text);
+      this.$.messageSnack.labelText = newVal.text;
+      this.$.messageSnack.leading = window.innerWidth > 800;
+      this.$.messageSnack.open();
     }
   }
 
