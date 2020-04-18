@@ -12,9 +12,6 @@ class BnbPageLockedCard extends connect(store)(PolymerElement) {
     return html`
     <style>
 
-    :host {
-    }
-
     .card-content {
       display: flex;
       align-items: center;
@@ -51,14 +48,24 @@ class BnbPageLockedCard extends connect(store)(PolymerElement) {
     <paper-card>
       <div class="card-content">
         <iron-icon icon="bnb:warning"></iron-icon>
-        <div>Because of your current plan, this page is no longer monitored.</div>
-        <paper-button on-tap="_upgradeTapped">Upgrade your plan</paper-button>
+        <div>
+          <div hidden$="[[!isOwner]]">
+            <span>Because of your current plan, this page is no longer monitored.</span>
+            <paper-button on-tap="_upgradeTapped">Upgrade your plan</paper-button>
+          </div>
+          <span hidden$="[[isOwner]]">
+            Because of the owner current plan, this page is no longer monitored.
+          </span>
+        </div>
       </div>
     </paper-card>
     `;
   }
 
-  _stateChanged() {
+  _stateChanged(state) {
+    if (state.app.credentials && state.app.page) {
+      this.isOwner = state.app.credentials.uid === state.app.page.owner.uid;
+    }
   }
 
   _upgradeTapped() {

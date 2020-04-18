@@ -292,11 +292,17 @@ const app = (state = initial, action) => {
         message: { text: 'Member has been removed', counter: state.message.counter + 1 },
       });
 
+    case 'PAGE_OWNER_UPDATE_SUCCESS':
+      return Object.assign({}, state, {
+        message: { text: 'Page ownership has been transfered', counter: state.message.counter + 1 },
+      });
+
+
     case 'BUDGET_CREATE_ERROR':
     case 'BUDGET_DELETE_ERROR':
     case 'PAGE_MEMBER_CREATE_ERROR':
     case 'PAGE_MEMBER_UPDATE_ERROR':
-    case 'PAGE_MEMBER_DELETE_ERROR':
+    case 'PAGE_OWNER_UPDATE_ERROR':
     case 'PUSH_SUBSCRIPTION_ERROR':
     case 'PAGE_CREATE_ERROR':
     case 'PAGE_UPDATE_ERROR':

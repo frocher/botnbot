@@ -22,7 +22,10 @@ class Ability
       member = page.page_members.find_by_user_id(user.id)
 
       # Rules based on role in page
-      if user.admin? || members.admins.include?(member)
+      if user.admin? || user.id == page.owner.id
+        rules << page_owner_rules
+
+      elsif members.admins.include?(member)
         rules << page_admin_rules
 
       elsif members.masters.include?(member)
@@ -62,6 +65,7 @@ class Ability
         :read_page,
         :read_budget,
         :read_page_member,
+        :read_page_owner,
         :leave_page
       ]
     end
@@ -86,6 +90,12 @@ class Ability
       page_master_rules + [
         :create_page_member_admin,
         :delete_page
+      ]
+    end
+
+    def page_owner_rules
+      page_admin_rules + [
+        :update_page_owner
       ]
     end
   end

@@ -5,10 +5,11 @@ Rails.application.routes.draw do
 
   resources :pages do
     scope module: :pages do
+      resource :owner, only: [:show, :update]
+      resources :members, except: :show
       resources :assets, only: [:index, :show]
       resources :lighthouse, only: [:index, :show]
       resources :budgets, only: [:index, :create, :destroy]
-      resources :members, except: :show
       resources :stats, only: [:index]
       resources :uptime, only: [:index, :show]
     end

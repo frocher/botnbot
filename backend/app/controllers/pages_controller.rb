@@ -44,7 +44,7 @@ class PagesController < ApplicationController
     Page.transaction do
       begin
         @page = Page.new
-
+        @page.owner = current_user
         @page.name = params[:name]
         @page.url = params[:url]
         @page.device = params[:device]
@@ -96,6 +96,7 @@ class PagesController < ApplicationController
   def destroy
     return not_found! unless can?(current_user, :delete_page, @page)
     @page.destroy
+    current_user.update_pages_lock
     render json: @page
   end
 

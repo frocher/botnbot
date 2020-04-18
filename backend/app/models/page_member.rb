@@ -29,8 +29,13 @@ class PageMember < ActiveRecord::Base
     user.name
   end
 
+  def is_owner?
+    user.id == page.owner.id
+  end
+
   def as_json(options={})
     h = super({only: [:id, :user_id, :role, :created_at, :updated_at]}.merge(options || {}))
+    h[:isOwner] = is_owner?
     h[:email] = user.email
     h[:username] = user.name
     h

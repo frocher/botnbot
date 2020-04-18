@@ -1,5 +1,6 @@
 class Pages::MembersController < ApplicationController
   before_action :authenticate_user!
+
   def index
     @page = Page.find(params[:page_id])
     return not_found! unless can?(current_user, :read_page_member, @page)
@@ -56,9 +57,7 @@ class Pages::MembersController < ApplicationController
     return render_api_error!("You are not allowed to give the #{params[:role]} role", 422) if is_greater_role(role, user_member.role)
 
     # There must be at least one admin member remaining
-    logger.error "Ah ah 1"
     if @member.role == "admin"
-      logger.error "Ah ah 2"
       return render_api_error!("There must be at least one admin remaining", 422) unless has_a_remaining_admin(@page, @member)
     end
 
@@ -87,6 +86,9 @@ class Pages::MembersController < ApplicationController
       return not_found! unless can?(current_user, :delete_page_member, @page)
     end
 
+    # The owner of the page cannot be removed from the team, ownership must me be transfered first
+    return render_api_error!("The owner of the page cannot be removed from the team, ownership must me be transfered first", 422) if @page.owner.id == @member.user.id
+
     # A user can always remove himself as a page member except if he is the last
     # admin member
     return render_api_error!("There must be at least one admin remaining", 422) unless has_a_remaining_admin(@page, @member)
@@ -112,9 +114,7 @@ class Pages::MembersController < ApplicationController
 
   def has_a_remaining_admin(page, member)
     found_admin = false
-    logger.error "Entrez ici"
     page.page_members.each do |current|
-      logger.error current.to_s
       if current.id != member.id && current.role == "admin"
         found_admin = true
         break

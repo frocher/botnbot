@@ -112,3 +112,34 @@ export const deletePageMember = (pageId, memberId) => (dispatch) => {
     });
   });
 };
+
+// ***** Page owner management
+
+export const updatePageOwnerSuccess = owner => ({
+  type: 'PAGE_OWNER_UPDATE_SUCCESS',
+  owner,
+});
+
+export const updatePageOwnerError = message => ({
+  type: 'PAGE_OWNER_UPDATE_ERROR',
+  message,
+});
+
+export const updatePageOwner = (pageId, memberId) => (dispatch) => {
+  dispatch((dispatch) => {
+    getResource({
+      url: getRequestUrl(`/pages/${pageId}/owner`, {member_id: memberId}),
+      method: 'PUT',
+      onLoad(e) {
+        const response = JSON.parse(e.target.responseText);
+        if (e.target.status === 200) {
+          dispatch(loadPageMembers(pageId));
+          dispatch(updatePageOwnerSuccess(response));
+        } else {
+          dispatch(updatePageOwnerError(response.message));
+        }
+      },
+    });
+  });
+
+};

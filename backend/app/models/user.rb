@@ -39,6 +39,7 @@ class User < ActiveRecord::Base
 
   alias_attribute :nickname, :name
 
+  has_many :owned_pages, foreign_key: :owner_id, class_name: 'Page'
   has_many :page_members, dependent: :destroy
   has_many :pages, through: :page_members
   has_many :identities, dependent: :destroy
@@ -59,10 +60,6 @@ class User < ActiveRecord::Base
 
   def avatar_url
     ApplicationController.helpers.avatar_icon(email)
-  end
-
-  def owned_pages
-    Page.joins(:page_members).where(page_members: {user: self, role: 3}).order(:created_at)
   end
 
   def stripe_subscription
