@@ -26,7 +26,7 @@ class BnbApp extends connect(store)(PolymerElement) {
         --dark-primary-color: #000000;
         --default-primary-color:var(--paper-grey-900);
         --light-primary-color: #303030;
-        --text-primary-color: #ffffff; /*text/icons*/
+        --text-primary-color: #ffffff;
         --accent-color: #FF5722;
         --primary-background-color: #303030;
         --primary-text-color: #ffffff;
@@ -35,11 +35,15 @@ class BnbApp extends connect(store)(PolymerElement) {
         --divider-color: #B6B6B6;
         --error-color: #db4437;
 
-        --mdc-theme-primary: var(--google-blue-300);
-        --mdc-theme-on-primary: var(--paper-grey-900);
-        --mdc-theme-surface: var(--paper-grey-900);
         --mdc-dialog-heading-ink-color: var(--text-primary-color);
         --mdc-dialog-content-ink-color: var(--text-primary-color);
+        --mdc-radio-unchecked-color: var(--text-primary-color);
+        --mdc-theme-on-primary: var(--paper-grey-900);
+        --mdc-theme-primary: var(--google-blue-300);
+        --mdc-theme-secondary: var(--google-blue-300);
+        --mdc-theme-text-primary-on-background: #ffffff;
+        --mdc-theme-surface: var(--paper-grey-900);
+
 
         --paper-card-background-color: var(--paper-grey-800);
         --paper-card-header-color: var(--text-primary-color);
@@ -47,7 +51,6 @@ class BnbApp extends connect(store)(PolymerElement) {
         --paper-divider-color: #B6B6B6;
         --paper-input-container-color: var(--secondary-text-color);
         --paper-input-container-focus-color: var(--google-blue-300);
-        --paper-radio-button-checked-color: var(--google-blue-300);
         --paper-tabs-selection-bar-color: var(--google-blue-300);
         --paper-toggle-button-checked-button-color: var(--google-blue-300);
         --paper-toggle-button-checked-ink-color: var(--google-blue-500);
