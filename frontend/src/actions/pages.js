@@ -3,7 +3,6 @@ import { getRequestUrl, getResource } from '../common';
 
 // ***** Pages management
 
-export const updatePeriod = createAction('PERIOD_UPDATE');
 export const fetchPagesSuccess = createAction('PAGES_FETCH_SUCCESS');
 export const fetchPagesError = createAction('PAGES_FETCH_ERROR');
 

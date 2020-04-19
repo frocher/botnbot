@@ -6,6 +6,7 @@ import { getRequestUrl, getResource } from '../common';
 export const fetchEnvironmentSuccess = createAction('ENVIRONMENT_FETCH_SUCCESS');
 export const fetchEnvironmentError = createAction('ENVIRONMENT_FETCH_ERROR');
 export const showInstallPrompt = createAction('SHOW_INSTALL_PROMPT');
+export const updatePeriod = createAction('PERIOD_UPDATE');
 export const updateRoute = createAction('UPDATE_ROUTE');
 export const updateMessage = createAction('UPDATE_MESSAGE');
 

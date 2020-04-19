@@ -13,7 +13,7 @@ import {
 } from 'date-fns';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
-import { updatePeriod } from '../actions/pages';
+import { updatePeriod } from '../actions/app';
 import './bnb-common-styles';
 import './bnb-icons';
 
