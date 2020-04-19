@@ -1,27 +1,30 @@
 import { LitElement, css, html } from 'lit-element';
-import '@polymer/paper-button/paper-button';
+import '@material/mwc-button/mwc-button';
 import { getRequestUrl } from '../common';
 import './bnb-divider';
 
 class BnbOAuth extends LitElement {
   static get styles() {
     return css`
-      paper-button {
-        text-transform:none;
+
+      mwc-button {
+        --mdc-typography-button-font-size: 13px;
+        --mdc-typography-button-font-weight: bold;
+        --mdc-typography-button-letter-spacing: 0;
+        --mdc-typography-button-text-transform: none;
       }
+
 
       .icon {
         width: 24px;
         height: 24px;
+        margin-top: 4px;
         margin-right: 6px;
       }
 
       .buttons {
         display: flex;
-      }
-
-      .buttons paper-button {
-        flex-grow: 1;
+        justify-content: space-around;
       }
 
       .title {
@@ -37,26 +40,27 @@ class BnbOAuth extends LitElement {
         text-align: center;
       }
 
-      .facebook {
-        background-color: #3C5A99;
-        font-weight: bold;
+      #facebook {
+        background-color: transparent;
+        --mdc-theme-primary: #3C5A99;
+        --mdc-theme-on-primary: #fff;
       }
 
-      .github {
-        background-color: #333;
-        color: white;
-        font-weight: bold;
+      #github {
+        background-color: transparent;
+        --mdc-theme-primary: #333;
+        --mdc-theme-on-primary: #fff;
       }
 
-      .google {
-        background-color: #fff;
-        color: var(--paper-grey-600);
-        font-weight: bold;
+      #google {
+        background-color: transparent;
+        --mdc-theme-primary: #fff;
+        --mdc-theme-on-primary: var(--paper-grey-600);
       }
 
       @media (max-width: 500px) {
-        paper-button {
-          font-size: 10px;
+        mwc-button {
+          --mdc-typography-button-font-size: 10px;
         }
 
         .icon {
@@ -75,18 +79,18 @@ class BnbOAuth extends LitElement {
         <bnb-divider></bnb-divider>
       </div>
       <div class="buttons">
-        <paper-button id="facebook" class="facebook" title="Sign in with Facebook">
-          ${this.facebookIcon}
+        <mwc-button unelevated id="facebook">
+          <span name="icon">${this.facebookIcon}</span>
           <span>Facebook</span>
-        </paper-button>
-        <paper-button id="github" class="github" title="Sign in with GitHub">
-          ${this.githubIcon}
+        </mwc-button>
+        <mwc-button unelevated id="github">
+          <span name="icon">${this.githubIcon}</span>
           <span>GitHub</span>
-        </paper-button>
-        <paper-button id="google" class="google" title="Sign in with Google">
-          ${this.googleIcon}
+        </mwc-button>
+        <mwc-button unelevated id="google">
+          <span name="icon">${this.googleIcon}</span>
           <span>Google</span>
-        </paper-button>
+        </mwc-button>
       </div>
     </div>
     `;
