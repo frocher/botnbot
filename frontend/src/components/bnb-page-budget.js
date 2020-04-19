@@ -31,9 +31,9 @@ class BnbPageBudget extends connect(store)(PolymerElement) {
   }
 
   _stateChanged(state) {
-    this.page = state.app.page;
-    this.stats = state.app.page_stats;
-    this._budgets = state.app.budgets;
+    this.page = state.pages.current;
+    this.stats = state.stats.all;
+    this._budgets = state.budgets.all;
   }
 
   ready() {

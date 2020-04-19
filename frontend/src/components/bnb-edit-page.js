@@ -117,7 +117,7 @@ class BnbEditPage extends connect(store)(BnbFormElement(PolymerElement)) {
   }
 
   _stateChanged(state) {
-    this.page = state.app.page;
+    this.page = state.pages.current;
     this.errors = state.app.errors;
   }
 

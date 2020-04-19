@@ -138,7 +138,6 @@ class BnbHome extends connect(store)(PolymerElement) {
 
   static get properties() {
     return {
-      canSubscribe: Boolean,
       pages: {
         type: Array,
         observer: '_pagesChanged',
@@ -151,8 +150,7 @@ class BnbHome extends connect(store)(PolymerElement) {
   }
 
   _stateChanged(state) {
-    this.pages = state.app.pages;
-    this.canSubscribe = state.app.stripeKey !== undefined;
+    this.pages = state.pages.all;
   }
 
   _sortPages(first, second) {

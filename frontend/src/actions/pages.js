@@ -1,138 +1,95 @@
+import { createAction } from '@reduxjs/toolkit';
 import { getRequestUrl, getResource } from '../common';
 
 // ***** Pages management
 
-export const fetchPagesSuccess = pages => ({
-  type: 'PAGES_FETCH_SUCCESS',
-  pages,
-});
+export const updatePeriod = createAction('PERIOD_UPDATE');
+export const fetchPagesSuccess = createAction('PAGES_FETCH_SUCCESS');
+export const fetchPagesError = createAction('PAGES_FETCH_ERROR');
 
-export const fetchPagesError = errors => ({
-  type: 'PAGES_FETCH_ERROR',
-  errors,
-});
-
-export const loadPages = () => (dispatch) => {
-  dispatch((dispatch) => {
-    getResource({
-      url: getRequestUrl('/pages', { per_page: 9999 }),
-      method: 'GET',
-      onLoad(e) {
-        const response = JSON.parse(e.target.responseText);
-        if (e.target.status === 200) {
-          dispatch(fetchPagesSuccess(response));
-        } else {
-          dispatch(fetchPagesError(response.errors));
-        }
-      },
-    });
+export const loadPages = () => async dispatch => {
+  getResource({
+    url: getRequestUrl('/pages', { per_page: 9999 }),
+    method: 'GET',
+    onLoad(e) {
+      const response = JSON.parse(e.target.responseText);
+      if (e.target.status === 200) {
+        dispatch(fetchPagesSuccess(response));
+      } else {
+        dispatch(fetchPagesError(response));
+      }
+    },
   });
 };
 
-export const fetchPageSuccess = page => ({
-  type: 'PAGE_FETCH_SUCCESS',
-  page,
-});
+export const fetchPageSuccess = createAction('PAGE_FETCH_SUCCESS');
+export const fetchPageError = createAction('PAGE_FETCH_ERROR');
 
-export const fetchPageError = errors => ({
-  type: 'PAGE_FETCH_ERROR',
-  errors,
-});
-
-export const loadPage = id => (dispatch) => {
-  dispatch((dispatch) => {
-    getResource({
-      url: getRequestUrl(`/pages/${id}`, {}),
-      method: 'GET',
-      onLoad(e) {
-        const response = JSON.parse(e.target.responseText);
-        if (e.target.status === 200) {
-          dispatch(fetchPageSuccess(response));
-        } else {
-          dispatch(fetchPageError(response.errors));
-        }
-      },
-    });
+export const loadPage = id => async dispatch => {
+  getResource({
+    url: getRequestUrl(`/pages/${id}`, {}),
+    method: 'GET',
+    onLoad(e) {
+      const response = JSON.parse(e.target.responseText);
+      if (e.target.status === 200) {
+        dispatch(fetchPageSuccess(response));
+      } else {
+        dispatch(fetchPageError(response));
+      }
+    },
   });
 };
 
-export const createPageSuccess = () => ({
-  type: 'PAGE_CREATE_SUCCESS',
-});
+export const createPageSuccess = createAction('PAGE_CREATE_SUCCESS');
+export const createPageError = createAction('PAGE_CREATE_ERROR');
 
-export const createPageError = (message, errors) => ({
-  type: 'PAGE_CREATE_ERROR',
-  message,
-  errors,
-});
-
-export const createPage = (name, url, device) => (dispatch) => {
-  dispatch((dispatch) => {
-    getResource({
-      url: getRequestUrl('/pages', { name, url, device }),
-      method: 'POST',
-      onLoad(e) {
-        const response = JSON.parse(e.target.responseText);
-        if (e.target.status === 200) {
-          dispatch(createPageSuccess());
-        } else {
-          dispatch(createPageError(response.message, response.errors));
-        }
-      },
-    });
+export const createPage = (name, url, device) => async dispatch => {
+  getResource({
+    url: getRequestUrl('/pages', { name, url, device }),
+    method: 'POST',
+    onLoad(e) {
+      const response = JSON.parse(e.target.responseText);
+      if (e.target.status === 200) {
+        dispatch(createPageSuccess());
+      } else {
+        dispatch(createPageError(response));
+      }
+    },
   });
 };
 
-export const updatePageSuccess = page => ({
-  type: 'PAGE_UPDATE_SUCCESS',
-  page,
-});
+export const updatePageSuccess = createAction('PAGE_UPDATE_SUCCESS');
+export const updatePageError = createAction('PAGE_UPDATE_ERROR');
 
-export const updatePageError = errors => ({
-  type: 'PAGE_UPDATE_ERROR',
-  errors,
-});
-
-export const updatePage = (id, page) => (dispatch) => {
-  dispatch((dispatch) => {
-    getResource({
-      url: getRequestUrl(`/pages/${id}`, page),
-      method: 'PUT',
-      onLoad(e) {
-        const response = JSON.parse(e.target.responseText);
-        if (e.target.status === 200) {
-          dispatch(updatePageSuccess(response));
-        } else {
-          dispatch(updatePageError(response.errors));
-        }
-      },
-    });
+export const updatePage = (id, page) => async dispatch => {
+  getResource({
+    url: getRequestUrl(`/pages/${id}`, page),
+    method: 'PUT',
+    onLoad(e) {
+      const response = JSON.parse(e.target.responseText);
+      if (e.target.status === 200) {
+        dispatch(updatePageSuccess(response));
+      } else {
+        dispatch(updatePageError(response));
+      }
+    },
   });
 };
 
-export const deletePageSuccess = page => ({
-  type: 'PAGE_DELETE_SUCCESS',
-  page,
-});
+export const deletePageSuccess = createAction('PAGE_DELETE_SUCCESS');
+export const deletePageError = createAction('PAGE_DELETE_ERROR');
 
-export const deletePageError = errors => ({
-  type: 'PAGE_DELETE_ERROR',
-  errors,
-});
-
-export const deletePage = id => (dispatch) => {
-  dispatch((dispatch) => {
-    getResource({
-      url: getRequestUrl(`/pages/${id}`, {}),
-      method: 'DELETE',
-      onLoad(e) {
-        const response = JSON.parse(e.target.responseText);
-        if (e.target.status === 200) {
-          dispatch(deletePageSuccess(response));
-        } else {
-          dispatch(deletePageError(response.errors));
-        }
-      },
-    });
+export const deletePage = id => async dispatch => {
+  getResource({
+    url: getRequestUrl(`/pages/${id}`, {}),
+    method: 'DELETE',
+    onLoad(e) {
+      const response = JSON.parse(e.target.responseText);
+      if (e.target.status === 200) {
+        dispatch(deletePageSuccess(response));
+      } else {
+        dispatch(deletePageError(response));
+      }
+    },
   });
 };

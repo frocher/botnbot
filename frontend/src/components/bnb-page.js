@@ -103,7 +103,7 @@ class BnbPage extends connect(store)(PolymerElement) {
   }
 
   _stateChanged(state) {
-    this.page = state.app.page;
+    this.page = state.pages.current;
   }
 
   backTapped() {

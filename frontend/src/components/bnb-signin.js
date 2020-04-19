@@ -53,7 +53,7 @@ class BnbSignIn extends connect(store)(PolymerElement) {
   }
 
   _stateChanged(state) {
-    this.credentials = state.app.credentials;
+    this.credentials = state.auth.credentials;
   }
 
   ready() {

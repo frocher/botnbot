@@ -51,6 +51,7 @@ class BnbApp extends connect(store)(PolymerElement) {
         --paper-divider-color: #B6B6B6;
         --paper-input-container-color: var(--secondary-text-color);
         --paper-input-container-focus-color: var(--google-blue-300);
+        --paper-radio-button-checked-color: var(--google-blue-300);
         --paper-tabs-selection-bar-color: var(--google-blue-300);
         --paper-toggle-button-checked-button-color: var(--google-blue-300);
         --paper-toggle-button-checked-ink-color: var(--google-blue-500);
@@ -161,8 +162,8 @@ class BnbApp extends connect(store)(PolymerElement) {
     this.routePath = state.app.route;
     this.message = state.app.message;
     this.analyticsKey = state.app.analyticsKey;
-    this.page = state.app.page;
-    this.page_stats = state.app.page_stats;
+    this.page = state.pages.current;
+    this.page_stats = state.stats.all;
     this.period = state.app.period;
   }
 
@@ -286,7 +287,7 @@ class BnbApp extends connect(store)(PolymerElement) {
   }
 
   _loadCurrentViewData() {
-    if (store && !store.getState().app.stripeSubscription) {
+    if (store && !store.getState().app.stripeSubscription && isLogged()) {
       store.dispatch(loadStripeSubscription());
     }
     if (this.view === 'home') {

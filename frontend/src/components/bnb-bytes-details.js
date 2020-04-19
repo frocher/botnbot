@@ -102,8 +102,8 @@ class BnbBytesDetails extends connect(store)(PolymerElement) {
   }
 
   _stateChanged(state) {
-    this.page = state.app.page;
-    this.assetsDetails = state.app.assets_details;
+    this.page = state.pages.current;
+    this.assetsDetails = state.stats.assets_details;
   }
 
   _backTapped() {

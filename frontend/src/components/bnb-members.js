@@ -138,9 +138,8 @@ class BnbMembers extends connect(store)(PolymerElement) {
     if (state.app.credentials) {
       this.currentUser = state.app.credentials.uid;
     }
-    this.page = state.app.page;
-    this.members = state.app.page_members;
-    this.uptimeDetails = state.app.uptimeDetails;
+    this.page = state.pages.current;
+    this.members = state.members.all;
   }
 
   ready() {
