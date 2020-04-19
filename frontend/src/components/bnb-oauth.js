@@ -6,7 +6,6 @@ import './bnb-divider';
 class BnbOAuth extends LitElement {
   static get styles() {
     return css`
-
       mwc-button {
         --mdc-typography-button-font-size: 13px;
         --mdc-typography-button-font-weight: bold;
