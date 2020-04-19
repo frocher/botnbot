@@ -63,8 +63,8 @@ class BnbPageLockedCard extends connect(store)(PolymerElement) {
   }
 
   _stateChanged(state) {
-    if (state.app.credentials && state.pages.current) {
-      this.isOwner = state.app.credentials.uid === state.pages.current.owner.uid;
+    if (state.auth.credentials && state.pages.current) {
+      this.isOwner = state.auth.credentials.uid === state.pages.current.owner.uid;
     }
   }
 
