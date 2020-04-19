@@ -12,24 +12,12 @@ const initial = {
 const pagesReducer = (state = initial, action) => {
   switch (action.type) {
     case 'PAGES_FETCH_SUCCESS':
-      return Object.assign({}, state, {
-        all: action.payload,
-      });
+      return {...state, all: action.payload };
 
     case 'PAGE_FETCH_SUCCESS':
-      return Object.assign({}, state, {
-        current: action.payload,
-      });
-
     case 'PAGE_UPDATE_SUCCESS':
-      return Object.assign({}, state, {
-        current: action.payload,
-      });
-
     case 'PAGE_DELETE_SUCCESS':
-      return Object.assign({}, state, {
-        current: action.payload,
-      });
+      return {...state, current: action.payload };
 
     default:
       return state;
