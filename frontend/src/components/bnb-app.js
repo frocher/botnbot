@@ -35,14 +35,24 @@ class BnbApp extends connect(store)(PolymerElement) {
         --divider-color: #B6B6B6;
         --error-color: #db4437;
 
-        --mdc-dialog-heading-ink-color: var(--text-primary-color);
-        --mdc-dialog-content-ink-color: var(--text-primary-color);
-        --mdc-radio-unchecked-color: var(--text-primary-color);
-        --mdc-theme-on-primary: var(--paper-grey-900);
         --mdc-theme-primary: var(--google-blue-300);
         --mdc-theme-secondary: var(--google-blue-300);
+        --mdc-theme-surface: #000;
+        --mdc-theme-background: #000;
+        --mdc-theme-on-primary: var(--paper-grey-900);
+        --mdc-theme-on-secondary: var(--paper-grey-900);
         --mdc-theme-text-primary-on-background: #ffffff;
-        --mdc-theme-surface: var(--paper-grey-900);
+        --mdc-theme-text-secondary-on-background: #ffffff;
+        --mdc-theme-text-disabled-on-background: var(--paper-grey-900);
+
+
+        --mdc-dialog-heading-ink-color: var(--mdc-theme-text-primary-on-background);
+        --mdc-dialog-content-ink-color: var(--mdc-theme-text-primary-on-background);
+        --mdc-radio-unchecked-color: var(--mdc-theme-text-primary-on-background);
+        --mdc-text-field-outlined-hover-border-color: var(--mdc-theme-primary);
+        --mdc-text-field-label-ink-color: var(--mdc-theme-text-primary-on-background);
+        --mdc-text-field-ink-color: var(--mdc-theme-text-primary-on-background);
+        --mdc-text-field-outlined-idle-border-color: var(--mdc-theme-text-primary-on-background);
 
 
         --paper-card-background-color: var(--paper-grey-800);

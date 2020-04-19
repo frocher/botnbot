@@ -23,6 +23,7 @@
     "@material/mwc-icon": "^0.14.1",
     "@material/mwc-radio": "^0.14.1",
     "@material/mwc-snackbar": "^0.14.1",
+    "@material/mwc-textfield": "^0.14.1",
     "@polymer/app-layout": "^3.1.0",
     "@polymer/app-route": "^3.0.2",
     "@polymer/iron-a11y-keys": "^3.0.1",
