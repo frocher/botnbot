@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element';
+import { LitElement, css, html } from 'lit-element';
 import '@polymer/iron-icon/iron-icon';
 import '@polymer/paper-button/paper-button';
 import { getRequestUrl } from '../common';
@@ -6,10 +6,9 @@ import './bnb-common-styles';
 import './bnb-divider';
 import './bnb-oauth-icons';
 
-class BnbOAuth extends PolymerElement {
-  static get template() {
-    return html`
-    <style include="bnb-common-styles">
+class BnbOAuth extends LitElement {
+  static get styles() {
+    return css`
       paper-button {
         text-transform:none;
       }
@@ -65,7 +64,11 @@ class BnbOAuth extends PolymerElement {
           display: none;
         }
       }
-    </style>
+      `;
+  }
+
+  render() {
+    return html`
     <div class="layout vertical center-justified">
 
       <div class="title layout horizontal center-justified center">
@@ -74,21 +77,27 @@ class BnbOAuth extends PolymerElement {
         <bnb-divider class="flex"></bnb-divider>
       </div>
       <div class="buttons">
-        <paper-button on-tap="facebookTapped" class="facebook" title="Sign in with Facebook">
+        <paper-button id="facebook" class="facebook" title="Sign in with Facebook">
           <iron-icon icon="oauth:facebook"></iron-icon>
           <span>Facebook</span>
         </paper-button>
-        <paper-button on-tap="githubTapped" class="github" title="Sign in with GitHub">
+        <paper-button id="github" class="github" title="Sign in with GitHub">
           <iron-icon icon="oauth:github"></iron-icon>
           <span>GitHub</span>
         </paper-button>
-        <paper-button on-tap="googleTapped" class="google" title="Sign in with Google">
+        <paper-button id="google" class="google" title="Sign in with Google">
           <iron-icon icon="oauth:google"></iron-icon>
           <span>Google</span>
         </paper-button>
       </div>
     </div>
     `;
+  }
+
+  firstUpdated() {
+    this.shadowRoot.getElementById('facebook').addEventListener('tap', () => this.facebookTapped());
+    this.shadowRoot.getElementById('github').addEventListener('tap', () => this.githubTapped());
+    this.shadowRoot.getElementById('google').addEventListener('tap', () => this.googleTapped());
   }
 
   facebookTapped() {

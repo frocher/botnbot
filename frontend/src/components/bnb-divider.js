@@ -1,9 +1,8 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element';
+import { LitElement, css, html } from 'lit-element';
 
-class BnbDivider extends PolymerElement {
-  static get template() {
-    return html`
-    <style>
+class BnbDivider extends LitElement {
+  static get styles() {
+    return css`
       :host {
         display: inline-block;
         height: 1px;
@@ -14,8 +13,11 @@ class BnbDivider extends PolymerElement {
         width: 100%;
         @apply --paper-divider;
       }
-    </style>
     `;
+  }
+
+  render() {
+    return html``;
   }
 }
 

@@ -1,33 +1,33 @@
-
-import { PolymerElement, html } from '@polymer/polymer/polymer-element';
-import '@polymer/iron-icon/iron-icon';
+import '@material/mwc-icon';
+import { LitElement, css, html } from 'lit-element';
 import './bnb-anchor';
-import './bnb-icons';
 
-class Bnb404Warning extends PolymerElement {
-  static get template() {
-    return html`
-    <style>
+class Bnb404Warning extends LitElement {
+  static get styles() {
+    return css`
     :host {
+      margin-top: 16px;
       display: block;
       text-align: center;
       color: var(--app-secondary-color);
     }
 
-    iron-icon {
+    mwc-icon {
       display: inline-block;
-      width: 60px;
-      height: 60px;
+      --mdc-icon-size: 60px;
     }
 
     h1 {
       margin: 50px 0 50px 0;
       font-weight: 300;
     }
-    </style>
+    `;
+  }
 
+  render() {
+    return html`
     <div>
-      <iron-icon icon="bnb:error"></iron-icon>
+      <mwc-icon>error</mwc-icon>
       <h1>Sorry, we couldn't find that page</h1>
     </div>
     <bnb-anchor text="Go to the home page" path="/home"></bnb-anchor>
