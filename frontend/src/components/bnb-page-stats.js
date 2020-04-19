@@ -34,8 +34,8 @@ class BnbPageStats extends connect(store)(PolymerElement) {
   }
 
   _stateChanged(state) {
-    this.page = state.app.page;
-    this.stats = state.app.page_stats;
+    this.page = state.pages.current;
+    this.stats = state.stats.all;
   }
 
   ready() {

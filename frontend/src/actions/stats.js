@@ -1,20 +1,11 @@
+import { createAction } from '@reduxjs/toolkit';
 import { getRequestUrl, getResource } from '../common';
 
 // ***** Page stats management
 
-export const fetchPageStatsStart = () => ({
-    type: 'PAGE_STATS_START',
-  });
-
-export const fetchPageStatsSuccess = stats => ({
-  type: 'PAGE_STATS_FETCH_SUCCESS',
-  stats,
-});
-
-export const fetchPageStatsError = errors => ({
-  type: 'PAGE_STATS_FETCH_ERROR',
-  errors,
-});
+export const fetchPageStatsStart = createAction('PAGE_STATS_START');
+export const fetchPageStatsSuccess = createAction('PAGE_STATS_FETCH_SUCCESS');
+export const fetchPageStatsError = createAction('PAGE_STATS_FETCH_ERROR');
 
 /* eslint no-param-reassign: ["error", { "props": false }] */
 const _updateUptime = (data) => {
@@ -45,123 +36,85 @@ const _updateBytes = (data) => {
 };
 
 
-export const loadPageStats = (pageId, period) => (dispatch) => {
-  dispatch((dispatch) => {
-    dispatch(fetchPageStatsStart());
+export const loadPageStats = (pageId, period) => async dispatch => {
+  dispatch(fetchPageStatsStart());
 
-    getResource({
-      url: getRequestUrl(`/pages/${pageId}/stats`, { start: period.start, end: period.end }),
-      method: 'GET',
-      onLoad(e) {
-        const response = JSON.parse(e.target.responseText);
-        if (e.target.status === 200) {
-          _updateUptime(response.uptime[0]);
-          _updateCount(response.lighthouse);
-          _updateCount(response.performance);
-          _updateBytes(response.bytes);
-          _updateCount(response.requests);
+  getResource({
+    url: getRequestUrl(`/pages/${pageId}/stats`, { start: new Date(period.start), end: new Date(period.end) }),
+    method: 'GET',
+    onLoad(e) {
+      const response = JSON.parse(e.target.responseText);
+      if (e.target.status === 200) {
+        _updateUptime(response.uptime[0]);
+        _updateCount(response.lighthouse);
+        _updateCount(response.performance);
+        _updateBytes(response.bytes);
+        _updateCount(response.requests);
 
-          dispatch(fetchPageStatsSuccess(response));
-        } else {
-          dispatch(fetchPageStatsError(response.errors));
-        }
-      },
-    });
+        dispatch(fetchPageStatsSuccess(response));
+      } else {
+        dispatch(fetchPageStatsError(response));
+      }
+    },
   });
 };
 
-export const fetchLighthouseDetailsStart = () => ({
-  type: 'LIGHTHOUSE_DETAILS_START',
-});
+export const fetchLighthouseDetailsStart = createAction('LIGHTHOUSE_DETAILS_START');
+export const fetchLighthouseDetailsSuccess = createAction('LIGHTHOUSE_DETAILS_FETCH_SUCCESS');
+export const fetchLighthouseDetailsError = createAction('LIGHTHOUSE_DETAILS_FETCH_ERROR');
 
-export const fetchLighthouseDetailsSuccess = details => ({
-  type: 'LIGHTHOUSE_DETAILS_FETCH_SUCCESS',
-  details,
-});
-
-export const fetchLighthouseDetailsError = errors => ({
-  type: 'LIGHTHOUSE_DETAILS_FETCH_ERROR',
-  errors,
-});
-
-export const loadLighthouseDetails = (pageId, period) => (dispatch) => {
-  dispatch((dispatch) => {
-    dispatch(fetchLighthouseDetailsStart());
-    getResource({
-      url: getRequestUrl(`/pages/${pageId}/lighthouse`, { start: period.start, end: period.end }),
-      method: 'GET',
-      onLoad(e) {
-        const response = JSON.parse(e.target.responseText);
-        if (e.target.status === 200) {
-          dispatch(fetchLighthouseDetailsSuccess(response));
-        } else {
-          dispatch(fetchLighthouseDetailsError(response.errors));
-        }
-      },
-    });
+export const loadLighthouseDetails = (pageId, period) => async dispatch => {
+  dispatch(fetchLighthouseDetailsStart());
+  getResource({
+    url: getRequestUrl(`/pages/${pageId}/lighthouse`, { start: new Date(period.start), end: new Date(period.end) }),
+    method: 'GET',
+    onLoad(e) {
+      const response = JSON.parse(e.target.responseText);
+      if (e.target.status === 200) {
+        dispatch(fetchLighthouseDetailsSuccess(response));
+      } else {
+        dispatch(fetchLighthouseDetailsError(response));
+      }
+    },
   });
 };
 
-export const fetchUptimeDetailsStart = () => ({
-  type: 'UPTIME_DETAILS_START',
-});
+export const fetchUptimeDetailsStart = createAction('UPTIME_DETAILS_START');
+export const fetchUptimeDetailsSuccess = createAction('UPTIME_DETAILS_FETCH_SUCCESS');
+export const fetchUptimeDetailsError = createAction('UPTIME_DETAILS_FETCH_ERROR');
 
-export const fetchUptimeDetailsSuccess = details => ({
-  type: 'UPTIME_DETAILS_FETCH_SUCCESS',
-  details,
-});
-
-export const fetchUptimeDetailsError = errors => ({
-  type: 'UPTIME_DETAILS_FETCH_ERROR',
-  errors,
-});
-
-export const loadUptimeDetails = (pageId, period) => (dispatch) => {
-  dispatch((dispatch) => {
-    dispatch(fetchUptimeDetailsStart());
-    getResource({
-      url: getRequestUrl(`/pages/${pageId}/uptime`, { start: period.start, end: period.end }),
-      method: 'GET',
-      onLoad(e) {
-        const response = JSON.parse(e.target.responseText);
-        if (e.target.status === 200) {
-          dispatch(fetchUptimeDetailsSuccess(response));
-        } else {
-          dispatch(fetchUptimeDetailsError(response.errors));
-        }
-      },
-    });
+export const loadUptimeDetails = (pageId, period) => async dispatch => {
+  dispatch(fetchUptimeDetailsStart());
+  getResource({
+    url: getRequestUrl(`/pages/${pageId}/uptime`, { start: new Date(period.start), end: new Date(period.end) }),
+    method: 'GET',
+    onLoad(e) {
+      const response = JSON.parse(e.target.responseText);
+      if (e.target.status === 200) {
+        dispatch(fetchUptimeDetailsSuccess(response));
+      } else {
+        dispatch(fetchUptimeDetailsError(response));
+      }
+    },
   });
 };
 
-export const fetchAssetsDetailsStart = () => ({
-  type: 'ASSETS_DETAILS_START',
-});
+export const fetchAssetsDetailsStart = createAction('ASSETS_DETAILS_START');
+export const fetchAssetsDetailsSuccess = createAction('ASSETS_DETAILS_FETCH_SUCCESS');
+export const fetchAssetsDetailsError = createAction('ASSETS_DETAILS_FETCH_ERROR');
 
-export const fetchAssetsDetailsSuccess = details => ({
-  type: 'ASSETS_DETAILS_FETCH_SUCCESS',
-  details,
-});
-
-export const fetchAssetsDetailsError = errors => ({
-  type: 'ASSETS_DETAILS_FETCH_ERROR',
-  errors,
-});
-
-export const loadAssetsDetails = (pageId, period) => (dispatch) => {
-  dispatch((dispatch) => {
-    dispatch(fetchAssetsDetailsStart());
-    getResource({
-      url: getRequestUrl(`/pages/${  pageId  }/assets`, { start: period.start, end: period.end }),
-      method: 'GET',
-      onLoad(e) {
-        const response = JSON.parse(e.target.responseText);
-        if (e.target.status === 200) {
-          dispatch(fetchAssetsDetailsSuccess(response));
-        } else {
-          dispatch(fetchAssetsDetailsError(response.errors));
-        }
-      },
-    });
+export const loadAssetsDetails = (pageId, period) => async dispatch => {
+  dispatch(fetchAssetsDetailsStart());
+  getResource({
+    url: getRequestUrl(`/pages/${  pageId  }/assets`, { start: new Date(period.start), end: new Date(period.end) }),
+    method: 'GET',
+    onLoad(e) {
+      const response = JSON.parse(e.target.responseText);
+      if (e.target.status === 200) {
+        dispatch(fetchAssetsDetailsSuccess(response));
+      } else {
+        dispatch(fetchAssetsDetailsError(response));
+      }
+    },
   });
 };

@@ -129,7 +129,7 @@ class BnbSubscriptions extends connect(store)(PolymerElement) {
   _stateChanged(state) {
     this.stripeKey = state.app.stripeKey;
     this.plans = state.app.subscriptionPlans;
-    this.currentPlan = state.app.stripeSubscription;
+    this.currentPlan = state.account.stripeSubscription;
   }
 
   _computeTeamMembers(value) {

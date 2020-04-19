@@ -1,80 +1,44 @@
+import { createAction } from '@reduxjs/toolkit';
 import { getRequestUrl, getResource } from '../common';
 
 // ***** App
 
-export const showInstallPrompt = event => ({
-  type: 'SHOW_INSTALL_PROMPT',
-  event,
-});
+export const fetchEnvironmentSuccess = createAction('ENVIRONMENT_FETCH_SUCCESS');
+export const fetchEnvironmentError = createAction('ENVIRONMENT_FETCH_ERROR');
+export const showInstallPrompt = createAction('SHOW_INSTALL_PROMPT');
+export const updatePeriod = createAction('PERIOD_UPDATE');
+export const updateRoute = createAction('UPDATE_ROUTE');
+export const updateMessage = createAction('UPDATE_MESSAGE');
 
-export const updateRoute = route => ({
-  type: 'UPDATE_ROUTE',
-  route,
-  errors: [],
-});
-
-export const updateMessage = message => ({
-  type: 'UPDATE_MESSAGE',
-  message,
-});
-
-export const updatePeriod = period => ({
-  type: 'UPDATE_PERIOD',
-  period,
-});
-
-export const fetchEnvironmentSuccess = keys => ({
-  type: 'ENVIRONMENT_FETCH_SUCCESS',
-  analyticsKey: keys.GOOGLE_ANALYTICS_KEY,
-  pushKey: keys.PUSH_KEY,
-  stripeKey: keys.STRIPE_KEY,
-});
-
-export const fetchEnvironmentError = message => ({
-  type: 'ENVIRONMENT_FETCH_ERROR',
-  message,
-});
-
-export const loadEnvironment = () => (dispatch) => {
-  dispatch((dispatch) => {
-    getResource({
-      url: getRequestUrl('/environment', {}),
-      method: 'GET',
-      onLoad(e) {
-        const response = JSON.parse(e.target.responseText);
-        if (e.target.status === 200) {
-          dispatch(fetchEnvironmentSuccess(response));
-        } else {
-          dispatch(fetchEnvironmentError(response.errors));
-        }
-      },
-    });
+export const loadEnvironment = () => async dispatch => {
+  getResource({
+    url: getRequestUrl('/environment', {}),
+    method: 'GET',
+    onLoad(e) {
+      const response = JSON.parse(e.target.responseText);
+      if (e.target.status === 200) {
+        dispatch(fetchEnvironmentSuccess(response));
+      } else {
+        dispatch(fetchEnvironmentError(response));
+      }
+    },
   });
 };
 
-export const fetchSubscriptionPlansSuccess = plans => ({
-  type: 'PLANS_FETCH_SUCCESS',
-  plans,
-});
+export const fetchSubscriptionPlansSuccess = createAction('PLANS_FETCH_SUCCESS');
+export const fetchSubscriptionPlansError = createAction('PLANS_FETCH_ERROR');
 
-export const fetchSubscriptionPlansError = message => ({
-  type: 'PLANS_FETCH_ERROR',
-  message,
-});
-
-export const loadSubscriptionPlans = () => (dispatch) => {
-  dispatch((dispatch) => {
-    getResource({
-      url: getRequestUrl('/plans', {}),
-      method: 'GET',
-      onLoad(e) {
-        const response = JSON.parse(e.target.responseText);
-        if (e.target.status === 200) {
-          dispatch(fetchSubscriptionPlansSuccess(response));
-        } else {
-          dispatch(fetchSubscriptionPlansError(response.errors));
-        }
-      },
-    });
+export const loadSubscriptionPlans = () => async dispatch => {
+  getResource({
+    url: getRequestUrl('/plans', {}),
+    method: 'GET',
+    onLoad(e) {
+      const response = JSON.parse(e.target.responseText);
+      if (e.target.status === 200) {
+        dispatch(fetchSubscriptionPlansSuccess(response));
+      } else {
+        dispatch(fetchSubscriptionPlansError(response));
+      }
+    },
   });
 };

@@ -98,8 +98,8 @@ class BnbLighthouseDetails extends connect(store)(PolymerElement) {
   }
 
   _stateChanged(state) {
-    this.page = state.app.page;
-    this.lighthouseDetails = state.app.lighthouse_details;
+    this.page = state.pages.current;
+    this.lighthouseDetails = state.stats.lighthouse_details;
   }
 
   _backTapped() {
