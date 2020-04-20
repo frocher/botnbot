@@ -58,7 +58,6 @@ class BnbSignIn extends connect(store)(LitElement) {
 
   firstUpdated() {
     this.shadowRoot.getElementById('signinBtn').addEventListener('tap', () => this.signinSubmitTapped());
-    this.shadowRoot.getElementById('email').focus();
   }
 
   _stateChanged(state) {
