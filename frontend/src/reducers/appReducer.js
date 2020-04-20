@@ -38,7 +38,11 @@ const appReducer = (state = initial, action) => {
     case 'FORGOT_PASSWORD_ERROR' :
     case 'SIGN_IN_ERROR' :
       return {...state, message: { text: action.payload.errors[0], counter: state.message.counter + 1 } };
-  }
+
+    case 'SIGN_UP_ERROR' :
+    case 'UPDATE_PASSWORD_ERROR' :
+      return {...state, errors: action.payload.errors };
+    }
 
   // Process all other error messages
   if (action.type.endsWith('_ERROR')) {
@@ -66,7 +70,7 @@ const appReducer = (state = initial, action) => {
        };
 
     case 'FORGOT_PASSWORD_SUCCESS':
-      return {...state, message: { text: action.message, counter: state.message.counter + 1 } };
+      return {...state, message: { text: action.payload, counter: state.message.counter + 1 } };
 
     case 'PAGE_CREATE_SUCCESS':
       return {...state,

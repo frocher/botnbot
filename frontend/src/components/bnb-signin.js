@@ -22,7 +22,7 @@ class BnbSignIn extends connect(store)(LitElement) {
 
   render() {
     return html`
-    <bnb-auth-form id="signinForm" name="signin" title="Sign in" buttons="${this.signinButtons}">
+    <bnb-auth-form id="signinForm" name="signin" title="Sign in" .buttons="${this.signinButtons}">
 
       <mwc-textfield id="email" label="E-mail" type="email" outlined value="${this.email}">
       </mwc-textfield>
@@ -45,7 +45,6 @@ class BnbSignIn extends connect(store)(LitElement) {
       credentials: { type: Object },
       email: { type: String, reflect: true },
       password: { type: String, reflect: true },
-      target: { type: Object },
       signinButtons: { type: Array },
     };
   }
@@ -58,7 +57,6 @@ class BnbSignIn extends connect(store)(LitElement) {
   }
 
   firstUpdated() {
-    this.target = this.shadowRoot.getElementById('signinForm');
     this.shadowRoot.getElementById('signinBtn').addEventListener('tap', () => this.signinSubmitTapped());
     this.shadowRoot.getElementById('email').focus();
   }

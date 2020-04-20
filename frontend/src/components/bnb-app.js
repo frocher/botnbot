@@ -37,6 +37,7 @@ class BnbApp extends connect(store)(PolymerElement) {
 
         --mdc-theme-primary: var(--google-blue-300);
         --mdc-theme-secondary: var(--google-blue-300);
+        --mdc-theme-error: #cf6679;
         --mdc-theme-surface: #000;
         --mdc-theme-background: #000;
         --mdc-theme-on-primary: var(--paper-grey-900);
