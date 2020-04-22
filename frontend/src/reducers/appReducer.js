@@ -47,10 +47,10 @@ const appReducer = (state = initial, action) => {
   // Process all other error messages
   if (action.type.endsWith('_ERROR')) {
     if (action.payload) {
-      return {...state, message: { text: action.payload.message, counter: state.message.counter + 1 } };
+      return {...state, message: { text: action.payload.message, counter: state.message.counter + 1 }, errors: action.payload.errors };
     }
     else {
-      return {...state, message: { text: 'Oops something went wrong.', counter: state.message.counter + 1 } };
+      return {...state, message: { text: 'Oops something went wrong.', counter: state.message.counter + 1 }, errors: [] };
     }
   }
 
