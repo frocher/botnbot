@@ -4,6 +4,7 @@ import { PolymerElement, html } from '@polymer/polymer/polymer-element';
 import '@polymer/app-layout/app-layout';
 import '@polymer/iron-pages/iron-pages';
 import '@polymer/paper-button/paper-button';
+import '@polymer/paper-card/paper-card';
 import '@polymer/paper-dropdown-menu/paper-dropdown-menu';
 import '@polymer/paper-icon-button/paper-icon-button';
 import '@polymer/paper-input/paper-input';
@@ -15,7 +16,6 @@ import { connect } from 'pwa-helpers';
 import { store } from '../store';
 import { updateRoute } from '../actions/app';
 import { createPageMember, updatePageMember, deletePageMember, updatePageOwner } from '../actions/members';
-import './bnb-collapse';
 import './bnb-grid-styles';
 import './bnb-icons';
 
@@ -23,6 +23,11 @@ class BnbMembers extends connect(store)(PolymerElement) {
   static get template() {
     return html`
     <style>
+      paper-card {
+        width: 100%;
+        padding: 16px;
+      }
+
       #content {
         display: flex;
         flex-direction: row;
@@ -66,7 +71,8 @@ class BnbMembers extends connect(store)(PolymerElement) {
       </app-header>
       <div id="content">
         <div id="container">
-          <bnb-collapse icon="bnb:people" header="Members" opened>
+          <h3>Edit page members</h3>
+          <paper-card>
             <div id="form">
               <paper-input id="email" label="E-mail" on-input="emailChanged" required="true" disabled="[[!page.can_add_member]]" error-message="You should enter a valid email address"></paper-input>
               <paper-dropdown-menu id="roleMenu" label="Role" required="true" disabled="[[!page.can_update_member]]" error-message="You should select a role">
@@ -107,7 +113,7 @@ class BnbMembers extends connect(store)(PolymerElement) {
                 <template class="header">Role</template>
               </vaadin-grid-column>
             </vaadin-grid>
-          </bnb-collapse>
+          </paper-card>
         </div>
       </div>
     </app-header-layout>
