@@ -1,16 +1,16 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element';
-import '@polymer/app-layout/app-layout';
-import '@polymer/iron-a11y-keys/iron-a11y-keys';
+import '@material/mwc-top-app-bar-fixed';
+import '@material/mwc-button';
+import '@material/mwc-icon-button';
+import '@material/mwc-switch';
+import '@material/mwc-textfield'
 import '@polymer/paper-button/paper-button';
+import '@polymer/paper-card/paper-card';
 import '@polymer/paper-dialog/paper-dialog';
-import '@polymer/paper-input/paper-input';
-import '@polymer/paper-toggle-button/paper-toggle-button';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
 import { updateRoute } from '../actions/app';
 import { updateUser, savePushSubscription } from '../actions/account';
-import './bnb-collapse';
-import './bnb-divider';
 import { BnbFormElement } from './bnb-form-element';
 import './bnb-icons';
 import './bnb-install-button';
@@ -19,50 +19,87 @@ import './bnb-subscriptions';
 class BnbAccount extends connect(store)(BnbFormElement(PolymerElement)) {
   static get template() {
     return html`
-    <style include="bnb-common-styles">
+    <style>
       :host {
-        @apply --layout-horizontal;
+        display: flex;
+        flex-direction: column;
+      }
+
+      mwc-switch {
+        display: block;
+      }
+
+      mwc-switch span {
+        padding-left: 8px;
+        vertical-align: text-bottom;
+      }
+
+      mwc-textfield {
+        width: 100%;
+      }
+
+      paper-card {
+        width: 100%;
+        padding: 16px;
       }
 
       #content {
-        @apply --layout-horizontal;
-        @apply --layout-center-justified;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
       }
 
       #container {
+        display: flex;
+        flex-direction: column;
         width: 100%;
         max-width: 1000px;
         padding: 10px 22px 10px 22px;
-        @apply --layout-vertical;
       }
+
+      #saveBtn {
+        --mdc-theme-primary: white;
+      }
+
+      #name {
+        margin-bottom: 16px;
+      }
+
     </style>
 
-    <iron-a11y-keys keys="enter" target="[[target]]" on-keys-pressed="saveTapped">
-    </iron-a11y-keys>
-    <app-header-layout fullbleed>
-      <app-header slot="header" fixed condenses shadow>
-        <app-toolbar>
-          <paper-icon-button icon="bnb:close" on-tap="closeTapped"></paper-icon-button>
-          <span class="title">My account</span>
-          <span class="flex"></span>
-          <paper-button on-tap="saveTapped">Save</paper-button>
-        </app-toolbar>
-      </app-header>
-      <div id="content" class="fit">
+    <mwc-top-app-bar-fixed>
+      <mwc-icon-button id="closeBtn" icon="close" slot="navigationIcon"></mwc-icon-button>
+      <div slot="title">My account</div>
+      <mwc-button id="saveBtn" slot="actionItems">Save</mwc-button>
+
+      <div id="content">
         <div id="container">
-          <bnb-collapse icon="bnb:info" header="General" opened>
-            <paper-input id="name" label="Name" value="[[user.name]]" autofocus="true"></paper-input>
-            <paper-toggle-button id="pushButton" disabled="[[!isNotificationsEnabled()]]">Send me notifications on this device</paper-toggle-button>
-          </bnb-collapse>
-          <bnb-divider></bnb-divider>
-          <bnb-collapse icon="bnb:credit-card" header="Subscription" opened hidden$="[[!canSubscribe]]">
+          <h3>General</h3>
+          <paper-card>
+            <mwc-textfield id="name" label="Name" type="text" outlined value="[[user.name]]"></mwc-textfield>
+            <mwc-switch id="pushButton" ?disabled="[[!isNotificationsEnabled()]]"><span>Send me notifications on this device<span></mwc-switch>
+          </paper-card>
+
+          <div hidden$="[[!canSubscribe]]">
+            <h3>Subscription</h3>
             <bnb-subscriptions></bnb-subscriptions>
-          </bnb-collapse>
-          <bnb-divider></bnb-divider>
-          <bnb-install-button></bnb-install-button>
+          </div>
+
+          <h3>Install</h3>
+          <paper-card>
+            <div class="card-content">
+              You can install a shortcut to launch Botnbot like a native application.
+              The button is disabled if your device doesn't allow web applications installation.
+            </div>
+
+            <div class="card-actions">
+              <bnb-install-button></bnb-install-button>
+            </div>
+          </paper-card>
+
         </div>
       </div>
-    </app-header-layout>
+    </mwc-top-app-bar-fixed>
 
     <paper-dialog id="discardDlg" modal>
       <p>Discard edit.</p>
@@ -77,7 +114,6 @@ class BnbAccount extends connect(store)(BnbFormElement(PolymerElement)) {
   static get properties() {
     return {
       user: Object,
-      target: Object,
       canSubscribe: Boolean,
       pushKey: {
         type: String,
@@ -99,7 +135,9 @@ class BnbAccount extends connect(store)(BnbFormElement(PolymerElement)) {
 
   ready() {
     super.ready();
-    this.target = this.$.content;
+
+    this.shadowRoot.getElementById('closeBtn').addEventListener('click', () => this.closeTapped());
+    this.shadowRoot.getElementById('saveBtn').addEventListener('click', () => this.saveTapped());
 
     if (this.isNotificationsEnabled()) {
       this.$.pushButton.addEventListener('checked-changed', this.notificationsChanged.bind(this));
@@ -148,7 +186,8 @@ class BnbAccount extends connect(store)(BnbFormElement(PolymerElement)) {
   }
 
   closeTapped() {
-    if (this.$.name.value !== this.user.name) {
+    const nameValue = this.shadowRoot.getElementById('name').value;
+    if (nameValue !== this.user.name) {
       this.$.discardDlg.open();
     } else {
       this.closePage();
@@ -156,13 +195,13 @@ class BnbAccount extends connect(store)(BnbFormElement(PolymerElement)) {
   }
 
   closePage() {
-    this.$.name.invalid = false;
+    this.validateFields(['name']);
     store.dispatch(updateRoute('home'));
   }
 
   saveTapped() {
-    this.$.name.invalid = false;
-    const user = { name: this.$.name.value };
+    this.validateFields(['name']);
+    const user = { name: this.shadowRoot.getElementById('name').value };
     store.dispatch(updateUser(this.user.id, user));
   }
 

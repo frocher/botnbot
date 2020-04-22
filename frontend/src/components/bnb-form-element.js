@@ -33,4 +33,14 @@ export const BnbFormElement = (baseElement) => class extends baseElement {
       }
     }
   }
+
+  validateFields(fields) {
+    fields.forEach(id => {
+      const obj = this.shadowRoot.getElementById(id);
+      if (obj) {
+        obj.setCustomValidity('');
+        obj.reportValidity();
+      }
+    });
+  }
 };

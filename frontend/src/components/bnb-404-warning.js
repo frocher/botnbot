@@ -1,5 +1,5 @@
-import '@material/mwc-icon';
 import { LitElement, css, html } from 'lit-element';
+import '@material/mwc-icon';
 import './bnb-anchor';
 
 class Bnb404Warning extends LitElement {

@@ -35,17 +35,19 @@ class BnbApp extends connect(store)(PolymerElement) {
         --divider-color: #B6B6B6;
         --error-color: #db4437;
 
-        --mdc-theme-primary: var(--google-blue-300);
+        --mdc-theme-primary: #212121;
         --mdc-theme-secondary: var(--google-blue-300);
-        --mdc-theme-error: #cf6679;
         --mdc-theme-surface: #000;
-        --mdc-theme-background: #000;
-        --mdc-theme-on-primary: var(--paper-grey-900);
+        --mdc-theme-background: #303030;
+
+        --mdc-theme-on-primary: #fff;
         --mdc-theme-on-secondary: var(--paper-grey-900);
+        --mdc-theme-on-surface: var(--paper-grey-900);
+
+        --mdc-theme-error: #cf6679;
         --mdc-theme-text-primary-on-background: #ffffff;
         --mdc-theme-text-secondary-on-background: #ffffff;
         --mdc-theme-text-disabled-on-background: var(--paper-grey-900);
-
 
         --mdc-dialog-heading-ink-color: var(--mdc-theme-text-primary-on-background);
         --mdc-dialog-content-ink-color: var(--mdc-theme-text-primary-on-background);
@@ -64,8 +66,6 @@ class BnbApp extends connect(store)(PolymerElement) {
         --paper-input-container-focus-color: var(--google-blue-300);
         --paper-radio-button-checked-color: var(--google-blue-300);
         --paper-tabs-selection-bar-color: var(--google-blue-300);
-        --paper-toggle-button-checked-button-color: var(--google-blue-300);
-        --paper-toggle-button-checked-ink-color: var(--google-blue-500);
 
         --range-datepicker-cell-hover: var(--google-blue-300);
         --range-datepicker-cell-selected: var(--google-blue-300);

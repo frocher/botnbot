@@ -9,17 +9,9 @@ import './bnb-icons';
 class BnbInstallButton extends connect(store)(PolymerElement) {
   static get template() {
     return html`
-    <style include="bnb-common-styles">
-    :host {
-      display: flex;
-      justify-content: center;
-      margin-top: 24px;
-      margin-bottom: 24px;
-    }
-    </style>
-  <paper-button raised style$="[[_computeStyle(displayButton)]]" on-tap="installTapped">
-    <iron-icon icon="bnb:cloud-download"></iron-icon>
-    Install Botnbot App
+    <paper-button raised disabled="[[!displayButton]]" on-tap="installTapped">
+      <iron-icon icon="bnb:cloud-download"></iron-icon>
+      <span style="margin-left: 8px">Install Botnbot App</span>
     </paper-button>
     `;
   }

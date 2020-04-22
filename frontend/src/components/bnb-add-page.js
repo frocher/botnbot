@@ -1,30 +1,44 @@
 import '@material/mwc-formfield';
 import '@material/mwc-radio';
+import '@material/mwc-textfield';
 import { PolymerElement, html } from '@polymer/polymer/polymer-element';
 import '@polymer/app-layout/app-layout';
-import '@polymer/iron-a11y-keys/iron-a11y-keys';
 import '@polymer/paper-button/paper-button';
+import '@polymer/paper-card/paper-card';
 import '@polymer/paper-dialog/paper-dialog';
 import '@polymer/paper-icon-button/paper-icon-button';
-import '@polymer/paper-input/paper-input';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
 import { updateRoute } from '../actions/app';
 import { createPage } from '../actions/pages';
-import './bnb-common-styles';
 import { BnbFormElement } from './bnb-form-element';
 
 class BnbAddPage extends connect(store)(BnbFormElement(PolymerElement)) {
   static get template() {
     return html`
-    <style include="bnb-common-styles">
+    <style>
       :host {
-        @apply --layout-vertical;
+        display: flex;
+        flex-direction: column;
+      }
+
+      mwc-textfield {
+        width: 100%;
+      }
+
+      paper-card {
+        width: 100%;
+        padding: 16px;
+      }
+
+      #createBtn {
+        margin-left: auto;
       }
 
       #content {
-        @apply --layout-horizontal;
-        @apply --layout-center-justified;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
       }
 
       #container {
@@ -32,29 +46,34 @@ class BnbAddPage extends connect(store)(BnbFormElement(PolymerElement)) {
         max-width: 1000px;
         padding: 10px 22px 10px 22px;
       }
+
+      #name {
+        margin-bottom: 16px;
+      }
     </style>
 
-    <iron-a11y-keys keys="enter" target="[[target]]" on-keys-pressed="createTapped">
-    </iron-a11y-keys>
-    <app-header-layout fullbleed>
+    <app-header-layout>
       <app-header slot="header" fixed condenses shadow>
         <app-toolbar>
           <paper-icon-button icon="bnb:close" on-tap="closeTapped"></paper-icon-button>
           <span class="title">New page</span>
-          <span class="flex"></span>
-          <paper-button on-tap="createTapped">Create</paper-button>
+          <paper-button id="createBtn" on-tap="createTapped">Create</paper-button>
         </app-toolbar>
       </app-header>
+
       <div id="content" class="fit">
         <div id="container">
-          <paper-input id="name" label="Page name" value="{{pageName}}" autofocus="true"></paper-input>
-          <paper-input id="url" label="URL" value="{{url}}"></paper-input>
-          <mwc-formfield label="Mobile">
-            <mwc-radio id="mobileBtn" name="device" group="deviceGroup" checked></mwc-radio>
-          </mwc-formfield>
-          <mwc-formfield label="Desktop">
-            <mwc-radio id="desktopBtn" name="device" group="deviceGroup"></mwc-radio>
-          </mwc-formfield>
+          <h3>Page informations</h3>
+          <paper-card>
+            <mwc-textfield id="name" label="Page name" type="text" outlined value="{{pageName}}"></mwc-textfield>
+            <mwc-textfield id="url" label="URL" type="url" outlined value="{{url}}"></mwc-textfield>
+            <mwc-formfield label="Mobile">
+              <mwc-radio id="mobileBtn" name="device" group="deviceGroup" checked></mwc-radio>
+            </mwc-formfield>
+            <mwc-formfield label="Desktop">
+              <mwc-radio id="desktopBtn" name="device" group="deviceGroup"></mwc-radio>
+            </mwc-formfield>
+          </paper-card>
         </div>
       </div>
     </app-header-layout>
@@ -71,7 +90,6 @@ class BnbAddPage extends connect(store)(BnbFormElement(PolymerElement)) {
 
   static get properties() {
     return {
-      target: Object,
       pageName: String,
       url: String,
       routePath: {
@@ -81,7 +99,7 @@ class BnbAddPage extends connect(store)(BnbFormElement(PolymerElement)) {
       },
       errors: {
         type: Object,
-        observer: '_errorsChanged',
+        observer: '_litErrorsChanged',
       },
     };
   }
@@ -93,11 +111,10 @@ class BnbAddPage extends connect(store)(BnbFormElement(PolymerElement)) {
 
   ready() {
     super.ready();
-    this.target = this.$.content;
   }
 
   closeTapped() {
-    if (this.pageName !== '' || this.url !== '') {
+    if (this.pageName || this.url) {
       this.$.discard_dlg.open();
     } else {
       this.closePage();
@@ -105,24 +122,23 @@ class BnbAddPage extends connect(store)(BnbFormElement(PolymerElement)) {
   }
 
   createTapped() {
-    this.$.name.invalid = false;
-    this.$.url.invalid = false;
-    const device = this.$.mobileBtn.checked ? 'mobile' : 'desktop';
+    this.$.name.setCustomValidity('');
+    this.$.url.setCustomValidity('');
 
     store.dispatch(
       createPage(
-        this.pageName,
-        this.url,
-        device,
-        this.handleResponse,
-        this.handleError,
+        this.shadowRoot.getElementById('name').value,
+        this.shadowRoot.getElementById('url').value,
+        this.$.mobileBtn.checked ? 'mobile' : 'desktop',
       ),
     );
   }
 
   clearFields() {
-    this.$.name.invalid = false;
-    this.$.url.invalid = false;
+    this.$.name.setCustomValidity('');
+    this.$.name.reportValidity();
+    this.$.url.setCustomValidity('');
+    this.$.url.reportValidity();
     this.pageName = '';
     this.url = '';
   }
