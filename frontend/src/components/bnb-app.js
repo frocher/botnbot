@@ -52,10 +52,10 @@ class BnbApp extends connect(store)(PolymerElement) {
         --mdc-dialog-heading-ink-color: var(--mdc-theme-text-primary-on-background);
         --mdc-dialog-content-ink-color: var(--mdc-theme-text-primary-on-background);
         --mdc-radio-unchecked-color: var(--mdc-theme-text-primary-on-background);
-        --mdc-text-field-outlined-hover-border-color: var(--mdc-theme-primary);
         --mdc-text-field-label-ink-color: var(--mdc-theme-text-primary-on-background);
         --mdc-text-field-ink-color: var(--mdc-theme-text-primary-on-background);
         --mdc-text-field-outlined-idle-border-color: var(--mdc-theme-text-primary-on-background);
+        --mdc-text-field-outlined-hover-border-color: var(--mdc-theme-secondary);
 
 
         --paper-card-background-color: var(--paper-grey-800);

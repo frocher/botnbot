@@ -35,6 +35,10 @@ export const BnbFormElement = (baseElement) => class extends baseElement {
   }
 
   validateFields(fields) {
+    if (!this.shadowRoot) {
+      return;
+    }
+
     fields.forEach(id => {
       const obj = this.shadowRoot.getElementById(id);
       if (obj) {

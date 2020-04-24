@@ -36,6 +36,7 @@ class BnbAccount extends connect(store)(BnbFormElement(PolymerElement)) {
 
       mwc-textfield {
         width: 100%;
+        --mdc-theme-primary: #fff;
       }
 
       paper-card {
