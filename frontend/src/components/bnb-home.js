@@ -3,7 +3,6 @@ import '@material/mwc-icon-button'
 import '@material/mwc-list/mwc-list-item'
 import '@material/mwc-menu'
 import '@material/mwc-top-app-bar-fixed'
-import '@polymer/iron-pages/iron-pages';
 import '@polymer/paper-spinner/paper-spinner';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
@@ -104,18 +103,34 @@ class BnbHome extends connect(store)(LitElement) {
           <mwc-list-item id="accountItem">My account</mwc-list-item>
           <mwc-list-item id="logoutItem">Log out</mwc-list-item>
         </mwc-menu>
-        <iron-pages selected="${this.selectedSection}">
-          <section id="loading">
-            <span>Loading&nbsp;</span>
-            <paper-spinner active></paper-spinner>
-          </section>
-          <section id="noData">Don't you dare try the + button in the toolbar !</section>
-          <section id="withData">
-            ${this.pages ? this.pages.map(i => this.renderCard(i)) : html``}
-          </section>
-        </iron-pages>
+        ${this.renderContent()}
       </mwc-top-app-bar-fixed>
       `;
+  }
+
+  renderContent() {
+    switch (this.selectedSection) {
+      case 0:
+        return html`
+          <div id="loading">
+            <span>Loading&nbsp;</span>
+            <paper-spinner active></paper-spinner>
+          </div>
+        `;
+
+      case 1:
+        return html`
+          <div id="noData">Don't you dare try the + button in the toolbar !</div>
+        `;
+
+      case 2:
+        return html`
+          <div id="withData">
+            ${this.pages ? this.pages.map(i => this.renderCard(i)) : html``}
+          </div>
+        `;
+    }
+    return html`Unknown error`;
   }
 
   renderCard(card) {
