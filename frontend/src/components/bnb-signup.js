@@ -72,7 +72,7 @@ class BnbSignUp extends connect(store)(BnbFormElement(LitElement)) {
   }
 
   firstUpdated() {
-    this.shadowRoot.getElementById('signupBtn').addEventListener('tap', () => this.signupSubmitTapped());
+    this.shadowRoot.getElementById('signupBtn').addEventListener('click', () => this.signupSubmitTapped());
   }
 
   signupSubmitTapped() {

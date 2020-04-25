@@ -1,7 +1,7 @@
-import '@material/mwc-button/mwc-button';
-import '@material/mwc-dialog';
 import { PolymerElement, html } from '@polymer/polymer/polymer-element';
-import '@polymer/app-layout/app-layout';
+import '@material/mwc-icon-button';
+import '@material/mwc-button';
+import '@material/mwc-dialog';
 import '@polymer/iron-pages/iron-pages';
 import '@polymer/paper-button/paper-button';
 import '@polymer/paper-card/paper-card';
@@ -18,6 +18,7 @@ import { updateRoute } from '../actions/app';
 import { createPageMember, updatePageMember, deletePageMember, updatePageOwner } from '../actions/members';
 import './bnb-grid-styles';
 import './bnb-icons';
+import './bnb-top-app-bar';
 
 class BnbMembers extends connect(store)(PolymerElement) {
   static get template() {
@@ -62,13 +63,10 @@ class BnbMembers extends connect(store)(PolymerElement) {
         max-height: 400px;
       }
     </style>
-    <app-header-layout fullbleed>
-      <app-header slot="header" fixed condenses shadow>
-        <app-toolbar>
-          <paper-icon-button icon="bnb:arrow-back" on-tap="closeTapped"></paper-icon-button>
-          <span class="title">Members</span>
-        </app-toolbar>
-      </app-header>
+    <bnb-top-app-bar>
+      <mwc-icon-button id="closeBtn" icon="arrow_back" slot="navigationIcon"></mwc-icon-button>
+      <span slot="title">Members</span>
+
       <div id="content">
         <div id="container">
           <h3>Edit page members</h3>
@@ -116,7 +114,7 @@ class BnbMembers extends connect(store)(PolymerElement) {
           </paper-card>
         </div>
       </div>
-    </app-header-layout>
+    </bnb-top-app-bar>
     <mwc-dialog id="confirmTransferDlg" heading="Transfering ownership">
       <p>Are-you sure to you want to loose ownership of this page ?</p>
       <mwc-button dialogAction="ok" slot="primaryAction">Yes, sure !</mwc-button>
@@ -152,6 +150,7 @@ class BnbMembers extends connect(store)(PolymerElement) {
     super.ready();
     this.target = this.$.content;
     this.$.confirmTransferDlg.addEventListener('closed', (e) => this._onConfirmTransferDialogClosed(e.detail.action));
+    this.shadowRoot.getElementById('closeBtn').addEventListener('tap', () => this.closeTapped());
 
     this.$.roleColumn.renderer = function(root, column, rowData) {
       const item = rowData.item;

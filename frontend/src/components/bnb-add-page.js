@@ -5,13 +5,13 @@ import '@material/mwc-textfield';
 import '@material/mwc-button';
 import '@material/mwc-dialog';
 import '@material/mwc-icon-button';
-import '@material/mwc-top-app-bar-fixed';
 import '@polymer/paper-card/paper-card';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
 import { updateRoute } from '../actions/app';
 import { createPage } from '../actions/pages';
 import { BnbFormElement } from './bnb-form-element';
+import './bnb-top-app-bar';
 
 class BnbAddPage extends connect(store)(BnbFormElement(LitElement)) {
 
@@ -41,10 +41,6 @@ class BnbAddPage extends connect(store)(BnbFormElement(LitElement)) {
       padding: 16px;
     }
 
-    #createBtn {
-      --mdc-theme-primary: white;
-    }
-
     #content {
       display: flex;
       flex-direction: row;
@@ -69,7 +65,7 @@ class BnbAddPage extends connect(store)(BnbFormElement(LitElement)) {
 
   render() {
     return html`
-    <mwc-top-app-bar-fixed>
+    <bnb-top-app-bar>
       <mwc-icon-button id="closeBtn" icon="close" slot="navigationIcon"></mwc-icon-button>
       <span slot="title">New page</span>
       <mwc-button id="createBtn" slot="actionItems">Create</mwc-button>
@@ -89,7 +85,7 @@ class BnbAddPage extends connect(store)(BnbFormElement(LitElement)) {
           </paper-card>
         </div>
       </div>
-    </app-header-layout>
+    </bnb-top-app-bar>
 
     <mwc-dialog id="discardDlg" >
       <p>Are you sure you want to discard this new page.</p>

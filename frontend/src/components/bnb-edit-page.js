@@ -1,11 +1,12 @@
 import { LitElement, css, html } from 'lit-element';
+import '@material/mwc-button';
+import '@material/mwc-icon-button';
 import '@material/mwc-switch';
 import '@material/mwc-textfield';
 import '@polymer/app-layout/app-layout';
 import '@polymer/paper-button/paper-button';
 import '@polymer/paper-card/paper-card';
 import '@polymer/paper-dialog/paper-dialog';
-import '@polymer/paper-icon-button/paper-icon-button';
 import '@polymer/paper-radio-button/paper-radio-button';
 import '@polymer/paper-radio-group/paper-radio-group';
 import { connect } from 'pwa-helpers';
@@ -14,6 +15,7 @@ import { updateRoute } from '../actions/app';
 import { updatePage } from '../actions/pages';
 import { BnbFormElement } from './bnb-form-element';
 import './bnb-icons';
+import './bnb-top-app-bar';
 
 class BnbEditPage extends connect(store)(BnbFormElement(LitElement)) {
   static get styles() {
@@ -40,10 +42,6 @@ class BnbEditPage extends connect(store)(BnbFormElement(LitElement)) {
 
     mwc-textfield {
       width: 100%;
-    }
-
-    #saveBtn {
-      margin-left: auto;
     }
 
     #content {
@@ -79,14 +77,11 @@ class BnbEditPage extends connect(store)(BnbFormElement(LitElement)) {
 
   render() {
     return html`
-    <app-header-layout fullbleed>
-      <app-header slot="header" fixed condenses shadow>
-        <app-toolbar>
-          <paper-icon-button id="closeBtn" icon="bnb:close"></paper-icon-button>
-          <span class="title">Edit page</span>
-          <paper-button id="saveBtn">Save</paper-button>
-        </app-toolbar>
-      </app-header>
+    <bnb-top-app-bar>
+      <mwc-icon-button id="closeBtn" icon="close" slot="navigationIcon"></mwc-icon-button>
+      <span slot="title">Edit page</span>
+      <mwc-button id="saveBtn" slot="actionItems">Save</mwc-button>
+
       <div id="content">
         <div id="container">
           <h3>General</h3>
@@ -115,7 +110,7 @@ class BnbEditPage extends connect(store)(BnbFormElement(LitElement)) {
           </paper-card>
         </div>
       </div>
-    </app-header-layout>
+    </bnb-top-app-bar>
 
     <paper-dialog id="discardDlg" modal>
       <p>Discard edit.</p>

@@ -62,7 +62,7 @@ class BnbEditPassword extends connect(store)(BnbFormElement(LitElement)) {
   }
 
   firstUpdated() {
-    this.shadowRoot.getElementById('submitBtn').addEventListener('tap', () => this.submitTapped());
+    this.shadowRoot.getElementById('submitBtn').addEventListener('click', () => this.submitTapped());
   }
 
   submitTapped() {

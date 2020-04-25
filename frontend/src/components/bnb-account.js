@@ -15,6 +15,7 @@ import { BnbFormElement } from './bnb-form-element';
 import './bnb-icons';
 import './bnb-install-button';
 import './bnb-subscriptions';
+import './bnb-top-app-bar';
 
 class BnbAccount extends connect(store)(BnbFormElement(PolymerElement)) {
   static get template() {
@@ -58,9 +59,6 @@ class BnbAccount extends connect(store)(BnbFormElement(PolymerElement)) {
         padding: 10px 22px 10px 22px;
       }
 
-      #saveBtn {
-        --mdc-theme-primary: white;
-      }
 
       #name {
         margin-bottom: 16px;
@@ -68,7 +66,7 @@ class BnbAccount extends connect(store)(BnbFormElement(PolymerElement)) {
 
     </style>
 
-    <mwc-top-app-bar-fixed>
+    <bnb-top-app-bar>
       <mwc-icon-button id="closeBtn" icon="close" slot="navigationIcon"></mwc-icon-button>
       <div slot="title">My account</div>
       <mwc-button id="saveBtn" slot="actionItems">Save</mwc-button>
@@ -100,7 +98,7 @@ class BnbAccount extends connect(store)(BnbFormElement(PolymerElement)) {
 
         </div>
       </div>
-    </mwc-top-app-bar-fixed>
+    </bnb-top-app-bar>
 
     <paper-dialog id="discardDlg" modal>
       <p>Discard edit.</p>

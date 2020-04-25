@@ -47,7 +47,7 @@ class BnbForgotPassword extends connect(store)(LitElement) {
   }
 
   firstUpdated() {
-    this.shadowRoot.getElementById('forgotBtn').addEventListener('tap', () => this.submitTapped());
+    this.shadowRoot.getElementById('forgotBtn').addEventListener('click', () => this.submitTapped());
   }
 
   submitTapped() {
