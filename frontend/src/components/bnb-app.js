@@ -1,7 +1,7 @@
 import { LitElement, css, html } from 'lit-element';
+import { classMap } from 'lit-html/directives/class-map';
 import '@material/mwc-snackbar';
 import { connect } from 'pwa-helpers';
-import '@polymer/iron-pages/iron-pages';
 import { store } from '../store';
 import { updateRoute, loadEnvironment, loadSubscriptionPlans, showInstallPrompt } from '../actions/app';
 import { loadBudgets } from '../actions/budgets';
@@ -101,13 +101,21 @@ class BnbApp extends connect(store)(LitElement) {
 
 
     .view {
+      display: none;
       position: absolute;
       top: 0;
       right: 0;
       bottom: 0;
       left: 0;
     }
+
+    .view.active {
+      display: block;
+    }
+
     `;
+
+
   }
 
   constructor() {
@@ -120,36 +128,56 @@ class BnbApp extends connect(store)(LitElement) {
     return html`
     <bnb-analytics id="analytics" key="${this.analyticsKey}"></bnb-analytics>
 
-    <iron-pages
-        class="view"
-        selected="${this.view}"
-        attr-for-selected="name"
-        selected-attribute="visible"
-        fallback-selection="404">
-      <bnb-add-page            name="add-page"            class="view"></bnb-add-page>
-      <bnb-account             name="account"             class="view"></bnb-account>
-      <bnb-bytes-details       name="bytes-details"       class="view"></bnb-bytes-details>
-      <bnb-home                name="home"                class="view"></bnb-home>
-      <bnb-members             name="members"             class="view"></bnb-members>
-      <bnb-edit-page           name="edit-page"           class="view"></bnb-edit-page>
-      <bnb-edit-password       name="edit-password"       class="view"></bnb-edit-password>
-      <bnb-forgot-password     name="forgot-password"     class="view"></bnb-forgot-password>
-      <bnb-lighthouse-details  name="lighthouse-details"  class="view"></bnb-lighthouse-details>
-      <bnb-page                name="page"                class="view"></bnb-page>
-      <bnb-performance-details name="performance-details" class="view"></bnb-performance-details>
-      <bnb-requests-details    name="requests-details"    class="view"></bnb-requests-details>
-      <bnb-signin              name="signin"              class="view"></bnb-signin>
-      <bnb-signup              name="signup"              class="view"></bnb-signup>
-      <bnb-uptime-details      name="uptime-details"      class="view"></bnb-uptime-details>
-      <bnb-404-warning         name="404"                 class="view"></bnb-404-warning>
-    </iron-pages>
+    <bnb-add-page            class=${classMap(this.renderClass('add-page'))}></bnb-add-page>
+    <bnb-account             class=${classMap(this.renderClass('ccount'))}></bnb-account>
+    <bnb-bytes-details       class=${classMap(this.renderClass('bytes-details'))}></bnb-bytes-details>
+    <bnb-home                class=${classMap(this.renderClass('home'))}></bnb-home>
+    <bnb-members             class=${classMap(this.renderClass('members'))}></bnb-members>
+    <bnb-edit-page           class=${classMap(this.renderClass('edit-page'))}></bnb-edit-page>
+    <bnb-edit-password       class=${classMap(this.renderClass('edit-password'))}></bnb-edit-password>
+    <bnb-forgot-password     class=${classMap(this.renderClass('forgot-password'))}></bnb-forgot-password>
+    <bnb-lighthouse-details  class=${classMap(this.renderClass('lighthouse-details'))}></bnb-lighthouse-details>
+    <bnb-page                class=${classMap(this.renderClass('page'))}></bnb-page>
+    <bnb-performance-details class=${classMap(this.renderClass('performance-details'))}></bnb-performance-details>
+    <bnb-requests-details    class=${classMap(this.renderClass('requests-details'))}></bnb-requests-details>
+    <bnb-signin              class=${classMap(this.renderClass('signin'))}></bnb-signin>
+    <bnb-signup              class=${classMap(this.renderClass('signup'))}></bnb-signup>
+    <bnb-uptime-details      class=${classMap(this.renderClass('uptime-details'))}></bnb-uptime-details>
+    <bnb-404-warning         class=${classMap(this.renderClass('404-warning'))}></bnb-404-warning>
 
     <mwc-snackbar id="messageSnack"></mwc-snackbar>
     `;
   }
 
-  renderCurrentView() {
+  renderClass(name) {
+    return name === this.view ? { view: true, active: true } : { view: true }
+  }
 
+  renderCurrentView() {
+    const views = {
+      'add-page' : html`<bnb-add-page class="view"></bnb-add-page>`,
+      'account'  : html`<bnb-account class="view"></bnb-account>`,
+      'bytes-details' : html`<bnb-bytes-details class="view"></bnb-bytes-details>`,
+      'home' : html`<bnb-home class="view"></bnb-home>`,
+      'members' : html`<bnb-members class="view"></bnb-members>`,
+      'edit-page' : html`<bnb-edit-page class="view"></bnb-edit-page>`,
+      'edit-password' : html`<bnb-edit-password class="view"></bnb-edit-password>`,
+      'forgot-password' : html`<bnb-forgot-password class="view"></bnb-forgot-password>`,
+      'lighthouse-details' : html`<bnb-lighthouse-details class="view"></bnb-lighthouse-details>`,
+      'page' : html`<bnb-page class="view"></bnb-page>`,
+      'performance-details' : html`<bnb-performance-details class="view"></bnb-performance-details>`,
+      'requests-details' : html`<bnb-requests-details class="view"></bnb-requests-details>`,
+      'signin' : html`<bnb-signin class="view"></bnb-signin>`,
+      'signup' : html`<bnb-signup class="view"></bnb-signup>`,
+      'uptime-details' : html`<bnb-uptime-details class="view"></bnb-uptime-details>`,
+    };
+
+    let result = views[this.view];
+    if (!result) {
+      html`<bnb-404-warning class="view"></bnb-404-warning>`;
+    }
+
+    return result;
   }
 
   stateChanged(state) {
@@ -226,6 +254,10 @@ class BnbApp extends connect(store)(LitElement) {
         this.pageId = params.id;
         this.updateView('uptime-details');
       },
+    });
+
+    this.router.notFound( () => {
+      this.updateView('404-warning');
     });
 
     this.router.resolve();
