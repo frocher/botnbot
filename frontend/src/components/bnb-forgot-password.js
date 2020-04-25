@@ -36,7 +36,7 @@ class BnbForgotPassword extends connect(store)(LitElement) {
     };
   }
 
-  _stateChanged() {
+  stateChanged() {
     // nothing to do
   }
 

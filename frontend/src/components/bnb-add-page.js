@@ -142,7 +142,7 @@ class BnbAddPage extends connect(store)(BnbFormElement(LitElement)) {
     store.dispatch(updateRoute('home'));
   }
 
-  _stateChanged(state) {
+  stateChanged(state) {
     this.routePath = state.app.route;
     this.errors = state.app.errors;
 

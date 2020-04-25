@@ -140,7 +140,7 @@ class BnbMembers extends connect(store)(PolymerElement) {
     };
   }
 
-  _stateChanged(state) {
+  stateChanged(state) {
     if (state.app.credentials) {
       this.currentUser = state.app.credentials.uid;
     }

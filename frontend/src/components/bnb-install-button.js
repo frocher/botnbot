@@ -28,7 +28,7 @@ class BnbInstallButton extends connect(store)(PolymerElement) {
     };
   }
 
-  _stateChanged(state) {
+  stateChanged(state) {
     this.promptEvent = state.app.promptEvent;
     this.displayButton = this.promptEvent !== undefined;
   }

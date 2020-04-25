@@ -161,7 +161,7 @@ class BnbEditPage extends connect(store)(BnbFormElement(LitElement)) {
     return ['name', 'url', 'uptimeKeyword', 'slack_webhook', 'slack_channel'];
   }
 
-  _stateChanged(state) {
+  stateChanged(state) {
     const page = state.pages.current;
     if (page) {
       this.pageId = page.id;

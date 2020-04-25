@@ -101,7 +101,7 @@ class BnbPerformanceDetails extends connect(store)(PolymerElement) {
     };
   }
 
-  _stateChanged(state) {
+  stateChanged(state) {
     this.page = state.pages.current;
     this.lighthouseDetails = state.stats.lighthouse_details;
   }

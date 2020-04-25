@@ -178,7 +178,7 @@ class BnbApp extends connect(store)(PolymerElement) {
     return ['_routeViewChanged(routeData.page)'];
   }
 
-  _stateChanged(state) {
+  stateChanged(state) {
     this.routePath = state.app.route;
     this.message = state.app.message;
     this.analyticsKey = state.app.analyticsKey;

@@ -151,7 +151,7 @@ class BnbHome extends connect(store)(LitElement) {
     this.selectedSection = 0;
   }
 
-  _stateChanged(state) {
+  stateChanged(state) {
     if (state.pages.all) {
       this.pages = [...state.pages.all].sort(this._sortPages);
     }

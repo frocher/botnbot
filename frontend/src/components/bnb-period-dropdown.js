@@ -77,7 +77,7 @@ class BnbPeriodDropdown extends connect(store)(PolymerElement) {
     };
   }
 
-  _stateChanged(state) {
+  stateChanged(state) {
     this.dateFrom = format(new Date(state.app.period.start), 'MMM dd, yyyy');
     this.dateTo = format(new Date(state.app.period.end), 'MMM dd, yyyy');
   }

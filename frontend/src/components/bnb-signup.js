@@ -64,7 +64,7 @@ class BnbSignUp extends connect(store)(BnbFormElement(LitElement)) {
     this.signupButtons = [{ text: 'Sign in', path: '/signin' }, { text: 'Forgot your password', path: '/forgot-password' }];
   }
 
-  _stateChanged(state) {
+  stateChanged(state) {
     this.errors = state.app.errors;
     if (this.errors) {
       this._litErrorsChanged();

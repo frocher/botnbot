@@ -60,7 +60,7 @@ class BnbSignIn extends connect(store)(LitElement) {
     this.shadowRoot.getElementById('signinBtn').addEventListener('tap', () => this.signinSubmitTapped());
   }
 
-  _stateChanged(state) {
+  stateChanged(state) {
     if (!state.auth.credentials && this.credentials !== state.auth.credentials) {
       this.email = '';
       this.password = '';

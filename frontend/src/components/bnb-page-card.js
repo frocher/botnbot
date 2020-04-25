@@ -99,7 +99,7 @@ class BnbPageCard extends connect(store)(GestureEventListeners(PolymerElement)) 
     };
   }
 
-  _stateChanged() {
+  stateChanged() {
     // Nothing to do
   }
 

@@ -72,7 +72,7 @@ class BnbPageLockedCard extends connect(store)(LitElement) {
     store.dispatch(updateRoute('account'));
   }
 
-  _stateChanged(state) {
+  stateChanged(state) {
     if (state.auth.credentials && state.pages.current) {
       this.isOwner = state.auth.credentials.uid === state.pages.current.owner.uid;
     }

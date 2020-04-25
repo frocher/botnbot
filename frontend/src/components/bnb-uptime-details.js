@@ -104,7 +104,7 @@ class BnbUptimeDetails extends connect(store)(PolymerElement) {
     };
   }
 
-  _stateChanged(state) {
+  stateChanged(state) {
     this.page = state.pages.current;
     this.uptimeDetails = state.stats.uptime_details;
   }

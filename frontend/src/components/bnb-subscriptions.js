@@ -126,7 +126,7 @@ class BnbSubscriptions extends connect(store)(PolymerElement) {
     this.$.downgradePlanDlg.addEventListener('closed', (e) => this._onDowngradePlanDialogClosed(e.detail.action));
   }
 
-  _stateChanged(state) {
+  stateChanged(state) {
     this.stripeKey = state.app.stripeKey;
     this.plans = state.app.subscriptionPlans;
     this.currentPlan = state.account.stripeSubscription;

@@ -54,7 +54,7 @@ class BnbEditPassword extends connect(store)(BnbFormElement(LitElement)) {
     this.editButtons = [{ text: 'Sign in', path: '/signin' }];
   }
 
-  _stateChanged(state) {
+  stateChanged(state) {
     this.errors = state.app.errors;
     if (this.errors) {
       this._litErrorsChanged();
