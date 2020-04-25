@@ -3,7 +3,7 @@ import { classMap } from 'lit-html/directives/class-map';
 import '@material/mwc-snackbar';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
-import { updateRoute, loadEnvironment, loadSubscriptionPlans, showInstallPrompt } from '../actions/app';
+import { updateRoute, loadEnvironment, loadSubscriptionPlans, showInstallPrompt, updateMessage } from '../actions/app';
 import { loadBudgets } from '../actions/budgets';
 import { loadPageMembers } from '../actions/members';
 import { loadPages, loadPage } from '../actions/pages';
@@ -365,7 +365,7 @@ class BnbApp extends connect(store)(LitElement) {
             import('./bnb-account.js').then(cb);
             break;
           default:
-            this._viewLoaded(Boolean(oldView));
+            this.viewLoaded(Boolean(oldView));
         }
       }
 
@@ -428,14 +428,10 @@ class BnbApp extends connect(store)(LitElement) {
     const oldOffline = this.offline;
     // Show the snackbar if the user is offline when starting a new session
     // or if the network status changed.
+    this.offline = !window.navigator.onLine;
     if (this.offline || (!this.offline && oldOffline === true)) {
-      if (!this._networkSnackbar) {
-        this._networkSnackbar = document.createElement('bnb-snackbar');
-        this.root.appendChild(this._networkSnackbar);
-      }
-      this._networkSnackbar.textContent = this.offline
-        ? 'You are offline' : 'You are online';
-      this._networkSnackbar.open();
+      const message = this.offline ? 'You are offline' : 'You are online';
+      store.dispatch(updateMessage(message));
     }
   }
 
