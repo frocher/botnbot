@@ -74,13 +74,22 @@ class BnbApp extends connect(store)(PolymerElement) {
         --app-nav-background-color: var(--primary-background-color);
         --app-nav-text-color: var(--secondary-text-color);
 
+        display: flex;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+
         background-color: var(--primary-background-color);
-        @apply --layout-fit;
-        @apply --layout-vertical;
       }
 
       .view {
-        @apply --layout-fit;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
       }
     </style>
 
