@@ -68,7 +68,7 @@ class BnbSubscriptions extends connect(store)(PolymerElement) {
               </li>
               <li>
                 <span class="card-label">Team members</span>
-                <span class="card-value">[[_computeTeamMembers(item.members)]]</span>
+                <span class="card-value">[[computeTeamMembers(item.members)]]</span>
               </li>
               <li>
                 <span class="card-label">Uptime check every</span>
@@ -77,8 +77,8 @@ class BnbSubscriptions extends connect(store)(PolymerElement) {
             </ul>
           </div>
           <div class="card-actions">
-            <paper-button hidden$="[[_computeHideSubscribe(item, currentPlan)]]" on-tap="_subscribeTapped">Subscribe</paper-button>
-            <div class="card-current" hidden$="[[!_computeHideSubscribe(item, currentPlan)]]">YOUR CURRENT PLAN</div>
+            <paper-button hidden$="[[computeHideSubscribe(item, currentPlan)]]" on-tap="subscribeTapped">Subscribe</paper-button>
+            <div class="card-current" hidden$="[[!computeHideSubscribe(item, currentPlan)]]">YOUR CURRENT PLAN</div>
           </div>
         </paper-card>
       </template>
@@ -119,11 +119,11 @@ class BnbSubscriptions extends connect(store)(PolymerElement) {
 
   ready() {
     super.ready();
-    this.checkout = this._initCheckout();
+    this.checkout = this.initCheckout();
     window.addEventListener('popstate', () => this.checkout.close());
-    this.$.freePlanDlg.addEventListener('closed', (e) => this._onFreePlanDialogClosed(e.detail.action));
-    this.$.upgradePlanDlg.addEventListener('closed', (e) => this._onUpgradePlanDialogClosed(e.detail.action));
-    this.$.downgradePlanDlg.addEventListener('closed', (e) => this._onDowngradePlanDialogClosed(e.detail.action));
+    this.$.freePlanDlg.addEventListener('closed', (e) => this.onFreePlanDialogClosed(e.detail.action));
+    this.$.upgradePlanDlg.addEventListener('closed', (e) => this.onUpgradePlanDialogClosed(e.detail.action));
+    this.$.downgradePlanDlg.addEventListener('closed', (e) => this.onDowngradePlanDialogClosed(e.detail.action));
   }
 
   stateChanged(state) {
@@ -132,18 +132,18 @@ class BnbSubscriptions extends connect(store)(PolymerElement) {
     this.currentPlan = state.account.stripeSubscription;
   }
 
-  _computeTeamMembers(value) {
+  computeTeamMembers(value) {
     return value < 0 ? 'infinite' : value;
   }
 
-  _computeHideSubscribe(item, plan) {
+  computeHideSubscribe(item, plan) {
     if (item && plan) {
       return plan.pages === item.pages;
     }
     return false;
   }
 
-  _subscribeTapped(e) {
+  subscribeTapped(e) {
     this.selectedPlan = e.model.item;
 
     if (this.selectedPlan.id !== -1) {
@@ -164,25 +164,25 @@ class BnbSubscriptions extends connect(store)(PolymerElement) {
     }
   }
 
-  _onFreePlanDialogClosed(action) {
+  onFreePlanDialogClosed(action) {
     if (action === 'ok') {
       store.dispatch(deleteStripeSubscription());
     }
   }
 
-  _onUpgradePlanDialogClosed(action) {
+  onUpgradePlanDialogClosed(action) {
     if (action === 'ok') {
       store.dispatch(updateStripeSubscription(this.selectedPlan.id));
     }
   }
 
-  _onDowngradePlanDialogClosed(action) {
+  onDowngradePlanDialogClosed(action) {
     if (action === 'ok') {
       store.dispatch(updateStripeSubscription(this.selectedPlan.id));
     }
   }
 
-  _initCheckout() {
+  initCheckout() {
     return StripeCheckout.configure({
       allowRememberMe: true,
       locale: 'auto',
