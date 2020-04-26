@@ -129,7 +129,7 @@ class BnbApp extends connect(store)(LitElement) {
     <bnb-analytics id="analytics" key="${this.analyticsKey}"></bnb-analytics>
 
     <bnb-add-page            class=${classMap(this.renderClass('add-page'))}></bnb-add-page>
-    <bnb-account             class=${classMap(this.renderClass('ccount'))}></bnb-account>
+    <bnb-account             class=${classMap(this.renderClass('account'))}></bnb-account>
     <bnb-bytes-details       class=${classMap(this.renderClass('bytes-details'))}></bnb-bytes-details>
     <bnb-home                class=${classMap(this.renderClass('home'))}></bnb-home>
     <bnb-members             class=${classMap(this.renderClass('members'))}></bnb-members>
