@@ -215,7 +215,7 @@ class BnbAccount extends connect(store)(BnbFormElement(LitElement)) {
 
   closePage() {
     this.validateFields(['name']);
-    store.dispatch(updateRoute('home'));
+    store.dispatch(updateRoute(''));
   }
 
   saveTapped() {

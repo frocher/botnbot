@@ -75,13 +75,13 @@ const appReducer = (state = initial, action) => {
     case 'PAGE_CREATE_SUCCESS':
       return {...state,
         message: { text: 'Page has been created', counter: state.message.counter + 1 },
-        route: 'home',
+        route: '',
       };
 
     case 'PAGE_DELETE_SUCCESS':
       return {...state,
         message: { text: 'Page has been deleted', counter: state.message.counter + 1 },
-        route: 'home',
+        route: '',
       };
 
     case 'PAGE_MEMBER_CREATE_SUCCESS':
@@ -112,7 +112,7 @@ const appReducer = (state = initial, action) => {
       return {...state, promptEvent: action.payload};
 
     case 'SIGN_IN_SUCCESS':
-      return {...state, route: 'home'};
+      return {...state, route: ''};
 
     case 'SIGN_OUT':
       return {...state, route: 'signin'};
@@ -147,7 +147,7 @@ const appReducer = (state = initial, action) => {
     case 'USER_UPDATE_SUCCESS':
       return {...state,
         message: { text: 'Account informations have been updated', counter: state.message.counter + 1 },
-        route: 'home',
+        route: '',
       };
 
     default:

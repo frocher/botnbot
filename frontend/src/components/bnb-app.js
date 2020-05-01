@@ -112,10 +112,7 @@ class BnbApp extends connect(store)(LitElement) {
     .view.active {
       display: block;
     }
-
     `;
-
-
   }
 
   constructor() {
@@ -221,7 +218,7 @@ class BnbApp extends connect(store)(LitElement) {
       '/forgot-password' : () => {
         this.updateView('forgot-password');
       },
-      '/home' : () => {
+      '/' : () => {
         this.updateView('home');
       },
       '/lighthouse-details/:id' : (params) => {

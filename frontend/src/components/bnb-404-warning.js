@@ -30,7 +30,7 @@ class Bnb404Warning extends LitElement {
       <mwc-icon>error</mwc-icon>
       <h1>Sorry, we couldn't find that page</h1>
     </div>
-    <bnb-anchor text="Go to the home page" path="/home"></bnb-anchor>
+    <bnb-anchor text="Go to the home page" path="/"></bnb-anchor>
     `;
   }
 }

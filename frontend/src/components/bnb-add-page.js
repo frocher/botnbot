@@ -135,7 +135,7 @@ class BnbAddPage extends connect(store)(BnbFormElement(LitElement)) {
 
   closePage() {
     this.clearFields();
-    store.dispatch(updateRoute('home'));
+    store.dispatch(updateRoute(''));
   }
 
   stateChanged(state) {

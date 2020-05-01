@@ -107,7 +107,7 @@ class BnbPage extends connect(store)(PolymerElement) {
   }
 
   backTapped() {
-    store.dispatch(updateRoute('home'));
+    store.dispatch(updateRoute(''));
   }
 
   editTapped() {
