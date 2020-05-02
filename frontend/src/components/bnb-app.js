@@ -104,9 +104,7 @@ class BnbApp extends connect(store)(LitElement) {
       mwc-button {
         --mdc-theme-primary: var(--google-blue-300);
       }
-
     }
-
 
     .view {
       display: none;
@@ -416,6 +414,7 @@ class BnbApp extends connect(store)(LitElement) {
       store.dispatch(loadPage(this.pageId));
       store.dispatch(loadUptimeDetails(this.pageId, this.period));
     } else if (this.view === 'requests-details' || this.view === 'bytes-details') {
+      store.dispatch(loadPage(this.pageId));
       store.dispatch(loadAssetsDetails(this.pageId, this.period));
     }
   }
