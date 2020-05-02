@@ -154,7 +154,7 @@ export class BnbPageDetails extends connect(store)(LitElement) {
 
       table tbody tr td:nth-child(1n) {
         text-align: left ! important;
-        width: 380px;
+        width: calc(100vw - 16px);
       }
 
     }
