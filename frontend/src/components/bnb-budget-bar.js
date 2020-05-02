@@ -1,123 +1,149 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element';
-import '@polymer/paper-button/paper-button';
+import { LitElement, css, html } from 'lit-element';
+import '@material/mwc-button';
+import '@material/mwc-list/mwc-list-item';
+import '@material/mwc-select';
+import '@material/mwc-textfield';
 import '@polymer/paper-card/paper-card';
-import '@polymer/paper-dropdown-menu/paper-dropdown-menu';
-import '@polymer/paper-listbox/paper-listbox';
-import '@polymer/paper-input/paper-input';
-import '@polymer/paper-item/paper-item';
-import './bnb-common-styles';
 import './bnb-period-dropdown';
 
-class BnbBudgetBar extends PolymerElement {
-  static get template() {
-    return html`
-    <style include="bnb-common-styles">
-      :host {
-        display: flex;
-      }
+class BnbBudgetBar extends LitElement {
+  static get properties() {
+    return {
+      items: { type: Array },
+      canAdd: { type: Boolean },
+    };
+  }
 
-      paper-card {
-        width: 100%;
-        margin: 16px;
-        padding: 16px;
-        @apply --layout-vertical;
-      }
+  static get styles() {
+    return css`
+    :host {
+      display: flex;
+    }
 
-      paper-item {
-        cursor: pointer;
-      }
+    paper-card {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      margin: 16px;
+      padding: 16px;
+    }
 
+    #budgetTools {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    #itemField {
+      margin-left: 5px;
+    }
+
+    #budgetField {
+      min-width: 170px;
+      margin-left: 5px;
+      width: 150px;
+    }
+
+    #budgetBtn {
+      height: 44px;
+      align-self: center;
+    }
+
+    @media (max-width: 700px) {
       #budgetTools {
         display: flex;
-        @apply --layout-horizontal;
-      }
-
-      #budgetTools[hidden] {
-        display: none;
+        flex-direction: column;
       }
 
       #itemField {
-        margin-left: 5px;
+        margin-top: 16px;
+        margin-left: 0;
       }
 
       #budgetField {
-        margin-left: 5px;
-        width: 150px;
+        margin-left: 0;
+        width: 100%;
       }
 
-      #budgetBtn {
-        height: 44px;
-        align-self: flex-end;
-      }
+    }
+    `;
+  }
 
-    </style>
+  constructor() {
+    super();
+    this.items = [];
+    this.canAdd = true;
+  }
+
+  render() {
+    return html`
     <paper-card>
       <bnb-period-dropdown></bnb-period-dropdown>
-      <div id="budgetTools" hidden$="[[!canAdd]]">
-        <paper-dropdown-menu id="categoryField" label="Category">
-          <paper-listbox slot="dropdown-content" class="dropdown-content" selected="{{selectedCategory}}">
-            <paper-item>Lighthouse</paper-item>
-            <paper-item>Performance</paper-item>
-            <paper-item>Assets count</paper-item>
-            <paper-item>Assets size</paper-item>
-          </paper-listbox>
-        </paper-dropdown-menu>
-        <paper-dropdown-menu id="itemField" required error-message="required" label="Item">
-          <paper-listbox slot="dropdown-content" class="dropdown-content" selected="{{selectedItem}}">
-            <template is="dom-repeat" items="[[items]]">
-              <paper-item>[[item]]</paper-item>
-            </template>
-          </paper-listbox>
-        </paper-dropdown-menu>
-        <paper-input id="budgetField" label="Budget" type="number" min="0" required value="{{budget}}" error-message="positive number required"></paper-input>
-        <paper-button id="budgetBtn" on-tap="_onAddTapped">Add</paper-button>
-      </div>
+      ${this.renderBudgetTools()}
     </paper-card>
     `;
   }
 
-  static get properties() {
-    return {
-      selectedCategory: {
-        type: Number,
-        value: 0,
-        observer: '_onSelectedItemChanged',
-      },
-      selectedItem: {
-        type: Number,
-      },
-      items: {
-        type: Array,
-        value: [],
-      },
-      canAdd: {
-        type: Boolean,
-        value: true,
-      },
-      budget: {
-        type: Number,
-      },
-    };
+  renderBudgetTools() {
+    if (!this.canAdd) {
+      return html``;
+    }
+
+    return html`
+      <div id="budgetTools" hidden$="[[!canAdd]]">
+        <mwc-select id="categoryField" outlined label="Category">
+          <mwc-list-item value="Lighthouse">Lighthouse</mwc-list-item>
+          <mwc-list-item value="Performance">Performance</mwc-list-item>
+          <mwc-list-item value="Assets count">Assets count</mwc-list-item>
+          <mwc-list-item value="Assets size">Assets size</mwc-list-item>
+        </mwc-select>
+
+        <mwc-select id="itemField" outlined required validationMessage="This field is required" label="Item">
+          ${this.items.map( i => this.renderFieldItem(i))}
+        </mwc-select>
+
+        <mwc-textfield id="budgetField" outlined label="Budget" type="number" min="0" required validationMessage="This field is required" value="{{budget}}">
+        </mwc-textfield>
+
+        <mwc-button id="budgetBtn">Add</mwc-button>
+      </div>
+      `;
   }
 
-  _onSelectedItemChanged() {
+  renderFieldItem(item) {
+    return html`<mwc-list-item value="${item}">${item}</mwc-list-item>`;
+  }
+
+  firstUpdated() {
+    this.shadowRoot.getElementById('categoryField').addEventListener('selected', () => this.selectedItemChanged());
+    this.shadowRoot.getElementById('budgetBtn').addEventListener('click', () => this.addTapped());
+  }
+
+  selectedItemChanged() {
     const data = [
       ['PWA', 'Performance', 'Accessibility', 'Best practices', 'SEO', 'Average'],
       ['First byte', 'First paint', 'Speed index', 'Interactive'],
       ['HTML', 'CSS', 'Javascript', 'Image', 'Font', 'Other', 'Total'],
       ['HTML', 'CSS', 'Javascript', 'Image', 'Font', 'Other', 'Total'],
     ];
-    this.items = data[this.selectedCategory];
-    this.selectedItem = undefined;
+    const selectedCategory = this.shadowRoot.getElementById('categoryField').index;
+    this.items = data[selectedCategory];
+    this.shadowRoot.getElementById('itemField').value = '';
   }
 
-  _onAddTapped() {
-    const isItemValid = this.$.itemField.validate();
-    const isBudgetValid = this.$.budgetField.validate();
+  addTapped() {
+    const categoryField = this.shadowRoot.getElementById('categoryField');
+    const itemField = this.shadowRoot.getElementById('itemField');
+    const budgetField = this.shadowRoot.getElementById('budgetField');
+
+    const isItemValid = itemField.reportValidity();
+    const isBudgetValid = budgetField.reportValidity();
+
     if (isItemValid && isBudgetValid) {
-      const name = `${this.$.categoryField.value}/${this.$.itemField.value}`;
+      const name = `${categoryField.value}/${itemField.value}`;
       const detail = {
-        name, category: this.selectedCategory, item: this.selectedItem, budget: this.budget,
+        name, category: categoryField.index, item: itemField.index, budget: budgetField.value,
       };
       this.dispatchEvent(new CustomEvent('add', { detail }));
     }

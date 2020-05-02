@@ -1,25 +1,22 @@
-import { PolymerElement } from '@polymer/polymer/polymer-element';
+import { LitElement } from 'lit-element';
 
-class BnbAnalytics extends PolymerElement {
+class BnbAnalytics extends LitElement {
   static get properties() {
     return {
-      key: {
-        type: String,
-        observer: '_keyChanged',
-      },
+      key: { type: String },
     };
+  }
+
+  set key(value) {
+    if (value) {
+      ga('create', value, 'auto', {
+        appName: 'Botnbot',
+      });
+    }
   }
 
   sendPath(pathname) {
     ga('send', 'pageview', pathname);
-  }
-
-  _keyChanged(key) {
-    if (key) {
-      ga('create', key, 'auto', {
-        appName: 'Botnbot',
-      });
-    }
   }
 }
 window.customElements.define('bnb-analytics', BnbAnalytics);

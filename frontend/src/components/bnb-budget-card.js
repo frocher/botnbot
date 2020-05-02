@@ -1,60 +1,66 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element';
+import { LitElement, css, html } from 'lit-element';
+import '@material/mwc-icon-button';
 import '@polymer/paper-card/paper-card';
-import '@polymer/paper-icon-button/paper-icon-button';
 import './bnb-budget';
-import './bnb-common-styles';
-import './bnb-icons';
 
-class BnbBudgetCard extends PolymerElement {
-  static get template() {
+class BnbBudgetCard extends LitElement {
+  static get properties() {
+    return {
+      budgetInfo: { type: Object },
+      canDelete: { type: Boolean },
+    };
+  }
+
+  static get styles() {
+    return css`
+    :host {
+      display: flex;
+      margin: 16px;
+    }
+
+    paper-card {
+      width: 100%;
+    }
+
+    #chart {
+      width: 100%;
+      height: 340px;
+    }
+
+    .budget-header {
+      font-size: 24px;
+      margin-bottom: 16px;
+    }
+
+    .budget-header-buttons {
+      float: right;
+      font-size: 14px;
+      vertical-align: middle;
+    }
+    `;
+  }
+
+  render() {
     return html`
-    <style include="bnb-common-styles">
-      :host {
-        display: flex;
-        margin: 16px;
-      }
-
-      paper-card {
-        width: 100%;
-      }
-
-      #chart {
-        width: 100%;
-        height: 340px;
-      }
-
-      .budget-header {
-        @apply --paper-font-headline;
-        margin-bottom: 16px;
-      }
-
-      .budget-header-buttons {
-        float: right;
-        font-size: 14px;
-        vertical-align: middle;
-      }
-    </style>
     <paper-card>
       <div class="card-content">
-        <div class="budget-header">[[budgetInfo.name]]
+        <div class="budget-header">${this.budgetInfo.name}
           <div class="budget-header-buttons">
-            <paper-icon-button icon="bnb:close" hidden$="[[!canDelete]]" on-tap="closeTapped"></paper-icon-button>
+            ${this.renderCloseBtn()}
           </div>
         </div>
-        <bnb-budget id="chart" data="[[budgetInfo.data]]" model="[[budgetInfo.model]]" budget="[[budgetInfo.budget]]"></bnb-budget>
+        <bnb-budget id="chart" .data="${this.budgetInfo.data}" .model="${this.budgetInfo.model}" .budget="${this.budgetInfo.budget}"></bnb-budget>
       </div>
     </paper-card>
     `;
   }
 
-  static get properties() {
-    return {
-      budgetInfo: Object,
-      canDelete: {
-        type: Boolean,
-        value: true,
-      },
-    };
+  renderCloseBtn() {
+    return this.canDelete ? html`<mwc-icon-button id="closeBtn" icon="close"></mwc-icon-button>` : html``;
+  }
+
+  firstUpdated() {
+    this.shadowRoot.getElementById('closeBtn').addEventListener('click', () => this.closeTapped());
   }
 
   closeTapped() {

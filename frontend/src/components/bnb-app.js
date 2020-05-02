@@ -55,13 +55,21 @@ class BnbApp extends connect(store)(LitElement) {
       --mdc-theme-on-surface: var(--paper-grey-900);
 
       --mdc-theme-error: #cf6679;
-      --mdc-theme-text-primary-on-background: #ffffff;
-      --mdc-theme-text-secondary-on-background: #ffffff;
+      --mdc-theme-text-primary-on-background: #fff;
+      --mdc-theme-text-secondary-on-background: #fff;
       --mdc-theme-text-disabled-on-background: var(--paper-grey-900);
 
       --mdc-dialog-heading-ink-color: var(--mdc-theme-text-primary-on-background);
       --mdc-dialog-content-ink-color: var(--mdc-theme-text-primary-on-background);
+
       --mdc-radio-unchecked-color: var(--mdc-theme-text-primary-on-background);
+
+      --mdc-select-ink-color: var(--mdc-theme-text-primary-on-background);
+      --mdc-select-label-ink-color: var(--mdc-theme-text-primary-on-background);
+      --mdc-select-outlined-idle-border-color: var(--mdc-theme-text-primary-on-background);
+      --mdc-select-outlined-hover-border-color: var(--mdc-theme-primary);
+      --mdc-select-dropdown-icon-color: var(--mdc-theme-text-primary-on-background);
+
       --mdc-text-field-label-ink-color: var(--mdc-theme-text-primary-on-background);
       --mdc-text-field-ink-color: var(--mdc-theme-text-primary-on-background);
       --mdc-text-field-outlined-idle-border-color: var(--mdc-theme-text-primary-on-background);
