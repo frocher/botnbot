@@ -1,124 +1,205 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element';
-import '@polymer/app-layout/app-layout';
-import '@polymer/paper-icon-button/paper-icon-button';
-import '@vaadin/vaadin-grid/vaadin-grid';
-import '@vaadin/vaadin-grid/vaadin-grid-sorter';
+import { LitElement, css, html } from 'lit-element';
+import '@material/mwc-icon-button';
 import { connect } from 'pwa-helpers';
 import { format } from 'date-fns';
 import { store } from '../store';
 import { updateRoute } from '../actions/app';
 import { getRequestUrl } from '../common';
-import './bnb-common-styles';
-import './bnb-grid-styles';
-import './bnb-icons';
+import './bnb-top-app-bar';
 
-class BnbBytesDetails extends connect(store)(PolymerElement) {
-  static get template() {
-    return html`
-    <style include="bnb-common-styles">
-      :host {
-        @apply --layout-vertical;
-      }
+class BnbBytesDetails extends connect(store)(LitElement) {
+  static get properties() {
+    return {
+      page: { type: Object },
+      details: { type: Object },
+    };
+  }
 
-      #content {
-        display: flex;
-        justify-content: center;
-        padding: 8px;
-      }
+  static get styles() {
+    return css`
+    #content {
+      padding: 8px;
+    }
 
-      a {
-        color: rgba(0, 0, 0, var(--dark-primary-opacity));
-      }
+    .table-wrap {
+      overflow: auto;
+      max-height: calc(100vh - 80px);
+      margin: 0 auto;
+      width: fit-content;
+    }
 
-      .right {
-        text-align: right;
-      }
+    table {
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 4px;
+    }
 
-      vaadin-grid {
-        height: calc(100vh - 80px);
-        max-width: 800px;
-      }
-    </style>
+    table thead tr {
+      height: 60px;
+      background: #212121;
+      font-size: 16px;
+      color: #fff;
+      line-height: 1.2;
+      font-weight: unset;
+    }
 
-    <app-header-layout fullbleed>
-      <app-header slot="header" fixed condenses shadow>
-        <app-toolbar>
-          <paper-icon-button icon="bnb:arrow-back" on-tap="_backTapped"></paper-icon-button>
-          <span>[[page.name]]</span>
-        </app-toolbar>
-      </app-header>
+    th {
+      position: sticky;
+      top: 0;
+      z-index: 1
+    }
 
-      <div id="content" class="fit">
-        <vaadin-grid id="grid" theme="bnb-grid" items="[[assetsDetails]]">
-          <vaadin-grid-column>
-            <template class="header">
-              <vaadin-grid-sorter path="time" direction="desc">time</vaadin-grid-sorter>
-            </template>
-            <template>[[_formatTime(item.time)]]</template>
-          </vaadin-grid-column>
-          <vaadin-grid-column width="100px" flex-grow="0">
-            <template class="header">html</template>
-            <template><div class="right">[[_formatBytes(item.html_bytes)]]</div></template>
-          </vaadin-grid-column>
-          <vaadin-grid-column width="100px" flex-grow="0">
-            <template class="header">css</template>
-            <template><div class="right">[[_formatBytes(item.css_bytes)]]</div></template>
-          </vaadin-grid-column>
-          <vaadin-grid-column width="100px" flex-grow="0">
-            <template class="header">javascript</template>
-            <template><div class="right">[[_formatBytes(item.js_bytes)]]</div></template>
-          </vaadin-grid-column>
-          <vaadin-grid-column width="100px" flex-grow="0">
-            <template class="header">image</template>
-            <template><div class="right">[[_formatBytes(item.image_bytes)]]</div></template>
-          </vaadin-grid-column>
-          <vaadin-grid-column width="100px" flex-grow="0">
-            <template class="header">font</template>
-            <template><div class="right">[[_formatBytes(item.font_bytes)]]</div></template>
-          </vaadin-grid-column>
-          <vaadin-grid-column width="100px" flex-grow="0">
-              <template class="header">other</template>
-              <template><div class="right">[[_formatBytes(item.other_bytes)]]</div></template>
-            </vaadin-grid-column>
-            <vaadin-grid-column width="52px" flex-grow="0">
-            <template class="header"></template>
-            <template>
-              <a href="[[_computeUrl(item.time_key)]]" title="Show HAR" target="_blank">
-                <paper-icon-button icon="bnb:visibility"></paper-icon-button>
-              </a>
-            </template>
-          </vaadin-grid-column>
-        </vaadin-grid>
-      </div>
-    </app-header-layout>
+    th:after {
+      content: '';
+      display: block;
+      position: absolute;
+      background-color: #212121;
+      top: -1px;
+      left:0;
+      right: 0;
+      bottom: 0;
+      z-index: -1;
+    }
+
+    table thead tr th:nth-child(1) {
+      width: 160px;
+      padding-left: 16px;
+      text-align: left;
+    }
+
+    table thead tr th:nth-child(1n+2) {
+      width: 95px;
+      text-align: right;
+    }
+
+    table thead tr th:nth-child(8) {
+      width: 60px;
+      text-align: right;
+    }
+
+    table tbody {
+      overflow: auto;
+    }
+
+
+    table tbody tr {
+      height: 50px;
+      font-size: 14px;
+      color: gray;
+      line-height: 1.2;
+      font-weight: unset;
+    }
+
+    table tbody tr:nth-child(even) {
+      background-color: #f5f5f5;
+    }
+
+    table tbody tr td:nth-child(1) {
+      padding-left: 16px;
+    }
+
+    table tbody tr td:nth-child(1n+2) {
+      text-align: right;
+    }
+
+    table tbody tr td:nth-child(8) {
+      text-align: center;
+    }
+
+    a {
+      color: rgba(0, 0, 0, var(--mdc-theme-on-primary));
+    }
+
     `;
   }
 
-  static get properties() {
-    return {
-      page: Object,
-      assetsDetails: Object,
-    };
+  render() {
+    return html`
+    <bnb-top-app-bar>
+      <mwc-icon-button id="backBtn" icon="arrow_back" slot="navigationIcon"></mwc-icon-button>
+      <div slot="title">${this.page ? this.page.name : ''}</div>
+
+      <div id="content">
+        <div class="table-wrap">
+        <table>
+          <thead>
+            ${this.renderHeader()}
+          </thead>
+          <tbody>
+            ${this.details.map( i => this.renderItem(i))}
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </bnb-top-app-bar>
+    `;
+  }
+
+  renderHeader() {
+    return html`
+      <tr>
+        <th>date</th>
+        <th>html</th>
+        <th>css</th>
+        <th>javascript</th>
+        <th>image</th>
+        <th>font</th>
+        <th>other</th>
+        <th></th>
+      </tr>
+    `;
+  }
+
+  renderItem(item) {
+    return html`
+      <tr>
+        <td>${this.formatTime(item.time)}</td>
+        <td>${this.formatBytes(item.html_bytes)}</td>
+        <td>${this.formatBytes(item.css_bytes)}</td>
+        <td>${this.formatBytes(item.js_bytes)}</td>
+        <td>${this.formatBytes(item.image_bytes)}</td>
+        <td>${this.formatBytes(item.font_bytes)}</td>
+        <td>${this.formatBytes(item.other_bytes)}</td>
+        <td>
+          <a href="${this.computeUrl(item.time_key)}" title="Show HAR" target="_blank">
+            <mwc-icon-button icon="visibility"></mwc-icon-button>
+          </a>
+      </tr>
+    `;
+  }
+
+  firstUpdated() {
+    this.shadowRoot.getElementById('backBtn').addEventListener('click', () => this.backTapped());
   }
 
   stateChanged(state) {
     this.page = state.pages.current;
-    this.assetsDetails = state.stats.assets_details;
+    if (state.stats.assets_details)
+    {
+      this.details = state.stats.assets_details.concat().sort( (a, b) => this.sortDetails(a,b));
+    }
+    else {
+      this.details = [];
+    }
   }
 
-  _backTapped() {
+  sortDetails(a, b) {
+    return a.time > b.time ? -1 : 1;
+  }
+
+  backTapped() {
     store.dispatch(updateRoute(`page/${this.page.id}`));
   }
 
-  _formatTime(time) {
+  formatTime(time) {
     return format(new Date(time), 'MMM dd, yyyy HH:mm');
   }
 
-  _formatBytes(bytes) {
+  formatBytes(bytes) {
     return Math.round(bytes / 1024).toLocaleString();
   }
 
-  _computeUrl(key) {
+  computeUrl(key) {
     if (key) {
       let result = 'http://www.softwareishard.com/har/viewer/?inputUrl=';
       result += `${window.location.protocol}//${window.location.host}`;
