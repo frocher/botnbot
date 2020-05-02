@@ -1,120 +1,110 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element';
-import '@polymer/app-layout/app-layout';
-import '@polymer/paper-icon-button/paper-icon-button';
-import '@vaadin/vaadin-grid/vaadin-grid';
-import '@vaadin/vaadin-grid/vaadin-grid-sorter';
-import { format } from 'date-fns';
-import { connect } from 'pwa-helpers';
-import { store } from '../store';
-import { updateRoute } from '../actions/app';
+import { html, css } from 'lit-element';
+import '@material/mwc-icon-button';
 import { getRequestUrl } from '../common';
-import './bnb-common-styles';
-import './bnb-grid-styles';
-import './bnb-icons';
+import { BnbPageDetails } from './bnb-page-details';
 
-class BnbLighthouseDetails extends connect(store)(PolymerElement) {
-  static get template() {
-    return html`
-    <style include="bnb-common-styles">
-      :host {
-        @apply --layout-vertical;
-      }
-
-      #content {
-        display: flex;
-        justify-content: center;
-        padding: 8px;
-      }
-
-      .number {
+class BnbLighthouseDetails extends BnbPageDetails {
+  static get styles() {
+    return [
+      super.styles,
+      css`
+      table thead tr th:nth-child(1n+2) {
+        width: 120px;
         text-align: right;
       }
 
-      a {
-        color: rgba(0, 0, 0, var(--dark-primary-opacity));
+      table thead tr th:nth-child(7) {
+        width: 60px;
+        text-align: center;
       }
 
-      vaadin-grid {
-        height: calc(100vh - 80px);
-        max-width: 800px;
+      table thead tr td:nth-child(7) {
+        width: 60px;
+        text-align: center;
       }
-    </style>
 
-    <app-header-layout fullbleed>
-      <app-header slot="header" fixed condenses shadow>
-        <app-toolbar>
-          <paper-icon-button icon="bnb:arrow-back" on-tap="_backTapped"></paper-icon-button>
-          <span>[[page.name]]</span>
-        </app-toolbar>
-      </app-header>
+      @media screen and (max-width: 820px) {
+        table tbody tr td:nth-child(2):before {
+          content: "pwa";
+        }
 
-      <div id="content">
-        <vaadin-grid id="toto" theme="compact" items="[[lighthouseDetails]]">
-          <vaadin-grid-column>
-            <template class="header">
-              <vaadin-grid-sorter path="time" direction="desc">time</vaadin-grid-sorter>
-            </template>
-            <template>[[_formatTime(item.time)]]</template>
-          </vaadin-grid-column>
-          <vaadin-grid-column width="100px" flex-grow="0">
-            <template class="header">pwa</template>
-            <template><div class="number">[[item.pwa]]</div></template>
-          </vaadin-grid-column>
-          <vaadin-grid-column width="100px" flex-grow="0">
-            <template class="header">performance</template>
-            <template><div class="number">[[item.performance]]</div></template>
-          </vaadin-grid-column>
-          <vaadin-grid-column width="100px" flex-grow="0">
-            <template class="header">accessibility</template>
-            <template><div class="number">[[item.accessibility]]</div></template>
-          </vaadin-grid-column>
-          <vaadin-grid-column width="100px" flex-grow="0">
-            <template class="header">best practices</template>
-            <template><div class="number">[[item.best_practices]]</div></template>
-          </vaadin-grid-column>
-          <vaadin-grid-column width="100px" flex-grow="0">
-            <template class="header">seo</template>
-            <template><div class="number">[[item.seo]]</div></template>
-          </vaadin-grid-column>
-          <vaadin-grid-column width="52px" flex-grow="0">
-            <template class="header"></template>
-            <template>
-              <a href="[[_computeUrl(item.time_key)]]" title="Show report" target="_blank">
-                <paper-icon-button icon="bnb:visibility"></paper-icon-button>
-              </a>
-            </template>
-          </vaadin-grid-column>
-        </vaadin-grid>
-      </div>
-    </app-header-layout>
+        table tbody tr td:nth-child(3):before {
+          content: "performance";
+        }
+
+        table tbody tr td:nth-child(4):before {
+          content: "accessibility";
+        }
+
+        table tbody tr td:nth-child(5):before {
+          content: "best practices";
+        }
+
+        table tbody tr td:nth-child(6):before {
+          content: "seo";
+        }
+
+        table tbody tr td:nth-child(7):before {
+          content: "open report";
+        }
+
+        a mwc-icon-button {
+          margin-left: -16px;
+          margin-top: -16px;
+        }
+      }
+      `,
+    ];
+  }
+
+  renderHeader() {
+    return html`
+      <tr>
+        <th>date</th>
+        <th>pwa</th>
+        <th>performance</th>
+        <th>accessibility</th>
+        <th>best practices</th>
+        <th>seo</th>
+        <th></th>
+      </tr>
     `;
   }
 
-  static get properties() {
-    return {
-      page: Object,
-      lighthouseDetails: Object,
-    };
+  renderItem(item) {
+    return html`
+      <tr>
+        <td>${this.formatTime(item.time)}</td>
+        <td>${this.formatNumber(item.pwa)}</td>
+        <td>${this.formatNumber(item.performance)}</td>
+        <td>${this.formatNumber(item.accessibility)}</td>
+        <td>${this.formatNumber(item.best_practices)}</td>
+        <td>${this.formatNumber(item.seo)}</td>
+        <td>
+          <a href="${this.computeUrl(item.time_key)}" title="Show HAR" target="_blank">
+            <mwc-icon-button icon="visibility"></mwc-icon-button>
+          </a>
+      </tr>
+    `;
   }
 
   stateChanged(state) {
-    this.page = state.pages.current;
-    this.lighthouseDetails = state.stats.lighthouse_details;
+    super.stateChanged(state);
+    if (state.stats.lighthouse_details) {
+      this.details = state.stats.lighthouse_details.concat().sort( (a, b) => this.sortDetails(a,b));
+    }
+    else {
+      this.details = [];
+    }
   }
 
-  _backTapped() {
-    store.dispatch(updateRoute(`page/${this.page.id}`));
-  }
 
-  _formatTime(time) {
-    return format(new Date(time), 'MMM dd, yyyy HH:mm');
-  }
-
-  _computeUrl(key) {
+  computeUrl(key) {
     if (key) {
-      return getRequestUrl(`pages/${this.page.id}/lighthouse/${key}`);
+      return getRequestUrl(`pages/${this.page.id}/lighthouse/${key}#performance`);
     }
     return '';
   }
 }
+
 window.customElements.define('bnb-lighthouse-details', BnbLighthouseDetails);

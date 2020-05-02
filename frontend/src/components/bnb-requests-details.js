@@ -1,120 +1,95 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element';
-import '@polymer/app-layout/app-layout';
-import '@polymer/paper-icon-button/paper-icon-button';
-import '@vaadin/vaadin-grid/vaadin-grid';
-import '@vaadin/vaadin-grid/vaadin-grid-sorter';
-import { format } from 'date-fns';
-import { connect } from 'pwa-helpers';
-import { store } from '../store';
-import { updateRoute } from '../actions/app';
+import { html, css } from 'lit-element';
+import '@material/mwc-icon-button';
 import { getRequestUrl } from '../common';
-import './bnb-common-styles';
-import './bnb-grid-styles';
-import './bnb-icons';
+import { BnbPageDetails } from './bnb-page-details';
 
-class BnbRequestsDetails extends connect(store)(PolymerElement) {
-  static get template() {
+class BnbRequestsDetails extends BnbPageDetails {
+  static get styles() {
+    return [
+      super.styles,
+      css`
+      @media screen and (max-width: 820px) {
+        table tbody tr td:nth-child(2):before {
+          content: "html";
+        }
+
+        table tbody tr td:nth-child(3):before {
+          content: "css";
+        }
+
+        table tbody tr td:nth-child(4):before {
+          content: "javascript";
+        }
+
+        table tbody tr td:nth-child(5):before {
+          content: "image";
+        }
+
+        table tbody tr td:nth-child(6):before {
+          content: "font";
+        }
+
+        table tbody tr td:nth-child(7):before {
+          content: "other";
+        }
+
+        table tbody tr td:nth-child(8):before {
+          content: "open report";
+        }
+
+        a mwc-icon-button {
+          margin-left: -16px;
+          margin-top: -16px;
+        }
+      }
+      `,
+    ];
+  }
+
+  renderHeader() {
     return html`
-    <style include="bnb-common-styles">
-      :host {
-        @apply --layout-vertical;
-      }
-
-      #content {
-        display: flex;
-        justify-content: center;
-        padding: 8px;
-      }
-
-      a {
-        color: rgba(0, 0, 0, var(--dark-primary-opacity));
-      }
-
-      .right {
-        text-align: right;
-      }
-
-      vaadin-grid {
-        height: calc(100vh - 80px);
-        max-width: 800px;
-      }
-    </style>
-
-    <app-header-layout fullbleed>
-      <app-header slot="header" fixed condenses shadow>
-        <app-toolbar>
-          <paper-icon-button icon="bnb:arrow-back" on-tap="_backTapped"></paper-icon-button>
-          <span>[[page.name]]</span>
-        </app-toolbar>
-      </app-header>
-
-      <div id="content" class="fit">
-        <vaadin-grid id="grid" theme="bnb-grid" items="[[assetsDetails]]">
-          <vaadin-grid-column>
-            <template class="header">
-              <vaadin-grid-sorter path="time" direction="desc">time</vaadin-grid-sorter>
-            </template>
-            <template>[[_formatTime(item.time)]]</template>
-          </vaadin-grid-column>
-          <vaadin-grid-column width="100px" flex-grow="0">
-            <template class="header">html</template>
-            <template><div class="right">[[item.html_requests]]</div></template>
-          </vaadin-grid-column>
-          <vaadin-grid-column width="100px" flex-grow="0">
-            <template class="header">css</template>
-            <template><div class="right">[[item.css_requests]]</div></template>
-          </vaadin-grid-column>
-          <vaadin-grid-column width="100px" flex-grow="0">
-            <template class="header">javascript</template>
-            <template><div class="right">[[item.js_requests]]</div></template>
-          </vaadin-grid-column>
-          <vaadin-grid-column width="100px" flex-grow="0">
-            <template class="header">image</template>
-            <template><div class="right">[[item.image_requests]]</div></template>
-          </vaadin-grid-column>
-          <vaadin-grid-column width="100px" flex-grow="0">
-            <template class="header">font</template>
-            <template><div class="right">[[item.font_requests]]</div></template>
-          </vaadin-grid-column>
-          <vaadin-grid-column width="100px" flex-grow="0">
-              <template class="header">other</template>
-              <template><div class="right">[[item.other_requests]]</div></template>
-            </vaadin-grid-column>
-            <vaadin-grid-column width="52px" flex-grow="0">
-            <template class="header"></template>
-            <template>
-              <a href="[[_computeUrl(item.time_key)]]" title="Show HAR" target="_blank">
-                <paper-icon-button icon="bnb:visibility"></paper-icon-button>
-              </a>
-            </template>
-          </vaadin-grid-column>
-        </vaadin-grid>
-      </div>
-    </app-header-layout>
+      <tr>
+        <th>date</th>
+        <th>html</th>
+        <th>css</th>
+        <th>javascript</th>
+        <th>image</th>
+        <th>font</th>
+        <th>other</th>
+        <th></th>
+      </tr>
     `;
   }
 
-  static get properties() {
-    return {
-      page: Object,
-      assetsDetails: Object,
-    };
+  renderItem(item) {
+    return html`
+      <tr>
+        <td>${this.formatTime(item.time)}</td>
+        <td>${item.html_requests}</td>
+        <td>${item.css_requests}</td>
+        <td>${item.js_requests}</td>
+        <td>${item.image_requests}</td>
+        <td>${item.font_requests}</td>
+        <td>${item.other_requests}</td>
+        <td>
+          <a href="${this.computeUrl(item.time_key)}" title="Show HAR" target="_blank">
+            <mwc-icon-button icon="visibility"></mwc-icon-button>
+          </a>
+      </tr>
+    `;
   }
 
   stateChanged(state) {
-    this.page = state.pages.current;
-    this.assetsDetails = state.stats.assets_details;
+    super.stateChanged(state);
+    if (state.stats.assets_details) {
+      this.details = state.stats.assets_details.concat().sort( (a, b) => this.sortDetails(a,b));
+    }
+    else {
+      this.details = [];
+    }
   }
 
-  _backTapped() {
-    store.dispatch(updateRoute(`page/${this.page.id}`));
-  }
-
-  _formatTime(time) {
-    return format(new Date(time), 'MMM dd, yyyy HH:mm');
-  }
-
-  _computeUrl(key) {
+  computeUrl(key) {
     if (key) {
       let result = 'http://www.softwareishard.com/har/viewer/?inputUrl=';
       result += `${window.location.protocol}//${window.location.host}`;
@@ -124,4 +99,5 @@ class BnbRequestsDetails extends connect(store)(PolymerElement) {
     return '';
   }
 }
+
 window.customElements.define('bnb-requests-details', BnbRequestsDetails);

@@ -61,7 +61,7 @@ export class BnbPageDetails extends connect(store)(LitElement) {
     }
 
     table thead tr th:nth-child(1) {
-      width: 160px;
+      width: 140px;
       padding-left: 16px;
       text-align: left;
     }
@@ -79,7 +79,6 @@ export class BnbPageDetails extends connect(store)(LitElement) {
     table tbody {
       overflow: auto;
     }
-
 
     table tbody tr {
       height: 50px;
@@ -109,6 +108,56 @@ export class BnbPageDetails extends connect(store)(LitElement) {
       color: rgba(0, 0, 0, var(--mdc-theme-on-primary));
     }
 
+
+    @media screen and (max-width: 820px) {
+      table {
+        display: block;
+      }
+
+      table * {
+        position: relative;
+      }
+
+      table>*, table tr, table td, table th {
+        display: block;
+      }
+
+      table thead {
+        display: none;
+      }
+
+      table tbody tr {
+        height: auto;
+        padding-top: 16px;
+      }
+
+      table tbody tr td {
+        padding-left: 40% !important;
+        margin-bottom: 24px;
+      }
+
+      table tbody tr td:before {
+        display: block;
+        position: absolute;
+        font-size: 14px;
+        color: #999;
+        line-height: 1.2;
+        font-weight: unset;
+        width: 40%;
+        left: 30px;
+        top: 0;
+      }
+
+      table tbody tr td:nth-child(1):before {
+        content: "date";
+      }
+
+      table tbody tr td:nth-child(1n) {
+        text-align: left ! important;
+        width: 380px;
+      }
+
+    }
     `;
   }
 
@@ -164,7 +213,11 @@ export class BnbPageDetails extends connect(store)(LitElement) {
   }
 
   formatBytes(bytes) {
-    return Math.round(bytes / 1024).toLocaleString();
+    return `${Math.round(bytes / 1024).toLocaleString()} kb`;
+  }
+
+  formatNumber(x) {
+    return x ? x.toLocaleString() : '';
   }
 
   computeUrl(key) {
