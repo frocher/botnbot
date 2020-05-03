@@ -14,7 +14,6 @@ import { BnbFormElement } from './bnb-form-element';
 import './bnb-top-app-bar';
 
 class BnbAddPage extends connect(store)(BnbFormElement(LitElement)) {
-
   static get properties() {
     return {
       pageName: { type: String },
@@ -121,7 +120,7 @@ class BnbAddPage extends connect(store)(BnbFormElement(LitElement)) {
     );
   }
 
-  discardDialogClosed() {
+  discardDialogClosed(action) {
     if (action === 'ok') {
       this.closePage();
     }
