@@ -3,7 +3,7 @@ import '@material/mwc-button';
 import '@material/mwc-dialog';
 import '@material/mwc-icon-button';
 import '@material/mwc-switch';
-import '@material/mwc-textfield'
+import '@material/mwc-textfield';
 import '@polymer/paper-card/paper-card';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
@@ -16,11 +16,10 @@ import './bnb-subscriptions';
 import './bnb-top-app-bar';
 
 class BnbAccount extends connect(store)(BnbFormElement(LitElement)) {
-
   static get properties() {
     return {
       user: { type: Object },
-      canSubscribe: {type: Boolean },
+      canSubscribe: { type: Boolean },
       pushKey: { type: String },
       errors: { type: Object },
     };
@@ -118,15 +117,14 @@ class BnbAccount extends connect(store)(BnbFormElement(LitElement)) {
   }
 
   renderSubscription() {
-    return this.canSubscribe ?
-      html`
+    return this.canSubscribe
+      ? html`
       <div>
         <h3>Subscription</h3>
         <bnb-subscriptions></bnb-subscriptions>
       </div>
       `
-      :
-      html``;
+      : html``;
   }
 
 
@@ -242,7 +240,7 @@ class BnbAccount extends connect(store)(BnbFormElement(LitElement)) {
 
   getNotificationPermissionState() {
     if (navigator.permissions) {
-      return navigator.permissions.query({ name: 'notifications' }).then(result => result.state);
+      return navigator.permissions.query({ name: 'notifications' }).then((result) => result.state);
     }
 
     return new Promise((resolve) => {
@@ -266,12 +264,12 @@ class BnbAccount extends connect(store)(BnbFormElement(LitElement)) {
       };
 
       return registration.pushManager.subscribe(subscribeOptions);
-    }).then(pushSubscription => pushSubscription);
+    }).then((pushSubscription) => pushSubscription);
   }
 
   unsubscribeUserFromPush() {
     return this.getSWRegistration()
-      .then(registration => registration.pushManager.getSubscription())
+      .then((registration) => registration.pushManager.getSubscription())
       .then((subscription) => {
         if (subscription) {
           return subscription.unsubscribe();
@@ -284,6 +282,7 @@ class BnbAccount extends connect(store)(BnbFormElement(LitElement)) {
         pushButton.checked = false;
       })
       .catch((err) => {
+        // eslint-disable-next-line no-console
         console.error('Failed to subscribe the user.', err);
         this.getNotificationPermissionState().then((permissionState) => {
           const pushButton = this.shadowRoot.getElementById('pushButton');
@@ -298,7 +297,9 @@ class BnbAccount extends connect(store)(BnbFormElement(LitElement)) {
   }
 
   urlB64ToUint8Array(base64String) {
+    // eslint-disable-next-line no-mixed-operators
     const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    // eslint-disable-next-line no-useless-escape
     const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
     const rawData = window.atob(base64);
     const outputArray = new Uint8Array(rawData.length);
