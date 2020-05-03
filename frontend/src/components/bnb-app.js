@@ -2,15 +2,19 @@ import { LitElement, css, html } from 'lit-element';
 import { classMap } from 'lit-html/directives/class-map';
 import '@material/mwc-snackbar';
 import { connect } from 'pwa-helpers';
+import Router from 'navigo';
 import { store } from '../store';
-import { updateRoute, loadEnvironment, loadSubscriptionPlans, showInstallPrompt, updateMessage } from '../actions/app';
+import {
+  updateRoute, loadEnvironment, loadSubscriptionPlans, showInstallPrompt, updateMessage,
+} from '../actions/app';
 import { loadBudgets } from '../actions/budgets';
 import { loadPageMembers } from '../actions/members';
 import { loadPages, loadPage } from '../actions/pages';
-import { loadPageStats, loadLighthouseDetails, loadAssetsDetails, loadUptimeDetails } from '../actions/stats';
+import {
+  loadPageStats, loadLighthouseDetails, loadAssetsDetails, loadUptimeDetails,
+} from '../actions/stats';
 import { loadStripeSubscription, loadUser } from '../actions/account';
 import { isLogged, storeCredentials, getFullPath } from '../common';
-import Router from 'navigo';
 import './bnb-analytics';
 import './bnb-common-styles';
 import './bnb-home';
@@ -82,7 +86,6 @@ class BnbApp extends connect(store)(LitElement) {
       --paper-divider-color: #B6B6B6;
       --paper-input-container-color: var(--secondary-text-color);
       --paper-input-container-focus-color: var(--google-blue-300);
-      --paper-radio-button-checked-color: var(--google-blue-300);
       --paper-tabs-selection-bar-color: var(--google-blue-300);
 
       --range-datepicker-cell-hover: var(--google-blue-300);
@@ -153,34 +156,7 @@ class BnbApp extends connect(store)(LitElement) {
   }
 
   renderClass(name) {
-    return name === this.view ? { view: true, active: true } : { view: true }
-  }
-
-  renderCurrentView() {
-    const views = {
-      'add-page' : html`<bnb-add-page class="view"></bnb-add-page>`,
-      'account'  : html`<bnb-account class="view"></bnb-account>`,
-      'bytes-details' : html`<bnb-bytes-details class="view"></bnb-bytes-details>`,
-      'home' : html`<bnb-home class="view"></bnb-home>`,
-      'members' : html`<bnb-members class="view"></bnb-members>`,
-      'edit-page' : html`<bnb-edit-page class="view"></bnb-edit-page>`,
-      'edit-password' : html`<bnb-edit-password class="view"></bnb-edit-password>`,
-      'forgot-password' : html`<bnb-forgot-password class="view"></bnb-forgot-password>`,
-      'lighthouse-details' : html`<bnb-lighthouse-details class="view"></bnb-lighthouse-details>`,
-      'page' : html`<bnb-page class="view"></bnb-page>`,
-      'performance-details' : html`<bnb-performance-details class="view"></bnb-performance-details>`,
-      'requests-details' : html`<bnb-requests-details class="view"></bnb-requests-details>`,
-      'signin' : html`<bnb-signin class="view"></bnb-signin>`,
-      'signup' : html`<bnb-signup class="view"></bnb-signup>`,
-      'uptime-details' : html`<bnb-uptime-details class="view"></bnb-uptime-details>`,
-    };
-
-    let result = views[this.view];
-    if (!result) {
-      html`<bnb-404-warning class="view"></bnb-404-warning>`;
-    }
-
-    return result;
+    return name === this.view ? { view: true, active: true } : { view: true };
   }
 
   stateChanged(state) {
@@ -204,62 +180,62 @@ class BnbApp extends connect(store)(LitElement) {
     this.router = new Router(getFullPath(''));
 
     this.router.on({
-      '/add-page' : () => {
+      '/add-page': () => {
         this.updateView('add-page');
       },
-      '/account' : () => {
+      '/account': () => {
         this.updateView('account');
       },
-      '/bytes-details/:id' : (params) => {
+      '/bytes-details/:id': (params) => {
         this.pageId = params.id;
         this.updateView('bytes-details');
       },
-      '/edit-page/:id' : (params) => {
+      '/edit-page/:id': (params) => {
         this.pageId = params.id;
         this.updateView('edit-page');
       },
-      '/edit-password' : () => {
+      '/edit-password': () => {
         this.updateView('edit-password');
       },
-      '/forgot-password' : () => {
+      '/forgot-password': () => {
         this.updateView('forgot-password');
       },
-      '/' : () => {
+      '/': () => {
         this.updateView('home');
       },
-      '/lighthouse-details/:id' : (params) => {
+      '/lighthouse-details/:id': (params) => {
         this.pageId = params.id;
         this.updateView('lighthouse-details');
       },
-      '/members/:id' : (params) => {
+      '/members/:id': (params) => {
         this.pageId = params.id;
         this.updateView('members');
       },
-      '/page/:id' : (params) => {
+      '/page/:id': (params) => {
         this.pageId = params.id;
         this.updateView('page');
       },
-      '/performance-details/:id' : (params) => {
+      '/performance-details/:id': (params) => {
         this.pageId = params.id;
         this.updateView('performance-details');
       },
-      '/requests-details/:id' : (params) => {
+      '/requests-details/:id': (params) => {
         this.pageId = params.id;
         this.updateView('requests-details');
       },
-      '/signin' : () => {
+      '/signin': () => {
         this.updateView('signin');
       },
-      '/signup' : () => {
+      '/signup': () => {
         this.updateView('signup');
       },
-      '/uptime-details/:id' : (params) => {
+      '/uptime-details/:id': (params) => {
         this.pageId = params.id;
         this.updateView('uptime-details');
       },
     });
 
-    this.router.notFound( () => {
+    this.router.notFound(() => {
       this.updateView('404-warning');
     });
 
@@ -268,7 +244,6 @@ class BnbApp extends connect(store)(LitElement) {
 
   updateView(view) {
     if (this.view !== view) {
-
       // Check if we find credentials in parameters (used for omniauth)
       // if true : store credentials and remove them from the query string
       if (this.getUrlParameter('auth_token')) {
@@ -307,8 +282,8 @@ class BnbApp extends connect(store)(LitElement) {
     });
 
 
-    window.addEventListener('online', e => this.notifyNetworkStatus(e));
-    window.addEventListener('offline', e => this.notifyNetworkStatus(e));
+    window.addEventListener('online', (e) => this.notifyNetworkStatus(e));
+    window.addEventListener('offline', (e) => this.notifyNetworkStatus(e));
   }
 
   /**
@@ -450,6 +425,7 @@ class BnbApp extends connect(store)(LitElement) {
 
 
   getUrlParameter(name) {
+    // eslint-disable-next-line no-useless-escape
     const replaced = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
     const regex = new RegExp(`[\\?&]${replaced}=([^&#]*)`);
     const results = regex.exec(window.location.search);
