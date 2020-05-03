@@ -1,7 +1,7 @@
 import { LitElement, css, html } from 'lit-element';
-import '@material/mwc-icon-button'
-import '@material/mwc-list/mwc-list-item'
-import '@material/mwc-menu'
+import '@material/mwc-icon-button';
+import '@material/mwc-list/mwc-list-item';
+import '@material/mwc-menu';
 import '@polymer/paper-spinner/paper-spinner';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
@@ -91,10 +91,10 @@ class BnbHome extends connect(store)(LitElement) {
         }
       }
       `;
-    }
+  }
 
-    render() {
-      return html`
+  render() {
+    return html`
       <bnb-top-app-bar>
         <div slot="title">All pages</div>
         <mwc-icon-button id="addBtn" slot="actionItems" icon="add"></mwc-icon-button>
@@ -126,7 +126,7 @@ class BnbHome extends connect(store)(LitElement) {
       case 2:
         return html`
           <div id="withData">
-            ${this.pages ? this.pages.map(i => this.renderCard(i)) : html``}
+            ${this.pages ? this.pages.map((i) => this.renderCard(i)) : html``}
           </div>
         `;
     }
@@ -154,8 +154,7 @@ class BnbHome extends connect(store)(LitElement) {
   stateChanged(state) {
     if (state.pages.all) {
       this.pages = [...state.pages.all].sort(this._sortPages);
-    }
-    else {
+    } else {
       this.pages = null;
     }
 
