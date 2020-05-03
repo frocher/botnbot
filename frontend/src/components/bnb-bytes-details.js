@@ -82,9 +82,8 @@ class BnbBytesDetails extends BnbPageDetails {
   stateChanged(state) {
     super.stateChanged(state);
     if (state.stats.assets_details) {
-      this.details = state.stats.assets_details.concat().sort( (a, b) => this.sortDetails(a,b));
-    }
-    else {
+      this.details = state.stats.assets_details.concat().sort((a, b) => this.sortDetails(a, b));
+    } else {
       this.details = [];
     }
   }

@@ -50,14 +50,14 @@ class BnbAuthForm extends LitElement {
     </paper-card>
 
     <div class="links">
-      ${this.buttons.map( (i, index) => this.renderLink(i, index))}
+      ${this.buttons.map((i, index) => this.renderLink(i, index))}
     </div>
     `;
   }
 
   renderLink(i, index) {
-    const prefix = index !== 0 ? html`&nbsp;|&nbsp;`: html``;
-    return html`${prefix}<bnb-anchor text="${i.text}" path="${i.path}"></bnb-anchor>`
+    const prefix = index !== 0 ? html`&nbsp;|&nbsp;` : html``;
+    return html`${prefix}<bnb-anchor text="${i.text}" path="${i.path}"></bnb-anchor>`;
   }
 
   static get properties() {
