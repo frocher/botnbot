@@ -78,7 +78,7 @@ class BnbBudget extends LitElement {
   }
 
   firstUpdated() {
-    const resizeObserver = new ResizeObserver( () => {
+    const resizeObserver = new ResizeObserver(() => {
       this.onResize();
     });
 

@@ -123,9 +123,11 @@ class BnbPageCard extends connect(store)(GestureEventListeners(PolymerElement)) 
     if (item.locked) {
       return 'locked';
     }
-    else if (item.uptime_status === 0) {
+
+    if (item.uptime_status === 0) {
       return 'hurt';
     }
+
     return '';
   }
 }

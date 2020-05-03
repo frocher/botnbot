@@ -15,7 +15,9 @@ import { find } from 'lodash-es';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
 import { updateRoute } from '../actions/app';
-import { createPageMember, updatePageMember, deletePageMember, updatePageOwner } from '../actions/members';
+import {
+  createPageMember, updatePageMember, deletePageMember, updatePageOwner,
+} from '../actions/members';
 import './bnb-grid-styles';
 import './bnb-icons';
 import './bnb-top-app-bar';
@@ -152,24 +154,22 @@ class BnbMembers extends connect(store)(PolymerElement) {
     this.$.confirmTransferDlg.addEventListener('closed', (e) => this._onConfirmTransferDialogClosed(e.detail.action));
     this.shadowRoot.getElementById('closeBtn').addEventListener('tap', () => this.closeTapped());
 
-    this.$.roleColumn.renderer = function(root, column, rowData) {
-      const item = rowData.item;
+    // eslint-disable-next-line func-names
+    this.$.roleColumn.renderer = (root, column, rowData) => {
+      const item = rowData;
       let text = 'unknown';
       if (item.isOwner) {
         text = 'Owner';
-      }
-      else if (item.role === 'admin') {
+      } else if (item.role === 'admin') {
         text = 'Administrator';
-      }
-      else if (item.role === 'master') {
+      } else if (item.role === 'master') {
         text = 'Master';
-      }
-      else if (item.role === 'editor') {
+      } else if (item.role === 'editor') {
         text = 'Editor';
-      }
-      else if (item.role === 'guest') {
+      } else if (item.role === 'guest') {
         text = 'Guest';
       }
+      // eslint-disable-next-line no-param-reassign
       root.textContent = text;
     };
   }
@@ -183,7 +183,7 @@ class BnbMembers extends connect(store)(PolymerElement) {
 
   emailChanged() {
     const email = this.$.email.value;
-    const member = find(this.members, o => o.email === email);
+    const member = find(this.members, (o) => o.email === email);
     if (!member) {
       this.$.buttons.selected = 0;
     } else {
@@ -211,7 +211,7 @@ class BnbMembers extends connect(store)(PolymerElement) {
     if (this.validateInputs()) {
       const email = this.$.email.value;
       const role = this.$.role.selected;
-      const member = find(this.members, o => o.email === email);
+      const member = find(this.members, (o) => o.email === email);
       store.dispatch(updatePageMember(this.page.id, { id: member.id, email, role }));
     }
   }
@@ -219,7 +219,7 @@ class BnbMembers extends connect(store)(PolymerElement) {
   removeTapped() {
     if (this.validateInputs()) {
       const email = this.$.email.value;
-      const member = find(this.members, o => o.email === email);
+      const member = find(this.members, (o) => o.email === email);
       store.dispatch(deletePageMember(this.page.id, member.id));
     }
   }
@@ -237,7 +237,7 @@ class BnbMembers extends connect(store)(PolymerElement) {
   _onConfirmTransferDialogClosed(action) {
     if (action === 'ok') {
       const email = this.$.email.value;
-      const member = find(this.members, o => o.email === email);
+      const member = find(this.members, (o) => o.email === email);
       store.dispatch(updatePageOwner(this.page.id, member.id));
     }
   }
@@ -248,7 +248,7 @@ class BnbMembers extends connect(store)(PolymerElement) {
   }
 
   _findOwner() {
-    return find(this.members, m => m.isOwner);
+    return find(this.members, (m) => m.isOwner);
   }
 
   _membersChanged() {

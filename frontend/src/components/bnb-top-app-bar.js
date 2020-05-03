@@ -1,5 +1,5 @@
-import {TopAppBarFixed} from '@material/mwc-top-app-bar-fixed';
-import {css} from 'lit-element';
+import { TopAppBarFixed } from '@material/mwc-top-app-bar-fixed';
+import { css } from 'lit-element';
 
 export class BnbTopAppBar extends TopAppBarFixed {
   static get styles() {
@@ -14,10 +14,9 @@ export class BnbTopAppBar extends TopAppBarFixed {
       ::slotted(mwc-button) {
         --mdc-theme-primary: white;
       }
-      `
+      `,
     ];
   }
-
 }
 
 customElements.define('bnb-top-app-bar', BnbTopAppBar);

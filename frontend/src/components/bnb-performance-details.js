@@ -84,9 +84,8 @@ class BnbPerformanceDetails extends BnbPageDetails {
   stateChanged(state) {
     super.stateChanged(state);
     if (state.stats.lighthouse_details) {
-      this.details = state.stats.lighthouse_details.concat().sort( (a, b) => this.sortDetails(a,b));
-    }
-    else {
+      this.details = state.stats.lighthouse_details.concat().sort((a, b) => this.sortDetails(a, b));
+    } else {
       this.details = [];
     }
   }

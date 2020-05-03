@@ -7,7 +7,6 @@ import { store } from '../store';
 import { updateRoute } from '../actions/app';
 
 class BnbPageLockedCard extends connect(store)(LitElement) {
-
   static get properties() {
     return {
       isOwner: { type: Boolean },

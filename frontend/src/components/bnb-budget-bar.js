@@ -100,7 +100,7 @@ class BnbBudgetBar extends LitElement {
         </mwc-select>
 
         <mwc-select id="itemField" outlined required validationMessage="This field is required" label="Item">
-          ${this.items.map( i => this.renderFieldItem(i))}
+          ${this.items.map((i) => this.renderFieldItem(i))}
         </mwc-select>
 
         <mwc-textfield id="budgetField" outlined label="Budget" type="number" min="0" required validationMessage="This field is required" value="{{budget}}">

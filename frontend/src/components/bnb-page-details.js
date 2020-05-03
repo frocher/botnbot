@@ -174,7 +174,7 @@ export class BnbPageDetails extends connect(store)(LitElement) {
             ${this.renderHeader()}
           </thead>
           <tbody>
-            ${this.details.map( i => this.renderItem(i))}
+            ${this.details.map((i) => this.renderItem(i))}
           </tbody>
         </table>
         </div>
@@ -218,9 +218,5 @@ export class BnbPageDetails extends connect(store)(LitElement) {
 
   formatNumber(x) {
     return x ? x.toLocaleString() : '';
-  }
-
-  computeUrl(key) {
-    return '';
   }
 }

@@ -114,9 +114,8 @@ class BnbUptimeDetails extends BnbPageDetails {
   stateChanged(state) {
     super.stateChanged(state);
     if (state.stats.uptime_details) {
-      this.details = state.stats.uptime_details.concat().sort( (a, b) => this.sortDetails(a,b));
-    }
-    else {
+      this.details = state.stats.uptime_details.concat().sort((a, b) => this.sortDetails(a, b));
+    } else {
       this.details = [];
     }
   }
@@ -135,7 +134,6 @@ class BnbUptimeDetails extends BnbPageDetails {
     }
     return '';
   }
-
 }
 
 window.customElements.define('bnb-uptime-details', BnbUptimeDetails);
