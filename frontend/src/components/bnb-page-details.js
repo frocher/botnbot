@@ -6,6 +6,7 @@ import { store } from '../store';
 import { updateRoute } from '../actions/app';
 import './bnb-top-app-bar';
 
+// eslint-disable-next-line import/prefer-default-export
 export class BnbPageDetails extends connect(store)(LitElement) {
   static get properties() {
     return {
