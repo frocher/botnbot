@@ -1,20 +1,17 @@
 import { LitElement, css, html } from 'lit-element';
 import '@material/mwc-button';
+import '@material/mwc-dialog';
+import '@material/mwc-formfield';
 import '@material/mwc-icon-button';
+import '@material/mwc-radio';
 import '@material/mwc-switch';
 import '@material/mwc-textfield';
-import '@polymer/app-layout/app-layout';
-import '@polymer/paper-button/paper-button';
 import '@polymer/paper-card/paper-card';
-import '@polymer/paper-dialog/paper-dialog';
-import '@polymer/paper-radio-button/paper-radio-button';
-import '@polymer/paper-radio-group/paper-radio-group';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
 import { updateRoute } from '../actions/app';
 import { updatePage } from '../actions/pages';
 import { BnbFormElement } from './bnb-form-element';
-import './bnb-icons';
 import './bnb-top-app-bar';
 
 class BnbEditPage extends connect(store)(BnbFormElement(LitElement)) {
@@ -31,17 +28,22 @@ class BnbEditPage extends connect(store)(BnbFormElement(LitElement)) {
     }
 
     mwc-switch {
-      display: block;
-      margin-bottom: 8px;
+      margin-left: 12px;
+      --mdc-theme-surface: var(--mdc-theme-text-primary-on-background);
+      --mdc-theme-on-surface: var(--mdc-theme-text-primary-on-background);
     }
 
-    mwc-switch span {
+    mwc-switch {
       padding-left: 8px;
-      vertical-align: text-bottom;
+    }
+
+    .mdc-label {
+      margin-top: -12px !important;
     }
 
     mwc-textfield {
       width: 100%;
+      --mdc-theme-primary: #fff;
     }
 
     #content {
@@ -65,6 +67,7 @@ class BnbEditPage extends connect(store)(BnbFormElement(LitElement)) {
     #slackInformations {
       display: flex;
       flex-direction: row;
+      margin-top: 12px;
       margin-right: 40px;
       margin-left: 40px;
     }
@@ -88,37 +91,45 @@ class BnbEditPage extends connect(store)(BnbFormElement(LitElement)) {
           <paper-card>
             <mwc-textfield id="name" type="text" label="Page name" outlined value="${this.name}"></mwc-textfield>
             <mwc-textfield id="url" type="url" label="URL" outlined value="${this.url}"></mwc-textfield>
-            <paper-radio-group id="device" selected="${this.device}">
-              <paper-radio-button name="mobile">Mobile</paper-radio-button>
-              <paper-radio-button name="desktop">Desktop</paper-radio-button>
-            </paper-radio-group>
+            <mwc-formfield label="Mobile">
+              <mwc-radio id="mobileBtn" name="device" ?checked="${this.device === 'mobile'}"></mwc-radio>
+            </mwc-formfield>
+            <mwc-formfield label="Desktop">
+              <mwc-radio id="desktopBtn" name="device" ?checked="${this.device === 'desktop'}"></mwc-radio>
+            </mwc-formfield>
           </paper-card>
           <h3>Uptime check</h3>
           <paper-card>
             <mwc-textfield id="uptimeKeyword" type="text" label="Keyword" outlined value="${this.uptimeKeyword}"></mwc-textfield>
-            <paper-radio-group id="uptimeKeywordType" selected="${this.uptimeKeywordType}">
-              <paper-radio-button name="presence">Presence</paper-radio-button>
-              <paper-radio-button name="absence">Absence</paper-radio-button>
-            </paper-radio-group>
+            <mwc-formfield label="Presence">
+              <mwc-radio id="presenceBtn" name="uptimeKeywordType" ?checked="${this.uptimeKeywordType === 'presence'}"></mwc-radio>
+            </mwc-formfield>
+            <mwc-formfield label="Absence">
+              <mwc-radio id="absenceBtn" name="uptimeKeywordType" ?checked="${this.uptimeKeywordType === 'absence'}"></mwc-radio>
+            </mwc-formfield>
           </paper-card>
           <h3>Notifications</h3>
           <paper-card>
-            <mwc-switch id="mailNotify" ?checked="${this.mailNotify}"><span>by mail<span></mwc-switch>
-            <mwc-switch id="pushNotify" ?checked="${this.pushNotify}"><span>by push<span></mwc-switch>
-            <mwc-switch id="slackNotify" ?checked="${this.slackNotify}"><span>by Slack</span></mwc-switch>
+            <mwc-formfield label="by mail">
+              <mwc-switch id="mailNotify" ?checked="${this.mailNotify}"></mwc-switch>
+            </mwc-formfield>
+            <mwc-formfield label="by push">
+              <mwc-switch id="pushNotify" ?checked="${this.pushNotify}"></mwc-switch>
+            </mwc-formfield>
+            <mwc-formfield label="by Slack">
+              <mwc-switch id="slackNotify" ?checked="${this.slackNotify}"></mwc-switch>
+            </mwc-formfield>
             ${this.renderSlackInformations()}
           </paper-card>
         </div>
       </div>
     </bnb-top-app-bar>
 
-    <paper-dialog id="discardDlg" modal>
-      <p>Discard edit.</p>
-      <div class="buttons">
-        <paper-button dialog-dismiss>Cancel</paper-button>
-        <paper-button id="confirmBtn" dialog-confirm>Discard</paper-button>
-      </div>
-    </paper-dialog>
+    <mwc-dialog id="discardDlg">
+      <p>Are you sure you want to discard your modifications.</p>
+      <mwc-button dialogAction="ok" slot="primaryAction">Discard</mwc-button>
+      <mwc-button dialogAction="cancel" slot="secondaryAction">Cancel</mwc-button>
+    </mwc-dialog>
     `;
   }
 
@@ -149,7 +160,6 @@ class BnbEditPage extends connect(store)(BnbFormElement(LitElement)) {
       slackChannel: { type: String },
       errors: { type: Object },
     };
-
   }
 
   get fields() {
@@ -180,20 +190,26 @@ class BnbEditPage extends connect(store)(BnbFormElement(LitElement)) {
 
   firstUpdated() {
     this.shadowRoot.getElementById('slackNotify').addEventListener('change', () => this.slackNotifyChanged());
-    this.shadowRoot.getElementById('closeBtn').addEventListener('tap', () => this.closeTapped());
-    this.shadowRoot.getElementById('saveBtn').addEventListener('tap', () => this.saveTapped());
-    this.shadowRoot.getElementById('confirmBtn').addEventListener('tap', () => this.closePage());
+    this.shadowRoot.getElementById('closeBtn').addEventListener('click', () => this.closeTapped());
+    this.shadowRoot.getElementById('saveBtn').addEventListener('click', () => this.saveTapped());
+    this.shadowRoot.getElementById('discardDlg').addEventListener('closed', (e) => this.discardDialogClosed(e.detail.action));
   }
 
   slackNotifyChanged() {
     this.slackNotify = this.shadowRoot.getElementById('slackNotify').checked;
   }
 
+  discardDialogClosed(action) {
+    if (action === 'ok') {
+      this.closePage();
+    }
+  }
+
   closeTapped() {
     const nameValue = this.shadowRoot.getElementById('name').value;
     const urlValue = this.shadowRoot.getElementById('url').value;
     if (nameValue !== this.name || urlValue !== this.url) {
-      this.shadowRoot.getElementById('discardDlg').open();
+      this.shadowRoot.getElementById('discardDlg').show();
     } else {
       this.closePage();
     }
@@ -206,12 +222,15 @@ class BnbEditPage extends connect(store)(BnbFormElement(LitElement)) {
 
   saveTapped() {
     this.validateFields(this.fields);
+
+    const device = this.shadowRoot.getElementById('mobileBtn').checked ? 'mobile' : 'desktop';
+    const uptimeKeywordType = this.shadowRoot.getElementById('presenceBtn').checked ? 'presence' : 'absence';
     const page = {
       name: this.shadowRoot.getElementById('name').value,
       url: this.shadowRoot.getElementById('url').value,
-      device: this.shadowRoot.getElementById('device').selected,
+      device,
       uptime_keyword: this.shadowRoot.getElementById('uptimeKeyword').value,
-      uptime_keyword_type: this.shadowRoot.getElementById('uptimeKeywordType').selected,
+      uptime_keyword_type: uptimeKeywordType,
       mail_notify: this.shadowRoot.getElementById('mailNotify').checked,
       push_notify: this.shadowRoot.getElementById('pushNotify').checked,
       slack_notify: this.shadowRoot.getElementById('slackNotify').checked,

@@ -1,115 +1,99 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element';
-import { mixinBehaviors } from '@polymer/polymer/lib/legacy/class';
-import { IronResizableBehavior } from '@polymer/iron-resizable-behavior/iron-resizable-behavior';
-import '@polymer/iron-pages/iron-pages';
+import { LitElement, css, html } from 'lit-element';
 import '@polymer/paper-spinner/paper-spinner';
-import { isEqual, find } from 'lodash-es';
+import { isEqual } from 'lodash-es';
 
-class BnbChart extends mixinBehaviors([IronResizableBehavior], PolymerElement) {
-  static get template() {
-    return html`
-    <style>
-      :host {
-        display: inline-block;
-      }
-
-      iron-pages {
-        width: 100%;
-        height: 100%;
-      }
-
-      #canvas {
-        position:relative;
-        width: 100%;
-        height: 100%;
-      }
-
-      #loading {
-        display: flex;
-
-        width: 100%;
-        height: 100%;
-
-        color: #999;
-
-        font-size: 24px;
-
-        align-items: center;
-        justify-content: center;
-      }
-
-      #noData {
-        display: flex;
-        width: 100%;
-        height: 100%;
-        color: #999;
-        font-size: 36px;
-        align-items: center;
-        justify-content: center;
-      }
-
-      #noData span {
-        margin-top: -50px;
-      }
-    </style>
-
-    <iron-pages selected="[[selectedPage]]">
-      <div id="loading">
-        <span>Loading&nbsp;</span>
-        <paper-spinner active></paper-spinner>
-      </div>
-      <div id="noData"><span>No data</span></div>
-      <div id="canvas">
-        <canvas id="chart"></canvas>
-      </div>
-    </iron-pages>
-    `;
-  }
-
+class BnbChart extends LitElement {
   static get properties() {
     return {
-      chart: {
-        notify: true,
-      },
-      data: {
-        type: Object,
-        value() {
-          return null;
-        },
-      },
-      model: {
-        type: Array,
-        value() {
-          return [];
-        },
-      },
-      symbol: {
-        type: String,
-        value: '',
-      },
-      type: {
-        type: String,
-        value: 'line',
-      },
-      selectedPage: {
-        type: Number,
-        value: 0,
-      },
+      data: { type: Object },
+      model: { type: Array },
+      symbol: { type: String },
+      type: { type: String },
+      selectedPage: { type: Number },
     };
   }
 
-  static get observers() {
-    return [
-      'updateChart(data.*)',
-    ];
+  static get styles() {
+    return css`
+    :host {
+      display: inline-block;
+    }
+
+    #canvas {
+      position:relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    #loading {
+      display: flex;
+
+      width: 100%;
+      height: 100%;
+
+      color: #999;
+
+      font-size: 24px;
+
+      align-items: center;
+      justify-content: center;
+    }
+
+    #noData {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      color: #999;
+      font-size: 36px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #noData span {
+      margin-top: -50px;
+    }
+  `;
   }
 
-  ready() {
-    super.ready();
-    this.addEventListener('iron-resize', this.onIronResize);
+  constructor() {
+    super();
+    this.symbol = '';
+    this.type = 'line';
+    this.selectedPage = 0;
   }
 
-  onIronResize() {
+  render() {
+    return html`
+    <div id="loading" style="${this.renderStyle(0)}">
+      <span>Loading&nbsp;</span>
+      <paper-spinner active></paper-spinner>
+    </div>
+    <div id="noData" style="${this.renderStyle(1)}">
+      <span>No data</span>
+    </div>
+    <div id="canvas" style="${this.renderStyle(2)}">
+      <canvas id="chart"></canvas>
+    </div>
+    `;
+  }
+
+  renderStyle(index) {
+    return this.selectedPage === index ? '' : 'display:none';
+  }
+
+  firstUpdated() {
+    const resizeObserver = new ResizeObserver(() => {
+      this.onResize();
+    });
+    resizeObserver.observe(this.shadowRoot.getElementById('canvas'));
+  }
+
+  update() {
+    super.update();
+    this.updateChart();
+  }
+
+  onResize() {
     if (this.chart) {
       this.chart.resize();
       this.chart.render(true);
@@ -189,7 +173,7 @@ class BnbChart extends mixinBehaviors([IronResizableBehavior], PolymerElement) {
         };
 
         if (this.type === 'area') {
-          options.tooltips.callbacks.footer = function (tooltipItems, data) {
+          options.tooltips.callbacks.footer = (tooltipItems, data) => {
             let sum = 0;
             tooltipItems.forEach((tooltipItem) => {
               sum += data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].y;
@@ -197,7 +181,7 @@ class BnbChart extends mixinBehaviors([IronResizableBehavior], PolymerElement) {
             return `Total: ${Math.round(sum)}`;
           };
         } else if (this.type === 'bar') {
-          options.tooltips.callbacks.footer = function (tooltipItems, data) {
+          options.tooltips.callbacks.footer = (tooltipItems, data) => {
             let sum = 0;
             tooltipItems.forEach((tooltipItem) => {
               sum += data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].y;
@@ -206,12 +190,14 @@ class BnbChart extends mixinBehaviors([IronResizableBehavior], PolymerElement) {
           };
         }
 
-        const ctx = this.$.chart;
-        this.chart = new Chart(ctx, {
-          type: chartType,
-          data: chartData,
-          options,
-        });
+        const ctx = this.shadowRoot.getElementById('chart');
+        if (ctx) {
+          this.chart = new Chart(ctx, {
+            type: chartType,
+            data: chartData,
+            options,
+          });
+        }
       }
     }
   }
@@ -246,7 +232,7 @@ class BnbChart extends mixinBehaviors([IronResizableBehavior], PolymerElement) {
   }
 
   createValues(key) {
-    const item = find(this.data, i => i.key === key);
+    const item = this.data.find((i) => i.key === key);
     const resu = [];
     if (item) {
       for (let i = 0; i < item.values.length; i += 1) {

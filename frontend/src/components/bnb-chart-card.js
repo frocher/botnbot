@@ -1,110 +1,106 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element';
-import '@polymer/polymer/lib/elements/dom-repeat';
-import '@polymer/iron-icon/iron-icon';
-import '@polymer/paper-button/paper-button';
+import { LitElement, html, css } from 'lit-element';
+import '@material/mwc-button';
 import '@polymer/paper-card/paper-card';
-import '@polymer/paper-tabs/paper-tabs';
 import './bnb-chart';
 import './bnb-value-chip';
 
-class BnbChartCard extends PolymerElement {
-  static get template() {
+class BnbChartCard extends LitElement {
+  static get properties() {
+    return {
+      name: { type: String },
+      data: { type: Array },
+      model: { type: Array },
+      type: { type: String },
+      hasDetails: { type: Boolean },
+    };
+  }
+
+  static get styles() {
+    return css`
+    :host {
+      display: flex;
+      margin: 16px;
+    }
+
+    paper-card {
+      width: 100%;
+    }
+
+    #chips {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      text-align: center;
+      align-items: stretch;
+    }
+
+    bnb-value-chip {
+      flex: 1;
+    }
+
+    #chart {
+      width: 100%;
+      height: 340px;
+    }
+  `;
+  }
+
+  constructor() {
+    super();
+    this.name = '';
+    this.data = [];
+    this.model = [];
+    this.type = 'line';
+    this.hasDetails = false;
+  }
+
+  render() {
     return html`
-    <style>
-      :host {
-        display: flex;
-        margin: 16px;
-      }
-
-      paper-card {
-        width: 100%;
-      }
-
-      #chips {
-        text-align: center;
-        align-items: stretch;
-        @apply --layout-horizontal;
-        @apply --layout-wrap;
-      }
-
-      bnb-value-chip {
-        flex: 1;
-      }
-
-      #chart {
-        width: 100%;
-        height: 340px;
-      }
-    </style>
-
-    <paper-card heading="[[name]]">
+    <paper-card heading="${this.name}">
       <div class="card-content">
         <div id="chips">
-          <template is="dom-repeat" id="values" items="[[data]]">
-            <bnb-value-chip text="[[computeLabel(item)]]" value="[[item.summary]]" suffix="[[computeSuffix(item)]]">
-            </bnb-value-chip>
-          </template>
+          ${this.data.map((i) => this.renderChip(i))}
         </div>
-        <bnb-chart id="chart" type="[[type]]" data="[[data]]" model="[[model]]"></bnb-chart>
+        <bnb-chart id="chart" type="${this.type}" .data="${this.data}" .model="${this.model}"></bnb-chart>
       </div>
-      <div class="card-actions" hidden$='[[!hasDetails]]'>
-        <paper-button on-tap="_detailsTapped"><iron-icon icon="bnb:toc"></iron-icon>Details</paper-button>
-      </div>
+      ${this.renderDetails()}
     </paper-card>
     `;
   }
 
-  static get properties() {
-    return {
-      name: {
-        type: String,
-        value: '',
-      },
-      data: {
-        type: Array,
-        value() {
-          return [];
-        },
-      },
-      model: {
-        type: Array,
-        value() {
-          return [];
-        },
-      },
-      type: {
-        type: String,
-        value: 'line',
-      },
-      hasDetails: {
-        type: Boolean,
-        value: false,
-      },
-    };
+  renderChip(item) {
+    return html`
+      <bnb-value-chip text="${this.computeLabel(item)}" value="${item.summary}" suffix="${this.computeSuffix(item)}">
+      </bnb-value-chip>
+    `;
   }
 
-  ready() {
-    super.ready();
+  renderDetails() {
+    return this.hasDetails
+      ? html`
+        <div class="card-actions" hidden$='[[!hasDetails]]'>
+          <mwc-button id="detailsBtn" icon="toc" label="Details"></mwc-button>
+        </div>`
+      : html``;
+  }
+
+  firstUpdated() {
+    this.shadowRoot.getElementById('detailsBtn').addEventListener('click', () => this.detailsTapped());
   }
 
   computeLabel(o) {
-    const item = this.model.find(i => i.name === o.key);
-    if (item) {
-      return item.label;
-    }
-    return '';
+    const item = this.model.find((i) => i.name === o.key);
+    return item ? item.label : '';
   }
 
   computeSuffix(o) {
-    const item = this.model.find(i => i.name === o.key);
-    if (item) {
-      return item.suffix;
-    }
-    return '';
+    const item = this.model.find((i) => i.name === o.key);
+    return item && item.suffix ? item.suffix : '';
   }
 
-  _detailsTapped() {
+  detailsTapped() {
     this.dispatchEvent(new CustomEvent('details'));
   }
 }
+
 customElements.define('bnb-chart-card', BnbChartCard);

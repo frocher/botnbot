@@ -70,6 +70,7 @@ class BnbApp extends connect(store)(LitElement) {
 
       --mdc-select-ink-color: var(--mdc-theme-text-primary-on-background);
       --mdc-select-label-ink-color: var(--mdc-theme-text-primary-on-background);
+      --mdc-select-focused-label-color: var(--mdc-theme-primary);
       --mdc-select-outlined-idle-border-color: var(--mdc-theme-text-primary-on-background);
       --mdc-select-outlined-hover-border-color: var(--mdc-theme-primary);
       --mdc-select-dropdown-icon-color: var(--mdc-theme-text-primary-on-background);
@@ -419,7 +420,7 @@ class BnbApp extends connect(store)(LitElement) {
       const snack = this.shadowRoot.getElementById('messageSnack');
       snack.labelText = newVal.text;
       snack.leading = window.innerWidth > 800;
-      snack.open();
+      snack.show();
     }
   }
 
