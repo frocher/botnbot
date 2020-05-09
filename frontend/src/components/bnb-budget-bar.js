@@ -46,9 +46,9 @@ class BnbBudgetBar extends LitElement {
     }
 
     #budgetBtn {
-      height: 44px;
-      align-self: center;
+      margin-top: 12px;
     }
+
 
     @media (max-width: 700px) {
       #budgetTools {
@@ -91,7 +91,7 @@ class BnbBudgetBar extends LitElement {
     }
 
     return html`
-      <div id="budgetTools" hidden$="[[!canAdd]]">
+      <div id="budgetTools">
         <mwc-select id="categoryField" outlined label="Category">
           <mwc-list-item value="Lighthouse">Lighthouse</mwc-list-item>
           <mwc-list-item value="Performance">Performance</mwc-list-item>
