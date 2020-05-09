@@ -1,6 +1,7 @@
 import { LitElement, css, html } from 'lit-element';
 import '@material/mwc-button';
 import '@material/mwc-dialog';
+import '@material/mwc-formfield';
 import '@material/mwc-icon-button';
 import '@material/mwc-switch';
 import '@material/mwc-textfield';
@@ -30,15 +31,6 @@ class BnbAccount extends connect(store)(BnbFormElement(LitElement)) {
     :host {
       display: flex;
       flex-direction: column;
-    }
-
-    mwc-switch {
-      display: block;
-    }
-
-    mwc-switch span {
-      padding-left: 8px;
-      vertical-align: text-bottom;
     }
 
     mwc-textfield {
@@ -88,7 +80,9 @@ class BnbAccount extends connect(store)(BnbFormElement(LitElement)) {
           <h3>General</h3>
           <paper-card>
             <mwc-textfield id="name" label="Name" type="text" outlined value="${this.user.name}"></mwc-textfield>
-            <mwc-switch id="pushButton" ?disabled="${!this.isNotificationsEnabled()}"><span>Send me notifications on this device<span></mwc-switch>
+            <mwc-formfield label="Send me notifications on this device">
+              <mwc-switch id="pushButton" ?disabled="${!this.isNotificationsEnabled()}"></mwc-switch>
+            </mwc-formfield>
           </paper-card>
 
           ${this.renderSubscription()}
