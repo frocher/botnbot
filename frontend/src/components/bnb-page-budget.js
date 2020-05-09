@@ -1,43 +1,22 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element';
-import '@polymer/app-layout/app-layout';
+import { LitElement, html } from 'lit-element';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
 import { createBudget, deleteBudget } from '../actions/budgets';
 import './bnb-budget-bar';
 import './bnb-budget-card';
 
-class BnbPageBudget extends connect(store)(PolymerElement) {
-  static get template() {
-    return html`
-      <bnb-budget-bar id="budgetBar" can-add="[[page.can_create_budget]]"></bnb-budget-bar>
-      <template is="dom-repeat" items="[[budgets]]">
-        <bnb-budget-card budget-info="[[item]]" can-delete="[[page.can_delete_budget]]" on-close="budgetCloseTapped"></bnb-budget-card>
-      </template>
-    `;
-  }
-
+class BnbPageBudget extends connect(store)(LitElement) {
   static get properties() {
     return {
-      stats: {
-        type: Object,
-        observer: '_statsChanged',
-      },
-      budgets: Array,
-      _budgets: {
-        type: Array,
-        observer: '_budgetsChanged',
-      },
+      stats: { type: Object },
+      budgets: { type: Array },
     };
   }
 
-  stateChanged(state) {
-    this.page = state.pages.current;
-    this.stats = state.stats.all;
-    this._budgets = state.budgets.all;
-  }
+  constructor() {
+    super();
 
-  ready() {
-    super.ready();
+    this.cards = [];
 
     this.lighthouseModel = [
       { name: 'pwa', color: '#4A148C', label: 'pwa' },
@@ -97,29 +76,38 @@ class BnbPageBudget extends connect(store)(PolymerElement) {
         name: 'other', color: '#F8BBD0', label: 'other', suffix: 'kb',
       },
     ];
-
-    this.$.budgetBar.addEventListener('add', this.handleAddBudget.bind(this));
   }
 
-  _statsChanged() {
-    if (this.stats) {
-      this._updateBudgets();
-    } else {
-      this.budgets = [];
-    }
+  render() {
+    return html`
+      <bnb-budget-bar id="budgetBar" can-add="${this.page.can_create_budget}"></bnb-budget-bar>
+      ${this.cards.map((i) => this.renderCard(i))}
+    `;
   }
 
-  _budgetsChanged() {
-    if (this.stats) {
-      this._updateBudgets();
-    }
+  renderCard(item) {
+    return html`
+      <bnb-budget-card .budgetInfo="${item}" ?canDelete="${this.page.can_delete_budget}" @close="${this.budgetCloseTapped}"></bnb-budget-card>
+    `;
   }
 
-  _updateBudgets() {
+  stateChanged(state) {
+    this.page = state.pages.current;
+    this.stats = state.stats.all;
+    this.budgets = state.budgets.all;
+
+    this.cards = this.createCards();
+  }
+
+  firstUpdated() {
+    this.shadowRoot.getElementById('budgetBar').addEventListener('add', (e) => this.addTapped(e));
+  }
+
+  createCards() {
     const budgets = [];
-    if (this._budgets) {
-      for (let i = 0; i < this._budgets.length; i += 1) {
-        budgets.push(this.createBudgetObject(this._budgets[i]));
+    if (this.stats && this.budgets) {
+      for (let i = 0; i < this.budgets.length; i += 1) {
+        budgets.push(this.createBudgetObject(this.budgets[i]));
       }
       budgets.sort((a, b) => {
         if (a.category > b.category) {
@@ -131,10 +119,10 @@ class BnbPageBudget extends connect(store)(PolymerElement) {
         return a.item > b.item ? 1 : -1;
       });
     }
-    this.budgets = budgets;
+    return budgets;
   }
 
-  handleAddBudget(e) {
+  addTapped(e) {
     store.dispatch(createBudget(this.page.id, e.detail.category, e.detail.item, e.detail.budget));
   }
 

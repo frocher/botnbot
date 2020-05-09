@@ -153,7 +153,7 @@ class BnbHome extends connect(store)(LitElement) {
 
   stateChanged(state) {
     if (state.pages.all) {
-      this.pages = [...state.pages.all].sort(this._sortPages);
+      this.pages = [...state.pages.all].sort(this.sortPages);
     } else {
       this.pages = null;
     }
@@ -168,34 +168,34 @@ class BnbHome extends connect(store)(LitElement) {
   }
 
   firstUpdated() {
-    this.shadowRoot.getElementById('addBtn').addEventListener('click', () => this._addTapped());
-    this.shadowRoot.getElementById('moreBtn').addEventListener('click', () => this._moreTapped());
-    this.shadowRoot.getElementById('accountItem').addEventListener('click', () => this._accountTapped());
-    this.shadowRoot.getElementById('logoutItem').addEventListener('click', () => this._signoutTapped());
+    this.shadowRoot.getElementById('addBtn').addEventListener('click', () => this.addTapped());
+    this.shadowRoot.getElementById('moreBtn').addEventListener('click', () => this.moreTapped());
+    this.shadowRoot.getElementById('accountItem').addEventListener('click', () => this.accountTapped());
+    this.shadowRoot.getElementById('logoutItem').addEventListener('click', () => this.signoutTapped());
   }
 
-  _sortPages(first, second) {
+  sortPages(first, second) {
     const a = first.name.toUpperCase();
     const b = second.name.toUpperCase();
     return a.localeCompare(b);
   }
 
-  _moreTapped() {
+  moreTapped() {
     const menu = this.shadowRoot.getElementById('moreMenu');
     menu.anchor = this.shadowRoot.getElementById('moreBtn');
     menu.corner = 'BOTTOM_START';
     menu.open = true;
   }
 
-  _addTapped() {
+  addTapped() {
     store.dispatch(updateRoute('add-page'));
   }
 
-  _accountTapped() {
+  accountTapped() {
     store.dispatch(updateRoute('account'));
   }
 
-  _signoutTapped() {
+  signoutTapped() {
     store.dispatch(signout());
   }
 }

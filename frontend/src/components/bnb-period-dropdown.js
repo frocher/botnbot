@@ -14,14 +14,19 @@ import {
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
 import { updatePeriod } from '../actions/app';
-import './bnb-common-styles';
 import './bnb-icons';
 
 
 class BnbPeriodDropdown extends connect(store)(PolymerElement) {
   static get template() {
     return html`
-    <style include="bnb-common-styles">
+    <style>
+      #content {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-end;
+      }
+
       #startDate, #endDate {
         cursor: pointer;
       }
@@ -41,9 +46,9 @@ class BnbPeriodDropdown extends connect(store)(PolymerElement) {
       }
     </style>
 
-    <div class="layout horizontal end">
-      <paper-input id="startDate" label="Date from" value="[[dateFrom]]" readonly on-tap="_handleOpenDropdown"></paper-input>
-      <paper-input id="endDate" label="Date to" value="[[dateTo]]" readonly on-tap="_handleOpenDropdown"></paper-input>
+    <div id="content">
+      <paper-input id="startDate" label="Date from" value="[[dateFrom]]" readonly on-tap="handleOpenDropdown"></paper-input>
+      <paper-input id="endDate" label="Date to" value="[[dateTo]]" readonly on-tap="handleOpenDropdown"></paper-input>
       <iron-dropdown id="rangeDropdown" horizontal-align="[[horizontalAlign]]">
         <paper-material slot="dropdown-content">
           <range-datepicker date-from="{{startDate}}" date-to="{{endDate}}"></range-datepicker>
@@ -52,14 +57,14 @@ class BnbPeriodDropdown extends connect(store)(PolymerElement) {
       <paper-menu-button horizontal-align="right">
         <paper-icon-button icon="bnb:arrow-drop-down" slot="dropdown-trigger"></paper-icon-button>
         <paper-listbox slot="dropdown-content" attr-for-selected="data-period">
-          <paper-item on-tap="_periodTapped" data-period="today">Today</paper-item>
-          <paper-item on-tap="_periodTapped" data-period="this_week">This week</paper-item>
-          <paper-item on-tap="_periodTapped" data-period="this_month">This&nbsp;month</paper-item>
-          <paper-item on-tap="_periodTapped" data-period="yesterday">Yesterday</paper-item>
-          <paper-item on-tap="_periodTapped" data-period="last_week">Last week</paper-item>
-          <paper-item on-tap="_periodTapped" data-period="last_month">Last month</paper-item>
-          <paper-item on-tap="_periodTapped" data-period="last_7_days">Last 7 days</paper-item>
-          <paper-item on-tap="_periodTapped" data-period="last_30_days">Last 30 days</paper-item>
+          <paper-item on-tap="periodTapped" data-period="today">Today</paper-item>
+          <paper-item on-tap="periodTapped" data-period="this_week">This week</paper-item>
+          <paper-item on-tap="periodTapped" data-period="this_month">This&nbsp;month</paper-item>
+          <paper-item on-tap="periodTapped" data-period="yesterday">Yesterday</paper-item>
+          <paper-item on-tap="periodTapped" data-period="last_week">Last week</paper-item>
+          <paper-item on-tap="periodTapped" data-period="last_month">Last month</paper-item>
+          <paper-item on-tap="periodTapped" data-period="last_7_days">Last 7 days</paper-item>
+          <paper-item on-tap="periodTapped" data-period="last_30_days">Last 30 days</paper-item>
         </paper-listbox>
       </paper-menu-button>
     </div>
@@ -72,7 +77,7 @@ class BnbPeriodDropdown extends connect(store)(PolymerElement) {
       endDate: {
         type: String,
         notify: true,
-        observer: '_endDateChanged',
+        observer: 'endDateChanged',
       },
     };
   }
@@ -82,11 +87,11 @@ class BnbPeriodDropdown extends connect(store)(PolymerElement) {
     this.dateTo = format(new Date(state.app.period.end), 'MMM dd, yyyy');
   }
 
-  _handleOpenDropdown() {
+  handleOpenDropdown() {
     this.$.rangeDropdown.open();
   }
 
-  _endDateChanged(date) {
+  endDateChanged(date) {
     if (date) {
       this.$.rangeDropdown.close();
       const period = {
@@ -97,7 +102,7 @@ class BnbPeriodDropdown extends connect(store)(PolymerElement) {
     }
   }
 
-  _periodTapped(e) {
+  periodTapped(e) {
     const type = e.currentTarget.dataset.period;
     let startDate;
     let endDate;

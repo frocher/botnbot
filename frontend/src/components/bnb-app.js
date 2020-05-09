@@ -68,6 +68,8 @@ class BnbApp extends connect(store)(LitElement) {
 
       --mdc-radio-unchecked-color: var(--mdc-theme-text-primary-on-background);
 
+      --mdc-ripple-color: var(--google-blue-300);
+
       --mdc-select-ink-color: var(--mdc-theme-text-primary-on-background);
       --mdc-select-label-ink-color: var(--mdc-theme-text-primary-on-background);
       --mdc-select-focused-label-color: var(--mdc-theme-primary);
