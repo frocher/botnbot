@@ -173,18 +173,18 @@ class BnbOAuth extends LitElement {
   }
 
   facebookTapped() {
-    this._callService('facebook');
+    this.callService('facebook');
   }
 
   githubTapped() {
-    this._callService('github');
+    this.callService('github');
   }
 
   googleTapped() {
-    this._callService('google_oauth2');
+    this.callService('google_oauth2');
   }
 
-  _callService(service) {
+  callService(service) {
     const origin = `${window.location.protocol}//${window.location.host}`;
     const url = getRequestUrl(`auth/${service}?auth_origin_url=${origin}`);
     window.location.replace(url);
