@@ -1,6 +1,6 @@
 import { LitElement, html, css } from 'lit-element';
 import '@material/mwc-button';
-import '@polymer/paper-card/paper-card';
+import './bnb-card';
 import './bnb-chart';
 import './bnb-value-chip';
 
@@ -22,8 +22,13 @@ class BnbChartCard extends LitElement {
       margin: 16px;
     }
 
-    paper-card {
+    bnb-card {
       width: 100%;
+    }
+
+    .card-header {
+      font-size: 24px;
+      margin-bottom: 16px;
     }
 
     #chips {
@@ -56,7 +61,8 @@ class BnbChartCard extends LitElement {
 
   render() {
     return html`
-    <paper-card heading="${this.name}">
+    <bnb-card>
+      <div class="card-header">${this.name}</div>
       <div class="card-content">
         <div id="chips">
           ${this.data.map((i) => this.renderChip(i))}
@@ -64,7 +70,7 @@ class BnbChartCard extends LitElement {
         <bnb-chart id="chart" type="${this.type}" .data="${this.data}" .model="${this.model}"></bnb-chart>
       </div>
       ${this.renderDetails()}
-    </paper-card>
+    </bnb-card>
     `;
   }
 

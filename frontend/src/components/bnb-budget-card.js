@@ -1,7 +1,7 @@
 import { LitElement, css, html } from 'lit-element';
 import '@material/mwc-icon-button';
-import '@polymer/paper-card/paper-card';
 import './bnb-budget';
+import './bnb-card';
 
 class BnbBudgetCard extends LitElement {
   static get properties() {
@@ -18,7 +18,7 @@ class BnbBudgetCard extends LitElement {
       margin: 16px;
     }
 
-    paper-card {
+    bnb-card {
       width: 100%;
     }
 
@@ -42,7 +42,7 @@ class BnbBudgetCard extends LitElement {
 
   render() {
     return html`
-    <paper-card>
+    <bnb-card>
       <div class="card-content">
         <div class="budget-header">${this.budgetInfo.name}
           <div class="budget-header-buttons">
@@ -51,7 +51,7 @@ class BnbBudgetCard extends LitElement {
         </div>
         <bnb-budget id="chart" .data="${this.budgetInfo.data}" .model="${this.budgetInfo.model}" .budget="${this.budgetInfo.budget}"></bnb-budget>
       </div>
-    </paper-card>
+    </bnb-card>
     `;
   }
 

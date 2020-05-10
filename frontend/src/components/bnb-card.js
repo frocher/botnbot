@@ -11,6 +11,7 @@ class BnbCard extends LitElement {
         color: var(--mdc-theme-on-surface, #000);
         display: block;
         position: relative;
+        padding: 16px;
       }
     `;
   }

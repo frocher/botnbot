@@ -1,10 +1,10 @@
 import { LitElement, css, html } from 'lit-element';
 import '@material/mwc-button/mwc-button';
 import '@material/mwc-icon/mwc-icon';
-import '@polymer/paper-card/paper-card';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
 import { updateRoute } from '../actions/app';
+import './bnb-card';
 
 class BnbPageLockedCard extends connect(store)(LitElement) {
   static get properties() {
@@ -35,23 +35,17 @@ class BnbPageLockedCard extends connect(store)(LitElement) {
       margin-left: 8px;
       --mdc-theme-primary: var(--google-blue-300);
     }
-
-    paper-card {
-      display: block;
-      cursor: pointer;
-      width: 100%;
-    }
     `;
   }
 
   render() {
     return html`
-    <paper-card>
+    <bnb-card>
       <div class="card-content">
         <mwc-icon>warning</mwc-icon>
         ${this.renderContent()}
       </div>
-    </paper-card>
+    </bnb-card>
     `;
   }
 

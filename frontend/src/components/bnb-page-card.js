@@ -23,8 +23,8 @@ class BnbPageCard extends connect(store)(LitElement) {
       bnb-card {
         display: block;
         cursor: pointer;
+        padding: 0;
         width: 100%;
-        height: 100%;
       }
 
       mwc-icon {
