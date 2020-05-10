@@ -5,12 +5,12 @@ import '@material/mwc-textfield';
 import '@material/mwc-button';
 import '@material/mwc-dialog';
 import '@material/mwc-icon-button';
-import '@polymer/paper-card/paper-card';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
 import { updateRoute } from '../actions/app';
 import { createPage } from '../actions/pages';
 import { BnbFormElement } from './bnb-form-element';
+import './bnb-card';
 import './bnb-top-app-bar';
 
 class BnbAddPage extends connect(store)(BnbFormElement(LitElement)) {
@@ -33,11 +33,6 @@ class BnbAddPage extends connect(store)(BnbFormElement(LitElement)) {
     mwc-textfield {
       width: 100%;
       --mdc-theme-primary: #fff;
-    }
-
-    paper-card {
-      width: 100%;
-      padding: 16px;
     }
 
     #content {
@@ -72,7 +67,7 @@ class BnbAddPage extends connect(store)(BnbFormElement(LitElement)) {
       <div id="content">
         <div id="container">
           <h3>Page informations</h3>
-          <paper-card>
+          <bnb-card>
             <mwc-textfield id="name" label="Page name" type="text" outlined value="${this.pageName}"></mwc-textfield>
             <mwc-textfield id="url" label="URL" type="url" outlined value="${this.url}"></mwc-textfield>
             <mwc-formfield label="Mobile">
@@ -81,7 +76,7 @@ class BnbAddPage extends connect(store)(BnbFormElement(LitElement)) {
             <mwc-formfield label="Desktop">
               <mwc-radio id="desktopBtn" name="device" group="deviceGroup"></mwc-radio>
             </mwc-formfield>
-          </paper-card>
+          </bnb-card>
         </div>
       </div>
     </bnb-top-app-bar>

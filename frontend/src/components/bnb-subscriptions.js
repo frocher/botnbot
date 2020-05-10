@@ -1,11 +1,11 @@
 import { LitElement, css, html } from 'lit-element';
 import '@material/mwc-button/mwc-button';
 import '@material/mwc-dialog';
-import '@polymer/paper-card/paper-card';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
 import { createStripeSubscription, updateStripeSubscription, deleteStripeSubscription } from '../actions/account';
 import { styles } from './bnb-styles';
+import './bnb-card';
 
 class BnbSubscriptions extends connect(store)(LitElement) {
   static get properties() {
@@ -24,38 +24,55 @@ class BnbSubscriptions extends connect(store)(LitElement) {
         list-style-type: none;
         padding-left: 0;
       }
-      paper-card {
+
+      bnb-card {
         margin-right: 8px;
         margin-bottom: 8px;
+        padding-bottom: 0;
       }
+
       .plans {
         display: grid;
         grid-template-columns: 25% 25% 25% 25%;
         padding: 8px;
       }
+
       .card-header {
         font-size: 28px;
       }
+
       .card-price {
         font-size: 20px;
       }
+
       .card-label {
         padding-right: 8px;
       }
+
       .card-value {
         float: right;
         font-weight: bold;
       }
+
       .card-current {
         margin-top: 8px;
         font-weight: bold;
         color: var(--mdc-theme-primary);
       }
+
+      .card-actions {
+        border-top: 1px solid var(--mdc-theme-on-surface);
+        height: 36px;
+        padding-top: 8px;
+        padding-bottom: 8px;
+      }
+
       @media (max-width: 850px) {
         .plans {
           grid-template-columns: 50% 50%;
         }
       }
+
       @media (max-width: 500px) {
         .plans {
           grid-template-columns: 100%;
@@ -68,7 +85,7 @@ class BnbSubscriptions extends connect(store)(LitElement) {
   render() {
     return html`
     <div class="plans">
-      ${this.plans.map((i) => this.renderPlan(i))}
+      ${this.plans.map((item, index) => this.renderPlan(item, index))}
     </div>
     <mwc-dialog id="downgradePlanDlg" heading="Downgrading your plan">
       <p>You are downgrading your current plan.
@@ -96,9 +113,9 @@ class BnbSubscriptions extends connect(store)(LitElement) {
     `;
   }
 
-  renderPlan(item) {
+  renderPlan(item, index) {
     return html`
-    <paper-card>
+    <bnb-card>
       <div class="card-content">
         <div class="card-header">${item.name}</div>
         <div class="card-price">${item.amount} per month</div>
@@ -118,16 +135,16 @@ class BnbSubscriptions extends connect(store)(LitElement) {
         </ul>
       </div>
       <div class="card-actions">
-        ${this.renderCardButton(item)}
+        ${this.renderCardButton(item, index)}
       </div>
-    </paper-card>
+    </bnb-card>
     `;
   }
 
-  renderCardButton(item) {
+  renderCardButton(item, index) {
     return this.computeHideSubscribe(item, this.currentPlan)
       ? html`<div class="card-current">YOUR CURRENT PLAN</div>`
-      : html`<mwc-button @click="${this.subscribeTapped}">Subscribe</mwc-button>`;
+      : html`<mwc-button @click="${this.subscribeTapped}" data-index="${index}">Subscribe</mwc-button>`;
   }
 
   firstUpdated() {
@@ -156,14 +173,14 @@ class BnbSubscriptions extends connect(store)(LitElement) {
   }
 
   subscribeTapped(e) {
-    this.selectedPlan = e.model.item;
+    this.selectedPlan = this.plans[e.currentTarget.dataset.index];
 
     if (this.selectedPlan.id !== -1) {
       if (this.currentPlan.planId === -1) {
         const config = {
-          amount: e.model.item.amount * 100,
+          amount: this.selectedPlan.amount * 100,
           key: this.stripeKey,
-          name: e.model.item.name,
+          name: this.selectedPlan.name,
         };
         this.checkout.open(config);
       } else if (this.currentPlan.pages > this.selectedPlan.pages) {

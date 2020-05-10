@@ -5,12 +5,12 @@ import '@material/mwc-formfield';
 import '@material/mwc-icon-button';
 import '@material/mwc-switch';
 import '@material/mwc-textfield';
-import '@polymer/paper-card/paper-card';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
 import { updateRoute } from '../actions/app';
 import { updateUser, savePushSubscription } from '../actions/account';
 import { BnbFormElement } from './bnb-form-element';
+import './bnb-card';
 import './bnb-install-button';
 import './bnb-subscriptions';
 import './bnb-top-app-bar';
@@ -38,11 +38,6 @@ class BnbAccount extends connect(store)(BnbFormElement(LitElement)) {
 
       mwc-textfield {
         width: 100%;
-      }
-
-      paper-card {
-        width: 100%;
-        padding: 16px;
       }
 
       #content {
@@ -81,17 +76,17 @@ class BnbAccount extends connect(store)(BnbFormElement(LitElement)) {
       <div id="content">
         <div id="container">
           <h3>General</h3>
-          <paper-card>
+          <bnb-card>
             <mwc-textfield id="name" label="Name" type="text" outlined value="${this.user.name}"></mwc-textfield>
             <mwc-formfield label="Send me notifications on this device">
               <mwc-switch id="pushButton" ?disabled="${!this.isNotificationsEnabled()}"></mwc-switch>
             </mwc-formfield>
-          </paper-card>
+          </bnb-card>
 
           ${this.renderSubscription()}
 
           <h3>Install</h3>
-          <paper-card>
+          <bnb-card>
             <div class="card-content">
               <div>
               You can install a shortcut to launch Botnbot like a native application.
@@ -99,7 +94,7 @@ class BnbAccount extends connect(store)(BnbFormElement(LitElement)) {
               </div>
               <bnb-install-button id="installBtn"></bnb-install-button>
             </div>
-          </paper-card>
+          </bnb-card>
 
         </div>
       </div>

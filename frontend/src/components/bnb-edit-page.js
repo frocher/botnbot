@@ -6,12 +6,12 @@ import '@material/mwc-icon-button';
 import '@material/mwc-radio';
 import '@material/mwc-switch';
 import '@material/mwc-textfield';
-import '@polymer/paper-card/paper-card';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
 import { updateRoute } from '../actions/app';
 import { updatePage } from '../actions/pages';
 import { BnbFormElement } from './bnb-form-element';
+import './bnb-card';
 import './bnb-top-app-bar';
 
 class BnbEditPage extends connect(store)(BnbFormElement(LitElement)) {
@@ -20,11 +20,6 @@ class BnbEditPage extends connect(store)(BnbFormElement(LitElement)) {
     :host {
       display: flex;
       flex-direction: column;
-    }
-
-    paper-card {
-      width: 100%;
-      padding: 16px;
     }
 
     mwc-switch {
@@ -88,7 +83,7 @@ class BnbEditPage extends connect(store)(BnbFormElement(LitElement)) {
       <div id="content">
         <div id="container">
           <h3>General</h3>
-          <paper-card>
+          <bnb-card>
             <mwc-textfield id="name" type="text" label="Page name" outlined value="${this.name}"></mwc-textfield>
             <mwc-textfield id="url" type="url" label="URL" outlined value="${this.url}"></mwc-textfield>
             <mwc-formfield label="Mobile">
@@ -97,9 +92,9 @@ class BnbEditPage extends connect(store)(BnbFormElement(LitElement)) {
             <mwc-formfield label="Desktop">
               <mwc-radio id="desktopBtn" name="device" ?checked="${this.device === 'desktop'}"></mwc-radio>
             </mwc-formfield>
-          </paper-card>
+          </bnb-card>
           <h3>Uptime check</h3>
-          <paper-card>
+          <bnb-card>
             <mwc-textfield id="uptimeKeyword" type="text" label="Keyword" outlined value="${this.uptimeKeyword}"></mwc-textfield>
             <mwc-formfield label="Presence">
               <mwc-radio id="presenceBtn" name="uptimeKeywordType" ?checked="${this.uptimeKeywordType === 'presence'}"></mwc-radio>
@@ -107,9 +102,9 @@ class BnbEditPage extends connect(store)(BnbFormElement(LitElement)) {
             <mwc-formfield label="Absence">
               <mwc-radio id="absenceBtn" name="uptimeKeywordType" ?checked="${this.uptimeKeywordType === 'absence'}"></mwc-radio>
             </mwc-formfield>
-          </paper-card>
+          </bnb-card>
           <h3>Notifications</h3>
-          <paper-card>
+          <bnb-card>
             <mwc-formfield label="by mail">
               <mwc-switch id="mailNotify" ?checked="${this.mailNotify}"></mwc-switch>
             </mwc-formfield>
@@ -120,7 +115,7 @@ class BnbEditPage extends connect(store)(BnbFormElement(LitElement)) {
               <mwc-switch id="slackNotify" ?checked="${this.slackNotify}"></mwc-switch>
             </mwc-formfield>
             ${this.renderSlackInformations()}
-          </paper-card>
+          </bnb-card>
         </div>
       </div>
     </bnb-top-app-bar>

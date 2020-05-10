@@ -38,9 +38,6 @@ export const styles = css`
     --mdc-text-field-outlined-idle-border-color: var(--mdc-theme-text-primary-on-background);
     --mdc-text-field-outlined-hover-border-color: var(--mdc-theme-secondary);
 
-    --paper-card-background-color: var(--mdc-theme-surface);
-    --paper-card-header-color: var(--mdc-theme-on-surface);
-
     --range-datepicker-cell-hover: var(--mdc-theme-primary);
     --range-datepicker-cell-selected: var(--mdc-theme-primary);
     --range-datepicker-cell-hovered: #2196F3;
@@ -53,6 +50,11 @@ export const styles = css`
   }
 
   mwc-button {
+    --mdc-theme-primary: #64B5F6;
+  }
+
+  mwc-linear-progress {
+    width: 100%;
     --mdc-theme-primary: #64B5F6;
   }
 

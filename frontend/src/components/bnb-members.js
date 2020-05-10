@@ -5,7 +5,6 @@ import '@material/mwc-icon-button';
 import '@material/mwc-list/mwc-list-item';
 import '@material/mwc-select';
 import '@material/mwc-textfield';
-import '@polymer/paper-card/paper-card';
 import { find } from 'lodash-es';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
@@ -13,6 +12,7 @@ import { updateRoute } from '../actions/app';
 import {
   createPageMember, updatePageMember, deletePageMember, updatePageOwner,
 } from '../actions/members';
+import './bnb-card';
 import './bnb-textfield';
 import './bnb-top-app-bar';
 
@@ -31,11 +31,6 @@ class BnbMembers extends connect(store)(LitElement) {
 
     mwc-button {
       --mdc-theme-primary: var(--google-blue-300);
-    }
-
-    paper-card {
-      width: 100%;
-      padding: 16px;
     }
 
     bnb-textfield {
@@ -127,7 +122,7 @@ class BnbMembers extends connect(store)(LitElement) {
       <div id="content">
         <div id="container">
           <h3>Edit page members</h3>
-          <paper-card>
+          <bnb-card>
             <div id="form">
               <bnb-textfield id="email" type="email" label="E-mail" outlined required ?disabled="${!this.page.can_add_member}" validationMessage="You should enter a valid email address"></bnb-textfield>
               <mwc-select id="role" outlined required label="Role" ?disabled="${!this.page.can_update_member}" validationMessage="You should enter a role">
@@ -155,7 +150,7 @@ class BnbMembers extends connect(store)(LitElement) {
               </tbody>
             </table>
 
-          </paper-card>
+          </bnb-card>
         </div>
       </div>
     </bnb-top-app-bar>

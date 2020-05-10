@@ -1,6 +1,6 @@
 import { LitElement, css, html } from 'lit-element';
-import '@polymer/paper-card/paper-card';
 import './bnb-anchor';
+import './bnb-card';
 
 class BnbAuthForm extends LitElement {
   static get styles() {
@@ -9,6 +9,17 @@ class BnbAuthForm extends LitElement {
       display: flex;
       flex-direction: column;
       justify-content: center;
+    }
+
+    h2 {
+      font-size: 24px;
+      font-weight: 400;
+      margin-top: 16px;
+      margin-bottom: 16px;
+    }
+
+    bnb-card {
+      padding-top: 0;
     }
 
     .auth-form {
@@ -43,11 +54,12 @@ class BnbAuthForm extends LitElement {
 
   render() {
     return html`
-    <paper-card id="auth" heading="${this.title}" class="auth-form">
+    <bnb-card id="auth" class="auth-form">
+      <h2>${this.title}</h2>
       <div class="card-content">
         <slot></slot>
       </div>
-    </paper-card>
+    </bnb-card>
 
     <div class="links">
       ${this.buttons.map((i, index) => this.renderLink(i, index))}

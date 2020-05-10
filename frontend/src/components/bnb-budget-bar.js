@@ -3,10 +3,9 @@ import '@material/mwc-button';
 import '@material/mwc-list/mwc-list-item';
 import '@material/mwc-select';
 import '@material/mwc-textfield';
-import '@polymer/paper-card/paper-card';
+import './bnb-card';
 import './bnb-period-dropdown';
 import { styles } from './bnb-styles';
-
 
 class BnbBudgetBar extends LitElement {
   static get properties() {
@@ -24,12 +23,11 @@ class BnbBudgetBar extends LitElement {
         display: flex;
       }
 
-      paper-card {
+      bnb-card {
         display: flex;
         flex-direction: column;
         width: 100%;
         margin: 16px;
-        padding: 16px;
       }
 
       #budgetTools {
@@ -82,10 +80,10 @@ class BnbBudgetBar extends LitElement {
 
   render() {
     return html`
-    <paper-card>
+    <bnb-card>
       <bnb-period-dropdown></bnb-period-dropdown>
       ${this.renderBudgetTools()}
-    </paper-card>
+    </bnb-card>
     `;
   }
 

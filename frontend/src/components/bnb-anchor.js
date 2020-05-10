@@ -1,6 +1,9 @@
 import { LitElement, css, html } from 'lit-element';
+import { connect } from 'pwa-helpers';
+import { store } from '../store';
+import { updateRoute } from '../actions/app';
 
-class BnbAnchor extends LitElement {
+class BnbAnchor extends connect(store)(LitElement) {
   static get styles() {
     return css`
     a {
@@ -17,8 +20,17 @@ class BnbAnchor extends LitElement {
 
   render() {
     return html`
-    <a href="${this.path}">${this.text}</a>
+    <a href="${this.path}" @click="${this.clicked}">${this.text}</a>
     `;
+  }
+
+  stateChanged() {
+    // nothing to do
+  }
+
+  clicked(e) {
+    store.dispatch(updateRoute(this.path));
+    e.preventDefault();
   }
 
   static get properties() {

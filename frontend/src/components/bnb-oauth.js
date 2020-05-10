@@ -35,7 +35,7 @@ class BnbOAuth extends LitElement {
       .title span {
         padding-left: 16px;
         padding-right: 16px;
-        color: var(--secondary-text-color);
+        color: var(--mdc-theme-on-surface);
         text-align: center;
       }
 

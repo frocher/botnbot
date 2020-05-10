@@ -1,5 +1,6 @@
 import { LitElement, css, html } from 'lit-element';
-import '@polymer/paper-spinner/paper-spinner';
+import '@material/mwc-linear-progress';
+import { styles } from './bnb-styles';
 
 class BnbBudget extends LitElement {
   static get properties() {
@@ -12,45 +13,54 @@ class BnbBudget extends LitElement {
   }
 
   static get styles() {
-    return css`
-    :host {
-      display: inline-block;
-    }
+    return [
+      styles,
+      css`
+      :host {
+        display: inline-block;
+      }
 
-    .hidden {
-      display: none;
-    }
+      .hidden {
+        display: none;
+      }
 
-    #loading {
-      display: flex;
-      width: 100%;
-      height: 100%;
-      color: #999;
-      font-size: 24px;
-      align-items: center;
-      justify-content: center;
-    }
+      #loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        color: #999;
+        font-size: 24px;
+      }
 
-    #noData {
-      display: flex;
-      width: 100%;
-      height: 100%;
-      color: #999;
-      font-size: 36px;
-      align-items: center;
-      justify-content: center;
-    }
+      #loading div {
+        width: 50%;
+        margin: auto;
+        text-align: center;
+      }
 
-    #canvas {
-      position:relative;
-      width: 100%;
-      height: 100%;
-    }
+      #noData {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        color: #999;
+        font-size: 36px;
+        align-items: center;
+        justify-content: center;
+      }
 
-    #noData span {
-      margin-top: -50px;
-    }
-    `;
+      #canvas {
+        position:relative;
+        width: 100%;
+        height: 100%;
+      }
+
+      #noData span {
+        margin-top: -50px;
+      }
+      `,
+    ];
   }
 
   constructor() {
@@ -61,8 +71,10 @@ class BnbBudget extends LitElement {
   render() {
     return html`
     <div id="loading" style="${this.renderStyle(0)}">
-      <span>Loading&nbsp;</span>
-      <paper-spinner active></paper-spinner>
+      <div>
+        <div>Loading</div>
+        <mwc-linear-progress indeterminate></mwc-linear-progress>
+      </div>
     </div>
     <div id="noData" style="${this.renderStyle(1)}">
       <span>No data</span>

@@ -4,20 +4,21 @@ import { LitElement, css, html } from 'lit-element';
 class BnbCard extends LitElement {
   static get styles() {
     return css`
+      :host {
+        box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.20);
+        border-radius: 2px;
+        background-color: var(--mdc-theme-surface, #fff);
+        color: var(--mdc-theme-on-surface, #000);
+        display: block;
+        position: relative;
+        padding: 16px;
+      }
     `;
   }
 
-
   render() {
     return html`
-    <paper-card placeholder-image="${this.getPlaceHolderImage()}" fade-image preload-image image="${this.getScreenshotUrl(this.page)}" animated="true" @click="cardTapped" class="${this.computeCardClass(this.page)}">
-      <div class="card-content">
-        <h2><mwc-icon>${this.computeIcon(this.page)}</mwc-icon>${this.page.name}</h2>
-        <a href="${this.page.url}" @click="urlTapped" target="_blank" title="Open url in a new tab" rel="noopener">${this.page.url}</a>
-      </div>
-      <mwc-ripple primary></mwc-ripple>
-
-    </paper-card>
+    <slot></slot>
     `;
   }
 }
