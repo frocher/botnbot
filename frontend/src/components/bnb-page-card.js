@@ -1,12 +1,13 @@
 import { LitElement, css, html } from 'lit-element';
 import '@material/mwc-icon';
 import '@material/mwc-ripple';
-import '@polymer/paper-card/paper-card';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
 import { getRequestUrl } from '../common';
 import { updateRoute } from '../actions/app';
 import { styles } from './bnb-styles';
+import './bnb-card';
+import './bnb-lazy-image';
 
 class BnbPageCard extends connect(store)(LitElement) {
   static get properties() {
@@ -19,28 +20,11 @@ class BnbPageCard extends connect(store)(LitElement) {
     return [
       styles,
       css`
-      paper-card {
+      bnb-card {
         display: block;
         cursor: pointer;
         width: 100%;
         height: 100%;
-      }
-
-      :host {
-        --paper-card-header: {
-          height: 0;
-          overflow: hidden;
-          padding-top: calc(3 / 4 * 100%);
-          background: white;
-          position: relative;
-        };
-        --paper-card-header-image: {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-        };
       }
 
       mwc-icon {
@@ -49,14 +33,18 @@ class BnbPageCard extends connect(store)(LitElement) {
         vertical-align: sub;
       }
 
-      .card-content h2 {
+      .cardContent {
+        padding: 16px;
+      }
+
+      h2 {
         margin: 0;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
       }
 
-      .card-content a {
+      a {
         display: block;
         color: #9e9e9e;
         text-decoration: none;
@@ -65,7 +53,7 @@ class BnbPageCard extends connect(store)(LitElement) {
         text-overflow: ellipsis;
       }
 
-      .card-content a:hover {
+      a:hover {
         text-decoration: underline;
       }
 
@@ -89,12 +77,7 @@ class BnbPageCard extends connect(store)(LitElement) {
 
   render() {
     return html`
-    <paper-card
-      placeholder-image="${this.getPlaceHolderImage()}"
-      fade-image
-      preload-image
-      image="${this.getScreenshotUrl(this.page)}"
-      animated="true"
+    <bnb-card
       class="${this.computeCardClass(this.page)}"
       @click="${this.cardTapped}"
       @focus="${this.handleRippleFocus}"
@@ -106,13 +89,13 @@ class BnbPageCard extends connect(store)(LitElement) {
       @touchstart="${this.handleRippleActivate}"
       @touchend="${this.handleRippleDeactivate}"
       @touchcancel="${this.handleRippleDeactivate}">
-      <div class="card-content">
+      <bnb-lazy-image src="${this.getScreenshotUrl(this.page)}"></bnb-lazy-image>
+      <div class="cardContent">
         <h2><mwc-icon>${this.computeIcon(this.page)}</mwc-icon>${this.page.name}</h2>
         <a href="${this.page.url}" @click="urlTapped" target="_blank" title="Open url in a new tab" rel="noopener">${this.page.url}</a>
       </div>
       <mwc-ripple id="ripple"></mwc-ripple>
-
-    </paper-card>
+    </bnb-card>
     `;
   }
 
@@ -126,10 +109,6 @@ class BnbPageCard extends connect(store)(LitElement) {
 
   urlTapped(e) {
     e.stopPropagation();
-  }
-
-  getPlaceHolderImage() {
-    return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAADwAQMAAABL4y8oAAAAA1BMVEW9vb2OR09dAAAAIElEQVR4Xu3AgQAAAADDoPtTX2EAtQAAAAAAAAAAAAAOJnAAAZexSsoAAAAASUVORK5CYII=';
   }
 
   getScreenshotUrl(item) {
