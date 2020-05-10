@@ -1,27 +1,28 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element';
-import '@polymer/iron-icon/iron-icon';
+import { LitElement, css, html } from 'lit-element';
+import '@material/mwc-button/mwc-button';
+import '@material/mwc-icon/mwc-icon';
 import '@polymer/paper-card/paper-card';
-import '@polymer/paper-button';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
 import { updateRoute } from '../actions/app';
-import './bnb-icons';
 
-class BnbPageLockedCard extends connect(store)(PolymerElement) {
-  static get template() {
-    return html`
-    <style>
+class BnbPageLockedCard extends connect(store)(LitElement) {
+  static get properties() {
+    return {
+      isOwner: { type: Boolean },
+    };
+  }
 
+  static get styles() {
+    return css`
     .card-content {
       display: flex;
       align-items: center;
       color: var(--paper-orange-700);
     }
 
-
-    .card-content iron-icon {
-      height: 48px;
-      width: 48px;
+    .card-content mwc-icon {
+      font-size: 48px;
     }
 
     .card-content div {
@@ -30,8 +31,9 @@ class BnbPageLockedCard extends connect(store)(PolymerElement) {
       font-size: 14px;
     }
 
-    .card-content paper-button {
+    .card-content mwc-button {
       margin-left: 8px;
+      --mdc-theme-primary: var(--google-blue-300);
     }
 
     paper-card {
@@ -39,37 +41,40 @@ class BnbPageLockedCard extends connect(store)(PolymerElement) {
       cursor: pointer;
       width: 100%;
     }
+    `;
+  }
 
-    paper-button {
-      color: var(--google-blue-300);
-    }
-    </style>
-
+  render() {
+    return html`
     <paper-card>
       <div class="card-content">
-        <iron-icon icon="bnb:warning"></iron-icon>
-        <div>
-          <div hidden$="[[!isOwner]]">
-            <span>Because of your current plan, this page is no longer monitored.</span>
-            <paper-button on-tap="_upgradeTapped">Upgrade your plan</paper-button>
-          </div>
-          <span hidden$="[[isOwner]]">
-            Because of the owner current plan, this page is no longer monitored.
-          </span>
-        </div>
+        <mwc-icon>warning</mwc-icon>
+        ${this.renderContent()}
       </div>
     </paper-card>
     `;
   }
 
-  _stateChanged(state) {
+  renderContent() {
+    if (this.isOwner) {
+      return html`
+        <span>Because of your current plan, this page is no longer monitored.</span>
+        <mwc-button @click="${this.upgradeTapped}">Upgrade your plan</mwc-button>
+      `;
+    }
+    return html`
+      <span>Because of the owner current plan, this page is no longer monitored.</span>
+    `;
+  }
+
+  upgradeTapped() {
+    store.dispatch(updateRoute('account'));
+  }
+
+  stateChanged(state) {
     if (state.auth.credentials && state.pages.current) {
       this.isOwner = state.auth.credentials.uid === state.pages.current.owner.uid;
     }
-  }
-
-  _upgradeTapped() {
-    store.dispatch(updateRoute('account'));
   }
 }
 

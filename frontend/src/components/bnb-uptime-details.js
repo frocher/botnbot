@@ -1,131 +1,134 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element';
-import '@polymer/app-layout/app-layout';
-import '@polymer/paper-icon-button/paper-icon-button';
-import '@vaadin/vaadin-grid/vaadin-grid';
-import '@vaadin/vaadin-grid/vaadin-grid-sorter';
-import { format } from 'date-fns';
-import { connect } from 'pwa-helpers';
-import { store } from '../store';
-import { updateRoute } from '../actions/app';
+import { html, css } from 'lit-element';
+import '@material/mwc-icon-button';
 import { getRequestUrl } from '../common';
-import './bnb-common-styles';
-import './bnb-grid-styles';
-import './bnb-icons';
+import { BnbPageDetails } from './bnb-page-details';
 
-class BnbUptimeDetails extends connect(store)(PolymerElement) {
-  static get template() {
-    return html`
-    <style include="bnb-common-styles">
-      :host {
-        @apply --layout-vertical;
-      }
-
-      #content {
-        padding: 8px;
-      }
-
-      .center {
+class BnbUptimeDetails extends BnbPageDetails {
+  static get styles() {
+    return [
+      super.styles,
+      css`
+      table thead tr th:nth-child(2) {
+        width: 80px;
         text-align: center;
+      }
+
+      table thead tr th:nth-child(3) {
+        width: 500px;
+        padding-left: 16px;
+        text-align: left;
+      }
+
+      table tbody tr td:nth-child(2) {
+        width: 80px;
+        text-align: center;
+      }
+
+      table tbody tr td:nth-child(3) {
+        width: 500px;
+        padding-left: 16px;
+        text-align: left;
       }
 
       .down {
+        width: 60px;
         color: #fff;
         border-radius: 4px;
         text-align: center;
-        padding: 2px;
+        padding: 4px;
         background-color: #B71C1C;
       }
 
       .up {
+        width: 60px;
         color: #fff;
         border-radius: 4px;
         text-align: center;
-        padding: 2px;
+        padding: 4px;
         background-color: #1B5E20;
       }
 
-      a {
-        color: rgba(0, 0, 0, var(--dark-primary-opacity));
+      @media screen and (max-width: 820px) {
+        table tbody tr td:nth-child(2):before {
+          content: "status";
+        }
+
+        table tbody tr td:nth-child(3):before {
+          content: "message";
+        }
+
+        table tbody tr td:nth-child(4):before {
+          content: "open report";
+        }
+
+        td mwc-icon-button {
+          margin-left: -16px;
+          margin-top: -16px;
+        }
       }
 
-      vaadin-grid {
-        height: calc(100vh - 80px);
-      }
-    </style>
+      `,
+    ];
+  }
 
-    <app-header-layout fullbleed>
-      <app-header slot="header" fixed condenses shadow>
-        <app-toolbar>
-          <paper-icon-button icon="bnb:arrow-back" on-tap="_backTapped"></paper-icon-button>
-          <span>[[page.name]]</span>
-        </app-toolbar>
-      </app-header>
-
-      <div id="content" class="fit">
-        <vaadin-grid id="grid" theme="bnb-grid" items="[[uptimeDetails]]">
-          <vaadin-grid-column width="155px" flex-grow="0">
-            <template class="header">
-              <vaadin-grid-sorter path="time" direction="desc">time</vaadin-grid-sorter>
-            </template>
-            <template>[[_formatTime(item.time)]]</template>
-          </vaadin-grid-column>
-          <vaadin-grid-column width="70px" flex-grow="0">
-            <template class="header">Status</template>
-            <template>
-              <div class$="[[_statusClass(item.value)]]">
-                [[_formatStatus(item.value)]]
-              </div>
-            </template>
-          </vaadin-grid-column>
-          <vaadin-grid-column flex-grow="1">
-            <template class="header">Message</template>
-            <template>[[item.error_message]]</template>
-          </vaadin-grid-column>
-          <vaadin-grid-column width="52px" flex-grow="0">
-            <template class="header"></template>
-            <template>
-              <div hidden$="[[!item.time_key]]">
-                <a href="[[_computeUrl(item.time_key)]]" title="Show content" target="_blank">
-                  <paper-icon-button icon="bnb:visibility"></paper-icon-button>
-                </a>
-              </div>
-            </template>
-          </vaadin-grid-column>
-        </vaadin-grid>
-      </div>
-    </app-header-layout>
+  renderHeader() {
+    return html`
+      <tr>
+        <th>date</th>
+        <th>status</th>
+        <th>message</th>
+        <th></th>
+      </tr>
     `;
   }
 
-  static get properties() {
-    return {
-      page: Object,
-      uptimeDetails: Object,
-    };
+  renderItem(item) {
+    return html`
+      <tr>
+        <td>${this.formatTime(item.time)}</td>
+        <td>
+          <div class="${this.statusClass(item.value)}">
+            ${this.formatStatus(item.value)}
+          </div>
+        </td>
+        <td>${item.error_message}</td>
+        <td>${this.renderIconButton(item)}</td>
+      </tr>
+    `;
   }
 
-  _stateChanged(state) {
-    this.page = state.pages.current;
-    this.uptimeDetails = state.stats.uptime_details;
+  renderIconButton(item) {
+    if (!item.key) {
+      return html`
+        <mwc-icon-button disabled icon="visibility"></mwc-icon-button>
+      `;
+    }
+
+    return html`
+      <a href="${this.computeUrl(item.time_key)}" title="Show content" target="_blank">
+        <mwc-icon-button icon="visibility"></mwc-icon-button>
+      </a>
+    `;
   }
 
-  _backTapped() {
-    store.dispatch(updateRoute(`page/${this.page.id}`));
+  stateChanged(state) {
+    super.stateChanged(state);
+    if (state.stats.uptime_details) {
+      this.details = state.stats.uptime_details.concat().sort((a, b) => this.sortDetails(a, b));
+    } else {
+      this.details = [];
+    }
   }
 
-  _formatTime(time) {
-    return format(new Date(time), 'MMM dd, yyyy HH:mm');
-  }
-
-  _statusClass(value) {
+  statusClass(value) {
     return value === 0 ? 'down' : 'up';
   }
 
-  _formatStatus(value) {
+  formatStatus(value) {
     return value === 0 ? 'Down' : 'Up';
   }
 
-  _computeUrl(key) {
+  computeUrl(key) {
     if (key) {
       return getRequestUrl(`pages/${this.page.id}/uptime/${key}`);
     }

@@ -1,48 +1,36 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element';
+import { LitElement, html } from 'lit-element';
 import { connect } from 'pwa-helpers';
-import '@polymer/iron-icon/iron-icon';
-import '@polymer/paper-button/paper-button';
+import '@material/mwc-button';
 import { store } from '../store';
-import './bnb-common-styles';
-import './bnb-icons';
+import { styles } from './bnb-styles';
 
-class BnbInstallButton extends connect(store)(PolymerElement) {
-  static get template() {
-    return html`
-    <style include="bnb-common-styles">
-    :host {
-      display: flex;
-      justify-content: center;
-      margin-top: 24px;
-      margin-bottom: 24px;
-    }
-    </style>
-  <paper-button raised style$="[[_computeStyle(displayButton)]]" on-tap="installTapped">
-    <iron-icon icon="bnb:cloud-download"></iron-icon>
-    Install Botnbot App
-    </paper-button>
-    `;
-  }
-
+class BnbInstallButton extends connect(store)(LitElement) {
   static get properties() {
     return {
-      promptEvent: {
-        type: Object,
-      },
-
       displayButton: {
         type: Boolean,
       },
     };
   }
 
-  _stateChanged(state) {
-    this.promptEvent = state.app.promptEvent;
-    this.displayButton = this.promptEvent !== undefined;
+  static get styles() {
+    return styles;
   }
 
-  _computeStyle(showMe) {
-    return showMe ? 'display:block' : 'display:none';
+  render() {
+    return html`
+    <mwc-button id="installBtn" raised label="Install Botnbot App" icon="cloud_download" ?disabled="${!this.displayButton}">
+    </mwc-button>
+    `;
+  }
+
+  firstUpdated() {
+    this.shadowRoot.getElementById('installBtn').addEventListener('click', () => this.installTapped());
+  }
+
+  stateChanged(state) {
+    this.promptEvent = state.app.promptEvent;
+    this.displayButton = this.promptEvent !== undefined;
   }
 
   installTapped() {

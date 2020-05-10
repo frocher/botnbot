@@ -1,21 +1,23 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element';
+import { LitElement, css, html } from 'lit-element';
 
-class BnbAnchor extends PolymerElement {
-  static get template() {
+class BnbAnchor extends LitElement {
+  static get styles() {
+    return css`
+    a {
+      cursor:pointer;
+      text-decoration: none;
+      color: var(--secondary-text-color);
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  `;
+  }
+
+  render() {
     return html`
-    <style>
-      a {
-        cursor:pointer;
-        text-decoration: none;
-        color: var(--secondary-text-color);
-      }
-
-      a:hover {
-        text-decoration: underline;
-      }
-
-    </style>
-    <a href="[[path]]">[[text]]</a>
+    <a href="${this.path}">${this.text}</a>
     `;
   }
 
@@ -23,7 +25,6 @@ class BnbAnchor extends PolymerElement {
     return {
       text: String,
       path: String,
-      params: Object,
     };
   }
 }

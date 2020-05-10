@@ -1,68 +1,76 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element';
-import '@polymer/polymer/lib/elements/dom-repeat';
+import { LitElement, css, html } from 'lit-element';
 import '@polymer/paper-card/paper-card';
 import './bnb-anchor';
-import './bnb-common-styles';
 
-class BnbAuthForm extends PolymerElement {
-  static get template() {
+class BnbAuthForm extends LitElement {
+  static get styles() {
+    return css`
+    :host {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .auth-form {
+      width: 70%;
+      max-width: 380px;
+      margin: 4em auto 1em auto;
+    }
+
+    .links {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+
+      width: 70%;
+      max-width: 380px;
+      margin: 0 auto;
+    }
+
+    .card-content ::slotted(.actions) {
+      position: relative;
+
+      margin: 0;
+      padding: 8px 8px 8px 24px;
+
+      color: var(--mdc-theme-primary);
+
+      display: flex;
+      justify-content: flex-end;
+    }
+    `;
+  }
+
+  render() {
     return html`
-    <style include="bnb-common-styles">
-      :host {
-        @apply --layout-fit;
-        @apply --layout-vertical;
-      }
-
-      .auth-form {
-        width: 70%;
-        max-width: 380px;
-        margin: 4em auto 1em auto;
-        @apply --layout-self-center;
-      }
-
-      .links {
-        width: 70%;
-        max-width: 380px;
-        margin: 0 auto;
-
-        text-align: center;
-        @apply --layout-self-center;
-      }
-
-      .card-content ::slotted(.actions) {
-        position: relative;
-
-        margin: 0;
-        padding: 8px 8px 8px 24px;
-
-        color: var(--paper-dialog-button-color);
-
-        @apply --layout-horizontal;
-        @apply --layout-end-justified;
-      }
-    </style>
-
-    <paper-card id="auth" heading="[[title]]" class="auth-form">
+    <paper-card id="auth" heading="${this.title}" class="auth-form">
       <div class="card-content">
         <slot></slot>
       </div>
     </paper-card>
 
     <div class="links">
-      <div class="layout vertical">
-        <template is="dom-repeat" items="{{buttons}}">
-          <bnb-anchor text="{{item.text}}" path="{{item.path}}"></bnb-anchor>
-        </template>
-      </div>
+      ${this.buttons.map((i, index) => this.renderLink(i, index))}
     </div>
     `;
   }
 
+  renderLink(i, index) {
+    const prefix = index !== 0 ? html`&nbsp;|&nbsp;` : html``;
+    return html`${prefix}<bnb-anchor text="${i.text}" path="${i.path}"></bnb-anchor>`;
+  }
+
   static get properties() {
     return {
-      title: String,
-      buttons: Array,
+      title: { type: String },
+      buttons: { type: Array },
     };
+  }
+
+  constructor() {
+    super();
+    this.title = '';
+    this.buttons = [];
   }
 }
 

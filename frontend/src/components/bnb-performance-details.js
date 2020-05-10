@@ -1,131 +1,101 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element';
-import '@polymer/app-layout/app-layout';
-import '@polymer/paper-icon-button/paper-icon-button';
-import '@vaadin/vaadin-grid/vaadin-grid';
-import '@vaadin/vaadin-grid/vaadin-grid-sorter';
-import { format } from 'date-fns';
-import { connect } from 'pwa-helpers';
-import { store } from '../store';
-import { updateRoute } from '../actions/app';
+import { html, css } from 'lit-element';
+import '@material/mwc-icon-button';
 import { getRequestUrl } from '../common';
-import './bnb-common-styles';
-import './bnb-grid-styles';
-import './bnb-icons';
+import { BnbPageDetails } from './bnb-page-details';
 
-class BnbPerformanceDetails extends connect(store)(PolymerElement) {
-  static get template() {
-    return html`
-    <style include="bnb-common-styles">
-      :host {
-        @apply --layout-vertical;
-      }
-
-      #content {
-        display: flex;
-        justify-content: center;
-        padding: 8px;
-      }
-
-      .number {
+class BnbPerformanceDetails extends BnbPageDetails {
+  static get styles() {
+    return [
+      super.styles,
+      css`
+      table thead tr th:nth-child(1n+2) {
+        width: 130px;
         text-align: right;
       }
 
-      a {
-        color: rgba(0, 0, 0, var(--dark-primary-opacity));
+      table thead tr th:nth-child(6) {
+        width: 60px;
+        text-align: center;
       }
 
-      vaadin-grid {
-        height: calc(100vh - 80px);
-        max-width: 800px;
+      table thead tr td:nth-child(6) {
+        width: 60px;
+        text-align: center;
       }
-    </style>
 
-    <app-header-layout fullbleed>
-      <app-header slot="header" fixed condenses shadow>
-        <app-toolbar>
-          <paper-icon-button icon="bnb:arrow-back" on-tap="_backTapped"></paper-icon-button>
-          <span>[[page.name]]</span>
-        </app-toolbar>
-      </app-header>
+      @media screen and (max-width: 820px) {
+        table tbody tr td:nth-child(2):before {
+          content: "ttfb";
+        }
 
-      <div id="content" class="fit">
-        <vaadin-grid id="grid" theme="bnb-grid" items="[[lighthouseDetails]]">
-          <vaadin-grid-column>
-            <template class="header">
-              <vaadin-grid-sorter path="time" direction="desc">time</vaadin-grid-sorter>
-            </template>
-            <template>[[_formatTime(item.time)]]</template>
-          </vaadin-grid-column>
-          <vaadin-grid-column width="70px" flex-grow="0">
-            <template class="header">
-              <acronym title="Time To First Byte" lang="en">ttfb</acronym>
-            </template>
-            <template><div class="number">[[_formatNumber(item.ttfb)]]</div></template>
-          </vaadin-grid-column>
-          <vaadin-grid-column width="90px" flex-grow="0">
-            <template class="header">first paint</template>
-            <template>
-              <div class="number">[[_formatNumber(item.first_meaningful_paint)]]</div>
-            </template>
-          </vaadin-grid-column>
-          <vaadin-grid-column width="100px" flex-grow="0">
-            <template class="header">speed index</template>
-            <template>
-              <div class="number">[[_formatNumber(item.speed_index)]]</div>
-            </template>
-          </vaadin-grid-column>
-          <vaadin-grid-column width="100px" flex-grow="0">
-            <template class="header">interactive</template>
-            <template>
-              <div class="number">[[_formatNumber(item.first_interactive)]]</div>
-            </template>
-          </vaadin-grid-column>
-          <vaadin-grid-column width="52px" flex-grow="0">
-            <template class="header"></template>
-            <template>
-              <a href="[[_computeUrl(item.time_key)]]" title="Show report" target="_blank">
-                <paper-icon-button icon="bnb:visibility"></paper-icon-button>
-              </a>
-            </template>
-          </vaadin-grid-column>
-        </vaadin-grid>
-      </div>
-    </app-header-layout>
+        table tbody tr td:nth-child(3):before {
+          content: "first paint";
+        }
+
+        table tbody tr td:nth-child(4):before {
+          content: "speed index";
+        }
+
+        table tbody tr td:nth-child(5):before {
+          content: "interactivity";
+        }
+        table tbody tr td:nth-child(6):before {
+          content: "open report";
+        }
+
+        a mwc-icon-button {
+          margin-left: -16px;
+          margin-top: -16px;
+        }
+      }
+      `,
+    ];
+  }
+
+  renderHeader() {
+    return html`
+      <tr>
+        <th>date</th>
+        <th><abbr title="Time To First Byte">ttfb</abbr></th>
+        <th>first paint</th>
+        <th>speed index</th>
+        <th>interactivity</th>
+        <th></th>
+      </tr>
     `;
   }
 
-  static get properties() {
-    return {
-      page: Object,
-      lighthouseDetails: Object,
-    };
+  renderItem(item) {
+    return html`
+      <tr>
+        <td>${this.formatTime(item.time)}</td>
+        <td>${this.formatNumber(item.ttfb)}</td>
+        <td>${this.formatNumber(item.first_meaningful_paint)}</td>
+        <td>${this.formatNumber(item.speed_index)}</td>
+        <td>${this.formatNumber(item.first_interactive)}</td>
+        <td>
+          <a href="${this.computeUrl(item.time_key)}" title="Show HAR" target="_blank">
+            <mwc-icon-button icon="visibility"></mwc-icon-button>
+          </a>
+      </tr>
+    `;
   }
 
-  _stateChanged(state) {
-    this.page = state.pages.current;
-    this.lighthouseDetails = state.stats.lighthouse_details;
-  }
-
-  _backTapped() {
-    store.dispatch(updateRoute(`page/${this.page.id}`));
-  }
-
-  _formatTime(time) {
-    return format(new Date(time), 'MMM dd, yyyy HH:mm');
-  }
-
-  _formatNumber(x) {
-    if (x) {
-      return x.toLocaleString();
+  stateChanged(state) {
+    super.stateChanged(state);
+    if (state.stats.lighthouse_details) {
+      this.details = state.stats.lighthouse_details.concat().sort((a, b) => this.sortDetails(a, b));
+    } else {
+      this.details = [];
     }
-    return '';
   }
 
-  _computeUrl(key) {
+  computeUrl(key) {
     if (key) {
       return getRequestUrl(`pages/${this.page.id}/lighthouse/${key}#performance`);
     }
     return '';
   }
 }
+
 window.customElements.define('bnb-performance-details', BnbPerformanceDetails);

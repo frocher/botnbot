@@ -1,140 +1,149 @@
+import { LitElement, css, html } from 'lit-element';
 import '@material/mwc-formfield';
 import '@material/mwc-radio';
-import { PolymerElement, html } from '@polymer/polymer/polymer-element';
-import '@polymer/app-layout/app-layout';
-import '@polymer/iron-a11y-keys/iron-a11y-keys';
-import '@polymer/paper-button/paper-button';
-import '@polymer/paper-dialog/paper-dialog';
-import '@polymer/paper-icon-button/paper-icon-button';
-import '@polymer/paper-input/paper-input';
+import '@material/mwc-textfield';
+import '@material/mwc-button';
+import '@material/mwc-dialog';
+import '@material/mwc-icon-button';
+import '@polymer/paper-card/paper-card';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
 import { updateRoute } from '../actions/app';
 import { createPage } from '../actions/pages';
-import './bnb-common-styles';
 import { BnbFormElement } from './bnb-form-element';
+import './bnb-top-app-bar';
 
-class BnbAddPage extends connect(store)(BnbFormElement(PolymerElement)) {
-  static get template() {
-    return html`
-    <style include="bnb-common-styles">
-      :host {
-        @apply --layout-vertical;
-      }
-
-      #content {
-        @apply --layout-horizontal;
-        @apply --layout-center-justified;
-      }
-
-      #container {
-        width:100%;
-        max-width: 1000px;
-        padding: 10px 22px 10px 22px;
-      }
-    </style>
-
-    <iron-a11y-keys keys="enter" target="[[target]]" on-keys-pressed="createTapped">
-    </iron-a11y-keys>
-    <app-header-layout fullbleed>
-      <app-header slot="header" fixed condenses shadow>
-        <app-toolbar>
-          <paper-icon-button icon="bnb:close" on-tap="closeTapped"></paper-icon-button>
-          <span class="title">New page</span>
-          <span class="flex"></span>
-          <paper-button on-tap="createTapped">Create</paper-button>
-        </app-toolbar>
-      </app-header>
-      <div id="content" class="fit">
-        <div id="container">
-          <paper-input id="name" label="Page name" value="{{pageName}}" autofocus="true"></paper-input>
-          <paper-input id="url" label="URL" value="{{url}}"></paper-input>
-          <mwc-formfield label="Mobile">
-            <mwc-radio id="mobileBtn" name="device" group="deviceGroup" checked></mwc-radio>
-          </mwc-formfield>
-          <mwc-formfield label="Desktop">
-            <mwc-radio id="desktopBtn" name="device" group="deviceGroup"></mwc-radio>
-          </mwc-formfield>
-        </div>
-      </div>
-    </app-header-layout>
-
-    <paper-dialog id="discard_dlg" modal>
-      <p>Discard new page.</p>
-      <div class="buttons">
-        <paper-button dialog-dismiss>Cancel</paper-button>
-        <paper-button dialog-confirm autofocus on-tap="closePage">Discard</paper-button>
-      </div>
-    </paper-dialog>
-    `;
-  }
-
+class BnbAddPage extends connect(store)(BnbFormElement(LitElement)) {
   static get properties() {
     return {
-      target: Object,
-      pageName: String,
-      url: String,
-      routePath: {
-        type: String,
-        reflectToAttribute: true,
-        observer: '_routePathChanged',
-      },
-      errors: {
-        type: Object,
-        observer: '_errorsChanged',
-      },
+      pageName: { type: String },
+      url: { type: String },
+      routePath: { type: String },
+      errors: { type: Object },
     };
   }
 
-  _stateChanged(state) {
-    this.routePath = state.app.route;
-    this.errors = state.app.errors;
+  static get styles() {
+    return css`
+    :host {
+      display: flex;
+      flex-direction: column;
+    }
+
+    mwc-textfield {
+      width: 100%;
+      --mdc-theme-primary: #fff;
+    }
+
+    paper-card {
+      width: 100%;
+      padding: 16px;
+    }
+
+    #content {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+    }
+
+    #container {
+      width:100%;
+      max-width: 1000px;
+      padding: 10px 22px 10px 22px;
+    }
+
+    #name {
+      margin-bottom: 16px;
+    }
+    `;
   }
 
-  ready() {
-    super.ready();
-    this.target = this.$.content;
+  get fields() {
+    return ['name', 'url'];
+  }
+
+  render() {
+    return html`
+    <bnb-top-app-bar>
+      <mwc-icon-button id="closeBtn" icon="close" slot="navigationIcon"></mwc-icon-button>
+      <span slot="title">New page</span>
+      <mwc-button id="createBtn" slot="actionItems">Create</mwc-button>
+
+      <div id="content">
+        <div id="container">
+          <h3>Page informations</h3>
+          <paper-card>
+            <mwc-textfield id="name" label="Page name" type="text" outlined value="${this.pageName}"></mwc-textfield>
+            <mwc-textfield id="url" label="URL" type="url" outlined value="${this.url}"></mwc-textfield>
+            <mwc-formfield label="Mobile">
+              <mwc-radio id="mobileBtn" name="device" group="deviceGroup" checked></mwc-radio>
+            </mwc-formfield>
+            <mwc-formfield label="Desktop">
+              <mwc-radio id="desktopBtn" name="device" group="deviceGroup"></mwc-radio>
+            </mwc-formfield>
+          </paper-card>
+        </div>
+      </div>
+    </bnb-top-app-bar>
+
+    <mwc-dialog id="discardDlg" >
+      <p>Are you sure you want to discard this new page.</p>
+      <mwc-button dialogAction="ok" slot="primaryAction">Discard</mwc-button>
+      <mwc-button dialogAction="cancel" slot="secondaryAction">Cancel</mwc-button>
+    </mwc-dialog>
+    `;
+  }
+
+  firstUpdated() {
+    this.shadowRoot.getElementById('closeBtn').addEventListener('click', () => this.closeTapped());
+    this.shadowRoot.getElementById('createBtn').addEventListener('click', () => this.createTapped());
+    this.shadowRoot.getElementById('discardDlg').addEventListener('closed', (e) => this.discardDialogClosed(e.detail.action));
   }
 
   closeTapped() {
-    if (this.pageName !== '' || this.url !== '') {
-      this.$.discard_dlg.open();
+    if (this.pageName || this.url) {
+      this.shadowRoot.getElementById('discardDlg').show();
     } else {
       this.closePage();
     }
   }
 
   createTapped() {
-    this.$.name.invalid = false;
-    this.$.url.invalid = false;
-    const device = this.$.mobileBtn.checked ? 'mobile' : 'desktop';
+    this.validateFields(this.fields);
 
     store.dispatch(
       createPage(
-        this.pageName,
-        this.url,
-        device,
-        this.handleResponse,
-        this.handleError,
+        this.shadowRoot.getElementById('name').value,
+        this.shadowRoot.getElementById('url').value,
+        this.shadowRoot.getElementById('mobileBtn').checked ? 'mobile' : 'desktop',
       ),
     );
   }
 
+  discardDialogClosed(action) {
+    if (action === 'ok') {
+      this.closePage();
+    }
+  }
+
   clearFields() {
-    this.$.name.invalid = false;
-    this.$.url.invalid = false;
+    this.validateFields(this.fields);
     this.pageName = '';
     this.url = '';
   }
 
   closePage() {
     this.clearFields();
-    store.dispatch(updateRoute('home'));
+    store.dispatch(updateRoute(''));
   }
 
-  _routePathChanged(newVal) {
-    if (newVal === 'add-page') {
-      this.clearFields();
+  stateChanged(state) {
+    this.routePath = state.app.route;
+    this.errors = state.app.errors;
+
+    this.clearFields();
+    if (this.errors) {
+      this._litErrorsChanged();
     }
   }
 }

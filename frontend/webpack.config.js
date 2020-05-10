@@ -122,7 +122,14 @@ const buildPlugins = [
   ),
   new InjectManifest({
     swSrc: './src/sw.js',
-    swDest: join(OUTPUT_PATH, 'service-worker.js')
+    swDest: join(OUTPUT_PATH, 'service-worker.js'),
+    exclude: [
+      /\.map$/,
+      /manifest$/,
+      /\.htaccess$/,
+      /service-worker\.js$/,
+      /sw\.js$/,
+    ]
   }),
   new CleanWebpackPlugin([OUTPUT_PATH], {verbose: true})
 ];
@@ -171,7 +178,7 @@ module.exports = {
   },
   plugins,
   devServer: {
-    contentBase: OUTPUT_PATH,
+    contentBase: [OUTPUT_PATH, resolve('images'), resolve('dist')],
     historyApiFallback: true,
     compress: true,
     overlay: {

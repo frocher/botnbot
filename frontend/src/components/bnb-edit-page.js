@@ -1,167 +1,247 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element';
-import '@polymer/app-layout/app-layout';
-import '@polymer/iron-a11y-keys/iron-a11y-keys';
-import '@polymer/paper-button/paper-button';
-import '@polymer/paper-dialog/paper-dialog';
-import '@polymer/paper-icon-button/paper-icon-button';
-import '@polymer/paper-input/paper-input';
-import '@polymer/paper-radio-button/paper-radio-button';
-import '@polymer/paper-radio-group/paper-radio-group';
-import '@polymer/paper-toggle-button/paper-toggle-button';
+import { LitElement, css, html } from 'lit-element';
+import '@material/mwc-button';
+import '@material/mwc-dialog';
+import '@material/mwc-formfield';
+import '@material/mwc-icon-button';
+import '@material/mwc-radio';
+import '@material/mwc-switch';
+import '@material/mwc-textfield';
+import '@polymer/paper-card/paper-card';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
 import { updateRoute } from '../actions/app';
 import { updatePage } from '../actions/pages';
-import './bnb-collapse';
-import './bnb-common-styles';
-import './bnb-divider';
 import { BnbFormElement } from './bnb-form-element';
-import './bnb-icons';
+import './bnb-top-app-bar';
 
-class BnbEditPage extends connect(store)(BnbFormElement(PolymerElement)) {
-  static get template() {
+class BnbEditPage extends connect(store)(BnbFormElement(LitElement)) {
+  static get styles() {
+    return css`
+    :host {
+      display: flex;
+      flex-direction: column;
+    }
+
+    paper-card {
+      width: 100%;
+      padding: 16px;
+    }
+
+    mwc-switch {
+      margin-left: 12px;
+      --mdc-theme-surface: var(--mdc-theme-text-primary-on-background);
+      --mdc-theme-on-surface: var(--mdc-theme-text-primary-on-background);
+    }
+
+    mwc-switch {
+      padding-left: 8px;
+    }
+
+    .mdc-label {
+      margin-top: -12px !important;
+    }
+
+    mwc-textfield {
+      width: 100%;
+      --mdc-theme-primary: #fff;
+    }
+
+    #content {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+    }
+
+    #container {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      max-width: 1000px;
+      padding: 10px 22px 10px 22px;
+    }
+
+    #name {
+      margin-bottom: 16px;
+    }
+
+    #slackInformations {
+      display: flex;
+      flex-direction: row;
+      margin-top: 12px;
+      margin-right: 40px;
+      margin-left: 40px;
+    }
+
+    #slack_webhook {
+      margin-right: 16px;
+    }
+    `;
+  }
+
+  render() {
     return html`
-    <style include="bnb-common-styles">
-      :host {
-        @apply --layout-vertical;
-      }
+    <bnb-top-app-bar>
+      <mwc-icon-button id="closeBtn" icon="close" slot="navigationIcon"></mwc-icon-button>
+      <span slot="title">Edit page</span>
+      <mwc-button id="saveBtn" slot="actionItems">Save</mwc-button>
 
-      #content {
-        @apply --layout-horizontal;
-        @apply --layout-center-justified;
-      }
-
-      #container {
-        width: 100%;
-        max-width: 1000px;
-        padding: 10px 22px 10px 22px;
-        @apply --layout-vertical;
-      }
-
-      #slackInformations {
-        margin-right: 40px;
-        margin-left: 40px;
-        @apply --layout-horizontal;
-      }
-
-      #slack_webhook {
-        margin-right: 16px;
-      }
-    </style>
-
-    <iron-a11y-keys keys="enter" target="[[target]]" on-keys-pressed="saveTapped">
-    </iron-a11y-keys>
-    <app-header-layout fullbleed>
-      <app-header slot="header" fixed condenses shadow>
-        <app-toolbar>
-          <paper-icon-button icon="bnb:close" on-tap="closeTapped"></paper-icon-button>
-          <span class="title">Edit page</span>
-          <span class="flex"></span>
-          <paper-button on-tap="saveTapped">Save</paper-button>
-        </app-toolbar>
-      </app-header>
-      <div id="content" class="fit">
+      <div id="content">
         <div id="container">
-          <bnb-collapse icon="bnb:info" header="General">
-            <paper-input id="name" label="Page name" value="[[page.name]]" autofocus="true"></paper-input>
-            <paper-input id="url" label="URL" value="[[page.url]]"></paper-input>
-            <paper-radio-group id="device" selected="[[page.device]]">
-              <paper-radio-button name="mobile">Mobile</paper-radio-button>
-              <paper-radio-button name="desktop">Desktop</paper-radio-button>
-            </paper-radio-group>
-          </bnb-collapse>
-          <bnb-divider></bnb-divider>
-          <bnb-collapse icon="bnb:timeline" header="Uptime check">
-            <paper-input id="uptimeKeyword" value="[[page.uptime_keyword]]" label="Keyword"></paper-input>
-            <paper-radio-group id="uptimeKeywordType" selected="[[page.uptime_keyword_type]]">
-              <paper-radio-button name="presence">Presence</paper-radio-button>
-              <paper-radio-button name="absence">Absence</paper-radio-button>
-            </paper-radio-group>
-          </bnb-collapse>
-          <bnb-divider></bnb-divider>
-          <bnb-collapse icon="bnb:sms" header="Notifications">
-            <paper-toggle-button id="mail_notify" checked="[[page.mail_notify]]">by mail</paper-toggle-button>
-            <paper-toggle-button id="push_notify" checked="[[page.push_notify]]">by push</paper-toggle-button>
-            <paper-toggle-button id="slack_notify" checked="{{page.slack_notify}}">by Slack</paper-toggle-button>
-            <div id="slackInformations" hidden$="[[!page.slack_notify]]">
-              <paper-input class="flex" id="slack_webhook" label="Webhook URL" value="[[page.slack_webhook]]"></paper-input>
-              <paper-input class="flex" id="slack_channel" label="Channel" value="[[page.slack_channel]]">
-                <div prefix>#</div>
-              </paper-input>
-            </div>
-          </bnb-collapse>
-          <bnb-divider></bnb-divider>
+          <h3>General</h3>
+          <paper-card>
+            <mwc-textfield id="name" type="text" label="Page name" outlined value="${this.name}"></mwc-textfield>
+            <mwc-textfield id="url" type="url" label="URL" outlined value="${this.url}"></mwc-textfield>
+            <mwc-formfield label="Mobile">
+              <mwc-radio id="mobileBtn" name="device" ?checked="${this.device === 'mobile'}"></mwc-radio>
+            </mwc-formfield>
+            <mwc-formfield label="Desktop">
+              <mwc-radio id="desktopBtn" name="device" ?checked="${this.device === 'desktop'}"></mwc-radio>
+            </mwc-formfield>
+          </paper-card>
+          <h3>Uptime check</h3>
+          <paper-card>
+            <mwc-textfield id="uptimeKeyword" type="text" label="Keyword" outlined value="${this.uptimeKeyword}"></mwc-textfield>
+            <mwc-formfield label="Presence">
+              <mwc-radio id="presenceBtn" name="uptimeKeywordType" ?checked="${this.uptimeKeywordType === 'presence'}"></mwc-radio>
+            </mwc-formfield>
+            <mwc-formfield label="Absence">
+              <mwc-radio id="absenceBtn" name="uptimeKeywordType" ?checked="${this.uptimeKeywordType === 'absence'}"></mwc-radio>
+            </mwc-formfield>
+          </paper-card>
+          <h3>Notifications</h3>
+          <paper-card>
+            <mwc-formfield label="by mail">
+              <mwc-switch id="mailNotify" ?checked="${this.mailNotify}"></mwc-switch>
+            </mwc-formfield>
+            <mwc-formfield label="by push">
+              <mwc-switch id="pushNotify" ?checked="${this.pushNotify}"></mwc-switch>
+            </mwc-formfield>
+            <mwc-formfield label="by Slack">
+              <mwc-switch id="slackNotify" ?checked="${this.slackNotify}"></mwc-switch>
+            </mwc-formfield>
+            ${this.renderSlackInformations()}
+          </paper-card>
         </div>
       </div>
-    </app-header-layout>
+    </bnb-top-app-bar>
 
-    <paper-dialog id="discardDlg" modal>
-      <p>Discard edit.</p>
-      <div class="buttons">
-        <paper-button dialog-dismiss>Cancel</paper-button>
-        <paper-button dialog-confirm autofocus on-tap="closePage">Discard</paper-button>
-      </div>
-    </paper-dialog>
+    <mwc-dialog id="discardDlg">
+      <p>Are you sure you want to discard your modifications.</p>
+      <mwc-button dialogAction="ok" slot="primaryAction">Discard</mwc-button>
+      <mwc-button dialogAction="cancel" slot="secondaryAction">Cancel</mwc-button>
+    </mwc-dialog>
     `;
+  }
+
+  renderSlackInformations() {
+    if (this.slackNotify) {
+      return html`
+        <div id="slackInformations" >
+          <mwc-textfield class="flex" id="slackWebhook" type="url" label="Webhook URL" outlined value="${this.slackWebhook}"></mwc-textfield>
+          <mwc-textfield class="flex" id="slackChannel" type="text" label="Channel" prefix="#" outlined value="${this.slackChannel}"></mwc-textfield>
+        </div>
+      `;
+    }
+    return html``;
   }
 
   static get properties() {
     return {
-      page: Object,
-      target: Object,
-      errors: {
-        type: Object,
-        observer: '_errorsChanged',
-      },
+      pageId: { type: Number },
+      name: { type: String },
+      url: { type: String },
+      device: { type: String },
+      uptimeKeyword: { type: String },
+      uptimeKeywordType: { type: String },
+      mailNotify: { type: Boolean },
+      pushNotify: { type: Boolean },
+      slackNotify: { type: Boolean },
+      slackWebhook: { type: String },
+      slackChannel: { type: String },
+      errors: { type: Object },
     };
   }
 
-  _stateChanged(state) {
-    this.page = state.pages.current;
-    this.errors = state.app.errors;
+  get fields() {
+    return ['name', 'url', 'uptimeKeyword', 'slack_webhook', 'slack_channel'];
   }
 
-  ready() {
-    super.ready();
-    this.target = this.$.content;
+  stateChanged(state) {
+    const page = state.pages.current;
+    if (page) {
+      this.pageId = page.id;
+      this.name = page.name;
+      this.url = page.url;
+      this.device = page.device;
+      this.uptimeKeyword = page.uptime_keyword;
+      this.uptimeKeywordType = page.uptime_keyword_type;
+      this.mailNotify = page.mail_notify;
+      this.pushNotify = page.push_notify;
+      this.slackNotify = page.slack_notify;
+      this.slackWebhook = page.slack_webhook;
+      this.slackChannel = page.slack_channel;
+    }
+    this.errors = state.app.errors;
+
+    if (this.errors) {
+      this._litErrorsChanged();
+    }
+  }
+
+  firstUpdated() {
+    this.shadowRoot.getElementById('slackNotify').addEventListener('change', () => this.slackNotifyChanged());
+    this.shadowRoot.getElementById('closeBtn').addEventListener('click', () => this.closeTapped());
+    this.shadowRoot.getElementById('saveBtn').addEventListener('click', () => this.saveTapped());
+    this.shadowRoot.getElementById('discardDlg').addEventListener('closed', (e) => this.discardDialogClosed(e.detail.action));
+  }
+
+  slackNotifyChanged() {
+    this.slackNotify = this.shadowRoot.getElementById('slackNotify').checked;
+  }
+
+  discardDialogClosed(action) {
+    if (action === 'ok') {
+      this.closePage();
+    }
   }
 
   closeTapped() {
-    if (this.$.name.value !== this.page.name || this.$.url.value !== this.page.url) {
-      this.$.discardDlg.open();
+    const nameValue = this.shadowRoot.getElementById('name').value;
+    const urlValue = this.shadowRoot.getElementById('url').value;
+    if (nameValue !== this.name || urlValue !== this.url) {
+      this.shadowRoot.getElementById('discardDlg').show();
     } else {
       this.closePage();
     }
   }
 
   closePage() {
-    this.validateFields();
-    store.dispatch(updateRoute(`page/${this.page.id}`));
+    this.validateFields(this.fields);
+    store.dispatch(updateRoute(`page/${this.pageId}`));
   }
 
   saveTapped() {
-    this.validateFields();
-    const page = {
-      name: this.$.name.value,
-      url: this.$.url.value,
-      device: this.$.device.selected,
-      uptime_keyword: this.$.uptimeKeyword.value,
-      uptime_keyword_type: this.$.uptimeKeywordType.selected,
-      mail_notify: this.$.mail_notify.checked,
-      push_notify: this.$.push_notify.checked,
-      slack_notify: this.$.slack_notify.checked,
-      slack_webhook: this.$.slack_webhook.value,
-      slack_channel: this.$.slack_channel.value,
-    };
-    store.dispatch(updatePage(this.page.id, page));
-  }
+    this.validateFields(this.fields);
 
-  validateFields() {
-    this.$.name.invalid = false;
-    this.$.url.invalid = false;
-    this.$.uptimeKeyword.invalid = false;
-    this.$.slack_webhook.invalid = false;
-    this.$.slack_channel.invalid = false;
+    const device = this.shadowRoot.getElementById('mobileBtn').checked ? 'mobile' : 'desktop';
+    const uptimeKeywordType = this.shadowRoot.getElementById('presenceBtn').checked ? 'presence' : 'absence';
+    const page = {
+      name: this.shadowRoot.getElementById('name').value,
+      url: this.shadowRoot.getElementById('url').value,
+      device,
+      uptime_keyword: this.shadowRoot.getElementById('uptimeKeyword').value,
+      uptime_keyword_type: uptimeKeywordType,
+      mail_notify: this.shadowRoot.getElementById('mailNotify').checked,
+      push_notify: this.shadowRoot.getElementById('pushNotify').checked,
+      slack_notify: this.shadowRoot.getElementById('slackNotify').checked,
+    };
+
+    if (page.slack_notify) {
+      page.slack_webhook = this.shadowRoot.getElementById('slackWebhook').value;
+      page.slack_channel = this.shadowRoot.getElementById('slackChannel').value;
+    }
+
+    store.dispatch(updatePage(this.pageId, page));
   }
 }
 

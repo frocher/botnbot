@@ -1,31 +1,29 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element';
-import '@polymer/iron-a11y-keys/iron-a11y-keys';
-import '@polymer/paper-button/paper-button';
-import '@polymer/paper-input/paper-input';
+import { LitElement, css, html } from 'lit-element';
+import '@material/mwc-button/mwc-button';
+import '@material/mwc-textfield';
 import './bnb-auth-form';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
 import { forgotPassword } from '../actions/auth';
 import { getFullPath } from '../common';
 
-class BnbForgotPassword extends connect(store)(PolymerElement) {
-  static get template() {
+class BnbForgotPassword extends connect(store)(LitElement) {
+  static get styles() {
+    return css`
+    mwc-textfield {
+      width: 100%;
+    }
+    `;
+  }
+
+  render() {
     return html`
-    <style>
-      :host {
-        @apply --layout-horizontal;
-        @apply --layout-center-justified;
-      }
-    </style>
-
-    <iron-a11y-keys keys="enter" target="[[target]]" on-keys-pressed="submitTapped"></iron-a11y-keys>
-
-    <bnb-auth-form id="forgot-form" title="Password forgotten" buttons="[[forgotButtons]]">
-      <paper-input id="forgot-email" label="E-mail" type="email" value="{{email}}" autofocus="true">
-      </paper-input>
+    <bnb-auth-form id="forgot" title="Password forgotten" .buttons="${this.forgotButtons}">
+      <mwc-textfield id="email" label="E-mail" type="email" outlined value="${this.email}">
+      </mwc-textfield>
 
       <div class="actions">
-        <paper-button on-tap="submitTapped">Reset password</paper-button>
+        <mwc-button id="forgotBtn">Reset password</mwc-button>
       </div>
     </bnb-auth-form>
     `;
@@ -33,28 +31,28 @@ class BnbForgotPassword extends connect(store)(PolymerElement) {
 
   static get properties() {
     return {
-      target: Object,
-      forgotButtons: Array,
-      email: {
-        type: String,
-        value: '',
-      },
+      forgotButtons: { type: Array },
+      email: { type: String },
     };
   }
 
-  _stateChanged() {
+  stateChanged() {
     // nothing to do
   }
 
-  ready() {
-    super.ready();
-    this.target = this.$['forgot-form'];
+  constructor() {
+    super();
+    this.email = '';
     this.forgotButtons = [{ text: 'Sign up', path: '/signup' }, { text: 'Sign in', path: '/signin' }];
   }
 
+  firstUpdated() {
+    this.shadowRoot.getElementById('forgotBtn').addEventListener('click', () => this.submitTapped());
+  }
+
   submitTapped() {
-    this.$['forgot-email'].isInvalid = false;
-    store.dispatch(forgotPassword(this.email, getFullPath('edit-password')));
+    const email = this.shadowRoot.getElementById('email').value;
+    store.dispatch(forgotPassword(email, getFullPath('edit-password')));
   }
 }
 

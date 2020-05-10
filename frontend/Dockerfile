@@ -22,5 +22,5 @@ RUN npm run build:prod
 # clean
 RUN apt-get purge -y curl git gnupg
 
-EXPOSE 8080
+EXPOSE 8081
 CMD ["npm", "run", "serve"]

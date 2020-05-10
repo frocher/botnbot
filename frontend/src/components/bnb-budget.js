@@ -1,128 +1,99 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element';
-import { mixinBehaviors } from '@polymer/polymer/lib/legacy/class';
-import { IronResizableBehavior } from '@polymer/iron-resizable-behavior/iron-resizable-behavior';
-import '@polymer/iron-pages/iron-pages';
+import { LitElement, css, html } from 'lit-element';
 import '@polymer/paper-spinner/paper-spinner';
 
-class BnbBudget extends mixinBehaviors([IronResizableBehavior], PolymerElement) {
-  static get template() {
-    return html`
-    <style>
-      :host {
-        display: inline-block;
-      }
-
-      iron-pages {
-        width: 100%;
-        height: 100%;
-      }
-
-      #canvas {
-        position:relative;
-        width: 100%;
-        height: 100%;
-      }
-
-      #loading {
-        display: flex;
-
-        width: 100%;
-        height: 100%;
-
-        color: #999;
-
-        font-size: 24px;
-
-        align-items: center;
-        justify-content: center;
-      }
-
-      #noData {
-        display: flex;
-        width: 100%;
-        height: 100%;
-        color: #999;
-        font-size: 36px;
-        align-items: center;
-        justify-content: center;
-      }
-
-      #noData span {
-        margin-top: -50px;
-      }
-    </style>
-
-    <iron-pages selected="[[selectedPage]]">
-      <div id="loading">
-        <span>Loading&nbsp;</span>
-        <paper-spinner active></paper-spinner>
-      </div>
-      <div id="noData"><span>No data</span></div>
-      <div id="canvas">
-        <canvas id="chart"></canvas>
-      </div>
-    </iron-pages>
-    `;
-  }
-
+class BnbBudget extends LitElement {
   static get properties() {
     return {
-      chart: {
-        notify: true,
-      },
-      data: {
-        type: Object,
-      },
-      model: {
-        type: Object,
-      },
-      budget: {
-        type: Number,
-      },
+      selectedPage: { type: Number },
+      data: { type: Object },
+      model: { type: Object },
+      budget: { type: Number },
     };
   }
 
-  static get observers() {
-    return [
-      'updateChart(data.*)',
-    ];
+  static get styles() {
+    return css`
+    :host {
+      display: inline-block;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    #loading {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      color: #999;
+      font-size: 24px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #noData {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      color: #999;
+      font-size: 36px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #canvas {
+      position:relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    #noData span {
+      margin-top: -50px;
+    }
+    `;
   }
 
-  ready() {
-    super.ready();
-    this.addEventListener('iron-resize', this.onIronResize);
+  constructor() {
+    super();
+    this.selectedPage = 0;
   }
 
-  attached() {
-    super.attached();
-    this._queue();
+  render() {
+    return html`
+    <div id="loading" style="${this.renderStyle(0)}">
+      <span>Loading&nbsp;</span>
+      <paper-spinner active></paper-spinner>
+    </div>
+    <div id="noData" style="${this.renderStyle(1)}">
+      <span>No data</span>
+    </div>
+    <div id="canvas" style="${this.renderStyle(2)}">
+      <canvas id="chart">
+    </div>
+    `;
   }
 
-  onIronResize() {
+  renderStyle(index) {
+    return this.selectedPage === index ? '' : 'display:none';
+  }
+
+  firstUpdated() {
+    const resizeObserver = new ResizeObserver(() => {
+      this.onResize();
+    });
+
+    resizeObserver.observe(this.shadowRoot.getElementById('canvas'));
+  }
+
+  update() {
+    super.update();
+    this.updateChart();
+  }
+
+  onResize() {
     if (this.chart) {
       this.chart.resize();
       this.chart.render(true);
-    }
-  }
-
-  _measure(cb) {
-    function measure() {
-      if (this.offsetHeight) {
-        cb(true);
-      } else {
-        cb(false);
-      }
-    }
-    requestAnimationFrame(measure.bind(this));
-  }
-
-  _queue() {
-    if (this.hasValues(this.data)) {
-      this._measure(function(hasHeight) {
-        if (hasHeight) {
-          this.updateChart();
-        }
-      }.bind(this));
     }
   }
 
@@ -195,12 +166,14 @@ class BnbBudget extends mixinBehaviors([IronResizableBehavior], PolymerElement) 
         },
       };
 
-      const ctx = this.$.chart;
-      this.chart = new Chart(ctx, {
-        type: 'line',
-        data: chartData,
-        options,
-      });
+      const ctx = this.shadowRoot.getElementById('chart');
+      if (ctx) {
+        this.chart = new Chart(ctx, {
+          type: 'line',
+          data: chartData,
+          options,
+        });
+      }
     }
   }
 

@@ -11,15 +11,11 @@ const authReducer = (state = initial, action) => {
   switch (action.type) {
     case 'SIGN_IN_SUCCESS':
       sessionStorage.setItem('credentials', JSON.stringify(action.payload));
-      return Object.assign({}, state, {
-        credentials: action.payload,
-      });
+      return {...state, credentials: action.payload};
 
     case 'SIGN_OUT':
       sessionStorage.removeItem('credentials');
-      return Object.assign({}, state, {
-        credentials: null,
-      });
+      return {...state, credentials: null};
 
     default:
       return state;

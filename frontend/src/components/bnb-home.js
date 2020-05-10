@@ -1,33 +1,18 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element';
-import '@polymer/polymer/lib/elements/dom-repeat';
-import '@polymer/app-layout/app-layout';
-import '@polymer/iron-pages/iron-pages';
-import '@polymer/paper-icon-button/paper-icon-button';
-import '@polymer/paper-item/paper-item';
-import '@polymer/paper-listbox/paper-listbox';
-import '@polymer/paper-menu-button/paper-menu-button';
+import { LitElement, css, html } from 'lit-element';
+import '@material/mwc-icon-button';
+import '@material/mwc-list/mwc-list-item';
+import '@material/mwc-menu';
 import '@polymer/paper-spinner/paper-spinner';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
 import { updateRoute } from '../actions/app';
 import { signout } from '../actions/auth';
-import './bnb-common-styles';
-import './bnb-divider';
-import './bnb-icons';
 import './bnb-page-card';
+import './bnb-top-app-bar';
 
-class BnbHome extends connect(store)(PolymerElement) {
-  static get template() {
-    return html`
-    <style include="bnb-common-styles">
-      paper-listbox {
-        line-height: 0;
-      }
-
-      paper-item {
-        cursor: pointer;
-      }
-
+class BnbHome extends connect(store)(LitElement) {
+  static get styles() {
+    return css`
       #noData, #loading {
         display: flex;
         width: 100%;
@@ -39,11 +24,13 @@ class BnbHome extends connect(store)(PolymerElement) {
       }
 
       #withData {
-        display: block;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+
         position: relative;
-        @apply --layout-horizontal;
-        @apply --layout-center-center;
-        @apply --layout-wrap;
         margin-top: 10px;
       }
 
@@ -103,75 +90,74 @@ class BnbHome extends connect(store)(PolymerElement) {
           margin: 5px;
         }
       }
-      </style>
-
-      <app-header-layout fullbleed>
-      <app-header slot="header" fixed condenses shadow>
-        <app-toolbar>
-          <div main-title>All pages</div>
-          <paper-icon-button icon="bnb:add" on-tap="_addTapped"></paper-icon-button>
-          <paper-menu-button horizontal-align="right">
-            <paper-icon-button icon="bnb:more-vert" slot="dropdown-trigger"></paper-icon-button>
-            <paper-listbox slot="dropdown-content">
-              <paper-item on-tap="_accountTapped">My account</paper-item>
-              <bnb-divider></bnb-divider>
-              <paper-item on-tap="_signoutTapped">Log out</paper-item>
-            </paper-listbox>
-          </paper-menu-button>
-        </app-toolbar>
-      </app-header>
-      <iron-pages selected="[[selectedSection]]">
-        <section id="loading">
-          <span>Loading&nbsp;</span>
-          <paper-spinner active></paper-spinner>
-        </section>
-        <section id="noData">Don't you dare try the + button in the toolbar !</section>
-        <section id="withData">
-          <template is="dom-repeat" items="[[pages]]" sort="_sortPages">
-            <bnb-page-card page="[[item]]" class="item"></bnb-page-card>
-          </template>
-        </section>
-      </iron-pages>
-      </app-header-layout>
       `;
+  }
+
+  render() {
+    return html`
+      <bnb-top-app-bar>
+        <div slot="title">All pages</div>
+        <mwc-icon-button id="addBtn" slot="actionItems" icon="add"></mwc-icon-button>
+        <mwc-icon-button id="moreBtn" slot="actionItems" icon="more_vert"></mwc-icon-button>
+        <mwc-menu id="moreMenu">
+          <mwc-list-item id="accountItem">My account</mwc-list-item>
+          <mwc-list-item id="logoutItem">Log out</mwc-list-item>
+        </mwc-menu>
+        ${this.renderContent()}
+      </bnb-top-app-bar>
+      `;
+  }
+
+  renderContent() {
+    switch (this.selectedSection) {
+      case 0:
+        return html`
+          <div id="loading">
+            <span>Loading&nbsp;</span>
+            <paper-spinner active></paper-spinner>
+          </div>
+        `;
+
+      case 1:
+        return html`
+          <div id="noData">Don't you dare try the + button in the toolbar !</div>
+        `;
+
+      case 2:
+        return html`
+          <div id="withData">
+            ${this.pages ? this.pages.map((i) => this.renderCard(i)) : html``}
+          </div>
+        `;
+    }
+    return html`Unknown error`;
+  }
+
+  renderCard(card) {
+    return html`
+      <bnb-page-card .page="${card}" class="item"></bnb-page-card>
+    `;
   }
 
   static get properties() {
     return {
-      pages: {
-        type: Array,
-        observer: '_pagesChanged',
-      },
-      selectedSection: {
-        type: Number,
-        value: 0,
-      },
+      pages: { type: Array },
+      selectedSection: { type: Number },
     };
   }
 
-  _stateChanged(state) {
-    this.pages = state.pages.all;
+  constructor() {
+    super();
+    this.selectedSection = 0;
   }
 
-  _sortPages(first, second) {
-    const a = first.name.toUpperCase();
-    const b = second.name.toUpperCase();
-    return a.localeCompare(b);
-  }
+  stateChanged(state) {
+    if (state.pages.all) {
+      this.pages = [...state.pages.all].sort(this.sortPages);
+    } else {
+      this.pages = null;
+    }
 
-  _addTapped() {
-    store.dispatch(updateRoute('add-page'));
-  }
-
-  _accountTapped() {
-    store.dispatch(updateRoute('account'));
-  }
-
-  _signoutTapped() {
-    store.dispatch(signout());
-  }
-
-  _pagesChanged() {
     if (this.pages === null || this.pages === undefined) {
       this.selectedSection = 0;
     } else if (this.pages.length === 0) {
@@ -179,6 +165,38 @@ class BnbHome extends connect(store)(PolymerElement) {
     } else {
       this.selectedSection = 2;
     }
+  }
+
+  firstUpdated() {
+    this.shadowRoot.getElementById('addBtn').addEventListener('click', () => this.addTapped());
+    this.shadowRoot.getElementById('moreBtn').addEventListener('click', () => this.moreTapped());
+    this.shadowRoot.getElementById('accountItem').addEventListener('click', () => this.accountTapped());
+    this.shadowRoot.getElementById('logoutItem').addEventListener('click', () => this.signoutTapped());
+  }
+
+  sortPages(first, second) {
+    const a = first.name.toUpperCase();
+    const b = second.name.toUpperCase();
+    return a.localeCompare(b);
+  }
+
+  moreTapped() {
+    const menu = this.shadowRoot.getElementById('moreMenu');
+    menu.anchor = this.shadowRoot.getElementById('moreBtn');
+    menu.corner = 'BOTTOM_START';
+    menu.open = true;
+  }
+
+  addTapped() {
+    store.dispatch(updateRoute('add-page'));
+  }
+
+  accountTapped() {
+    store.dispatch(updateRoute('account'));
+  }
+
+  signoutTapped() {
+    store.dispatch(signout());
   }
 }
 

@@ -1,119 +1,164 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element';
-import '@polymer/app-layout/app-layout';
-import '@polymer/iron-a11y-keys/iron-a11y-keys';
-import '@polymer/paper-button/paper-button';
-import '@polymer/paper-dialog/paper-dialog';
-import '@polymer/paper-input/paper-input';
-import '@polymer/paper-toggle-button/paper-toggle-button';
+import { LitElement, css, html } from 'lit-element';
+import '@material/mwc-button';
+import '@material/mwc-dialog';
+import '@material/mwc-formfield';
+import '@material/mwc-icon-button';
+import '@material/mwc-switch';
+import '@material/mwc-textfield';
+import '@polymer/paper-card/paper-card';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
 import { updateRoute } from '../actions/app';
 import { updateUser, savePushSubscription } from '../actions/account';
-import './bnb-collapse';
-import './bnb-divider';
 import { BnbFormElement } from './bnb-form-element';
-import './bnb-icons';
 import './bnb-install-button';
 import './bnb-subscriptions';
+import './bnb-top-app-bar';
+import { styles } from './bnb-styles';
 
-class BnbAccount extends connect(store)(BnbFormElement(PolymerElement)) {
-  static get template() {
-    return html`
-    <style include="bnb-common-styles">
-      :host {
-        @apply --layout-horizontal;
-      }
 
-      #content {
-        @apply --layout-horizontal;
-        @apply --layout-center-justified;
-      }
-
-      #container {
-        width: 100%;
-        max-width: 1000px;
-        padding: 10px 22px 10px 22px;
-        @apply --layout-vertical;
-      }
-    </style>
-
-    <iron-a11y-keys keys="enter" target="[[target]]" on-keys-pressed="saveTapped">
-    </iron-a11y-keys>
-    <app-header-layout fullbleed>
-      <app-header slot="header" fixed condenses shadow>
-        <app-toolbar>
-          <paper-icon-button icon="bnb:close" on-tap="closeTapped"></paper-icon-button>
-          <span class="title">My account</span>
-          <span class="flex"></span>
-          <paper-button on-tap="saveTapped">Save</paper-button>
-        </app-toolbar>
-      </app-header>
-      <div id="content" class="fit">
-        <div id="container">
-          <bnb-collapse icon="bnb:info" header="General" opened>
-            <paper-input id="name" label="Name" value="[[user.name]]" autofocus="true"></paper-input>
-            <paper-toggle-button id="pushButton" disabled="[[!isNotificationsEnabled()]]">Send me notifications on this device</paper-toggle-button>
-          </bnb-collapse>
-          <bnb-divider></bnb-divider>
-          <bnb-collapse icon="bnb:credit-card" header="Subscription" opened hidden$="[[!canSubscribe]]">
-            <bnb-subscriptions></bnb-subscriptions>
-          </bnb-collapse>
-          <bnb-divider></bnb-divider>
-          <bnb-install-button></bnb-install-button>
-        </div>
-      </div>
-    </app-header-layout>
-
-    <paper-dialog id="discardDlg" modal>
-      <p>Discard edit.</p>
-      <div class="buttons">
-        <paper-button dialog-dismiss>Cancel</paper-button>
-        <paper-button dialog-confirm autofocus on-tap="closePage">Discard</paper-button>
-      </div>
-    </paper-dialog>
-    `;
-  }
-
+class BnbAccount extends connect(store)(BnbFormElement(LitElement)) {
   static get properties() {
     return {
-      user: Object,
-      target: Object,
-      canSubscribe: Boolean,
-      pushKey: {
-        type: String,
-        observer: 'pushKeyChanged',
-      },
-      errors: {
-        type: Object,
-        observer: '_errorsChanged',
-      },
+      user: { type: Object },
+      canSubscribe: { type: Boolean },
+      pushKey: { type: String },
+      errors: { type: Object },
     };
   }
 
-  _stateChanged(state) {
-    this.user = state.account.user;
-    this.pushKey = state.app.pushKey;
-    this.errors = state.app.errors;
-    this.canSubscribe = state.app.stripeKey;
+  static get styles() {
+    return [
+      styles,
+      css`
+      :host {
+        display: flex;
+        flex-direction: column;
+      }
+
+      mwc-textfield {
+        width: 100%;
+      }
+
+      paper-card {
+        width: 100%;
+        padding: 16px;
+      }
+
+      #content {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+      }
+
+      #container {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-width: 1000px;
+        padding: 10px 22px 10px 22px;
+      }
+
+      #name {
+        margin-bottom: 16px;
+      }
+
+      #installBtn {
+        display: block;
+        margin-top: 12px;
+      }
+      `,
+    ];
   }
 
-  ready() {
-    super.ready();
-    this.target = this.$.content;
+  render() {
+    return html`
+    <bnb-top-app-bar>
+      <mwc-icon-button id="closeBtn" icon="close" slot="navigationIcon"></mwc-icon-button>
+      <div slot="title">My account</div>
+      <mwc-button id="saveBtn" slot="actionItems">Save</mwc-button>
+
+      <div id="content">
+        <div id="container">
+          <h3>General</h3>
+          <paper-card>
+            <mwc-textfield id="name" label="Name" type="text" outlined value="${this.user.name}"></mwc-textfield>
+            <mwc-formfield label="Send me notifications on this device">
+              <mwc-switch id="pushButton" ?disabled="${!this.isNotificationsEnabled()}"></mwc-switch>
+            </mwc-formfield>
+          </paper-card>
+
+          ${this.renderSubscription()}
+
+          <h3>Install</h3>
+          <paper-card>
+            <div class="card-content">
+              <div>
+              You can install a shortcut to launch Botnbot like a native application.
+              The button is disabled if your device doesn't allow web applications installation.
+              </div>
+              <bnb-install-button id="installBtn"></bnb-install-button>
+            </div>
+          </paper-card>
+
+        </div>
+      </div>
+    </bnb-top-app-bar>
+
+    <mwc-dialog id="discardDlg" modal>
+      <p>Discard edit.</p>
+      <mwc-button dialogAction="ok" slot="primaryAction">Discard</mwc-button>
+      <mwc-button dialogAction="cancel" slot="secondaryAction">Cancel</mwc-button>
+    </mwc-dialog>
+    `;
+  }
+
+  renderSubscription() {
+    return this.canSubscribe
+      ? html`
+      <div>
+        <h3>Subscription</h3>
+        <bnb-subscriptions></bnb-subscriptions>
+      </div>
+      `
+      : html``;
+  }
+
+
+  stateChanged(state) {
+    this.user = state.account.user;
+    this.errors = state.app.errors;
+    this.canSubscribe = state.app.stripeKey;
+
+    if (this.pushKey !== state.app.pushKey) {
+      this.pushKey = state.app.pushKey;
+      this.pushKeyChanged();
+    }
+
+    if (this.errors) {
+      this._litErrorsChanged();
+    }
+  }
+
+  firstUpdated() {
+    this.shadowRoot.getElementById('closeBtn').addEventListener('click', () => this.closeTapped());
+    this.shadowRoot.getElementById('saveBtn').addEventListener('click', () => this.saveTapped());
+    this.shadowRoot.getElementById('discardDlg').addEventListener('closed', (e) => this.onDiscardDialogClosed(e.detail.action));
 
     if (this.isNotificationsEnabled()) {
-      this.$.pushButton.addEventListener('checked-changed', this.notificationsChanged.bind(this));
+      this.shadowRoot.getElementById('pushButton').addEventListener('change', () => this.notificationsChanged());
 
       this.getNotificationPermissionState().then((state) => {
-        this.$.pushButton.checked = state === 'granted';
+        this.shadowRoot.getElementById('pushButton').checked = state === 'granted';
       });
     }
   }
 
   notificationsChanged() {
-    this.$.pushButton.disabled = true;
+    const pushButton = this.shadowRoot.getElementById('pushButton');
+    pushButton.disabled = true;
 
-    if (this.$.pushButton.checked) {
+    if (pushButton.checked) {
       this.askPermission()
         .then(() => this.subscribeUserToPush())
         .then((subscription) => {
@@ -123,14 +168,14 @@ class BnbAccount extends connect(store)(BnbFormElement(PolymerElement)) {
           return subscription;
         })
         .then((subscription) => {
-          this.$.pushButton.disabled = false;
-          this.$.pushButton.checked = subscription !== null;
+          pushButton.disabled = false;
+          pushButton.checked = subscription !== null;
         })
         .catch(() => {
           this.getNotificationPermissionState().then((state) => {
-            this.$.pushButton.disabled = state === 'denied';
+            pushButton.disabled = state === 'denied';
           });
-          this.$.pushButton.checked = false;
+          pushButton.checked = false;
         });
     } else {
       this.unsubscribeUserFromPush();
@@ -138,31 +183,39 @@ class BnbAccount extends connect(store)(BnbFormElement(PolymerElement)) {
   }
 
   pushKeyChanged() {
-    if (this.isNotificationsEnabled()) {
-      this.$.pushButton.addEventListener('checked-changed', this.notificationsChanged.bind(this));
-      this.$.pushButton.disabled = !this.isNotificationsEnabled();
+    const pushButton = this.shadowRoot.getElementById('pushButton');
+    if (pushButton && this.isNotificationsEnabled()) {
+      pushButton.addEventListener('checked-changed', this.notificationsChanged.bind(this));
+      pushButton.disabled = !this.isNotificationsEnabled();
       this.getNotificationPermissionState().then((state) => {
-        this.$.pushButton.checked = state === 'granted';
+        pushButton.checked = state === 'granted';
       });
     }
   }
 
   closeTapped() {
-    if (this.$.name.value !== this.user.name) {
-      this.$.discardDlg.open();
+    const nameValue = this.shadowRoot.getElementById('name').value;
+    if (nameValue !== this.user.name) {
+      this.shadowRoot.getElementById('discardDlg').show();
     } else {
       this.closePage();
     }
   }
 
+  onDiscardDialogClosed(action) {
+    if (action === 'ok') {
+      this.closePage();
+    }
+  }
+
   closePage() {
-    this.$.name.invalid = false;
-    store.dispatch(updateRoute('home'));
+    this.validateFields(['name']);
+    store.dispatch(updateRoute(''));
   }
 
   saveTapped() {
-    this.$.name.invalid = false;
-    const user = { name: this.$.name.value };
+    this.validateFields(['name']);
+    const user = { name: this.shadowRoot.getElementById('name').value };
     store.dispatch(updateUser(this.user.id, user));
   }
 
@@ -184,7 +237,7 @@ class BnbAccount extends connect(store)(BnbFormElement(PolymerElement)) {
 
   getNotificationPermissionState() {
     if (navigator.permissions) {
-      return navigator.permissions.query({ name: 'notifications' }).then(result => result.state);
+      return navigator.permissions.query({ name: 'notifications' }).then((result) => result.state);
     }
 
     return new Promise((resolve) => {
@@ -208,12 +261,12 @@ class BnbAccount extends connect(store)(BnbFormElement(PolymerElement)) {
       };
 
       return registration.pushManager.subscribe(subscribeOptions);
-    }).then(pushSubscription => pushSubscription);
+    }).then((pushSubscription) => pushSubscription);
   }
 
   unsubscribeUserFromPush() {
     return this.getSWRegistration()
-      .then(registration => registration.pushManager.getSubscription())
+      .then((registration) => registration.pushManager.getSubscription())
       .then((subscription) => {
         if (subscription) {
           return subscription.unsubscribe();
@@ -221,14 +274,17 @@ class BnbAccount extends connect(store)(BnbFormElement(PolymerElement)) {
         return undefined;
       })
       .then(() => {
-        this.$.pushButton.disabled = false;
-        this.$.pushButton.checked = false;
+        const pushButton = this.shadowRoot.getElementById('pushButton');
+        pushButton.disabled = false;
+        pushButton.checked = false;
       })
       .catch((err) => {
+        // eslint-disable-next-line no-console
         console.error('Failed to subscribe the user.', err);
         this.getNotificationPermissionState().then((permissionState) => {
-          this.$.pushButton.disabled = permissionState === 'denied';
-          this.$.pushButton.checked = false;
+          const pushButton = this.shadowRoot.getElementById('pushButton');
+          pushButton.disabled = permissionState === 'denied';
+          pushButton.checked = false;
         });
       });
   }
@@ -238,7 +294,9 @@ class BnbAccount extends connect(store)(BnbFormElement(PolymerElement)) {
   }
 
   urlB64ToUint8Array(base64String) {
+    // eslint-disable-next-line no-mixed-operators
     const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    // eslint-disable-next-line no-useless-escape
     const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
     const rawData = window.atob(base64);
     const outputArray = new Uint8Array(rawData.length);

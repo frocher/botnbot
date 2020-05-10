@@ -1,32 +1,35 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element';
+import { LitElement, css, html } from 'lit-element';
 import './bnb-divider';
 
-class BnbValueChip extends PolymerElement {
-  static get template() {
+class BnbValueChip extends LitElement {
+  static get styles() {
+    return css`
+    :host {
+      padding-right: 8px;
+      padding-left: 8px;
+    }
+
+    h3 {
+      margin: 0 0 5px 0;
+      padding: 0;
+      white-space: nowrap;
+      font-size: 32px;
+      font-weight: bold;
+    }
+
+    p {
+      margin-top: 5px;
+      margin-bottom: 5px;
+      color: var(--mdc-theme-on-surface);
+      font-size: 16px;
+    }
+    `;
+  }
+
+  render() {
     return html`
-    <style>
-      :host {
-        padding-right: 8px;
-        padding-left: 8px;
-      }
-
-      h3 {
-        margin: 0 0 5px 0;
-        padding: 0;
-        white-space: nowrap;
-        font-size: 32px;
-        font-weight: bold;
-      }
-
-      p {
-        margin-top: 5px;
-        margin-bottom: 5px;
-        color: var(--secondary-text-color);
-        font-size: 16px;
-      }
-    </style>
-    <h3>[[computeValue(value)]]<span style="font-size:smaller">[[suffix]]</span></h3>
-    <p>[[text]]</p>
+    <h3>${this.value}<span style="font-size:smaller">${this.suffix}</span></h3>
+    <p>${this.text}</p>
     <bnb-divider></bnb-divider>
     `;
   }
@@ -48,10 +51,6 @@ class BnbValueChip extends PolymerElement {
         value: null,
       },
     };
-  }
-
-  computeValue(value) {
-    return this.value;
   }
 }
 

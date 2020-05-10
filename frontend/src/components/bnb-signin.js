@@ -1,36 +1,37 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element';
-import '@polymer/iron-a11y-keys/iron-a11y-keys';
-import '@polymer/paper-button/paper-button';
-import '@polymer/paper-input/paper-input';
+import { LitElement, css, html } from 'lit-element';
+import '@material/mwc-button/mwc-button';
+import '@material/mwc-textfield';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
 import { signin } from '../actions/auth';
 import './bnb-auth-form';
 import './bnb-oauth';
 
-class BnbSignIn extends connect(store)(PolymerElement) {
-  static get template() {
+class BnbSignIn extends connect(store)(LitElement) {
+  static get styles() {
+    return css`
+    mwc-textfield {
+      width: 100%;
+    }
+
+    #email {
+      margin-bottom: 16px;
+    }
+    `;
+  }
+
+  render() {
     return html`
-    <style>
-      :host {
-        @apply --layout-horizontal;
-        @apply --layout-center-justified;
-      }
-    </style>
+    <bnb-auth-form id="signinForm" name="signin" title="Sign in" .buttons="${this.signinButtons}">
 
-    <iron-a11y-keys keys="enter" target="[[target]]" on-keys-pressed="signinSubmitTapped">
-    </iron-a11y-keys>
+      <mwc-textfield id="email" label="E-mail" type="email" outlined value="${this.email}">
+      </mwc-textfield>
 
-    <bnb-auth-form id="signin-form" name="signin" title="Sign in" buttons="[[signinButtons]]">
-
-      <paper-input label="E-mail" type="email" value="{{email}}" autofocus="true">
-      </paper-input>
-
-      <paper-input label="Password" autocomplete="off" type="password" value="{{password}}">
-      </paper-input>
+      <mwc-textfield id="password" label="Password" type="password" outlined value="${this.password}" >
+      </mwc-textfield>
 
       <div class="actions">
-        <paper-button on-tap="signinSubmitTapped">Log in</paper-button>
+        <mwc-button id="signinBtn">Log in</mwc-button>
       </div>
 
       <bnb-oauth></bnb-oauth>
@@ -41,34 +42,37 @@ class BnbSignIn extends connect(store)(PolymerElement) {
 
   static get properties() {
     return {
-      credentials: {
-        type: Object,
-        observer: '_credentialsChanged',
-      },
-      email: String,
-      password: String,
-      target: Object,
-      signinButtons: Array,
+      credentials: { type: Object },
+      email: { type: String, reflect: true },
+      password: { type: String, reflect: true },
+      signinButtons: { type: Array },
     };
   }
 
-  _stateChanged(state) {
-    this.credentials = state.auth.credentials;
-  }
-
-  ready() {
-    super.ready();
-    this.target = this.$['signin-form'];
+  constructor() {
+    super();
+    this.email = '';
+    this.password = '';
     this.signinButtons = [{ text: 'Sign up', path: '/signup' }, { text: 'Forgot your password', path: '/forgot-password' }];
   }
 
-  signinSubmitTapped() {
-    store.dispatch(signin(this.email, this.password));
+  firstUpdated() {
+    this.shadowRoot.getElementById('signinBtn').addEventListener('click', () => this.signinSubmitTapped());
   }
 
-  _credentialsChanged() {
-    this.email = '';
-    this.password = '';
+  stateChanged(state) {
+    if (!state.auth.credentials && this.credentials !== state.auth.credentials) {
+      this.email = '';
+      this.password = '';
+    }
+
+    this.credentials = state.auth.credentials;
+  }
+
+  signinSubmitTapped() {
+    this.email = this.shadowRoot.getElementById('email').value;
+    this.password = this.shadowRoot.getElementById('password').value;
+    store.dispatch(signin(this.email, this.password));
   }
 }
 

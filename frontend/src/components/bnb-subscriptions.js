@@ -1,18 +1,25 @@
+import { LitElement, css, html } from 'lit-element';
 import '@material/mwc-button/mwc-button';
 import '@material/mwc-dialog';
-import { PolymerElement, html } from '@polymer/polymer/polymer-element';
-import '@polymer/polymer/lib/elements/dom-repeat';
-import '@polymer/paper-button/paper-button';
 import '@polymer/paper-card/paper-card';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
 import { createStripeSubscription, updateStripeSubscription, deleteStripeSubscription } from '../actions/account';
-import './bnb-common-styles';
+import { styles } from './bnb-styles';
 
-class BnbSubscriptions extends connect(store)(PolymerElement) {
-  static get template() {
-    return html`
-    <style include="bnb-common-styles">
+class BnbSubscriptions extends connect(store)(LitElement) {
+  static get properties() {
+    return {
+      plans: { type: Object },
+      currentPlan: { type: Object },
+      stripeKey: { type: Object },
+    };
+  }
+
+  static get styles() {
+    return [
+      styles,
+      css`
       ul {
         list-style-type: none;
         padding-left: 0;
@@ -42,7 +49,7 @@ class BnbSubscriptions extends connect(store)(PolymerElement) {
       .card-current {
         margin-top: 8px;
         font-weight: bold;
-        color: var(--google-blue-300);
+        color: var(--mdc-theme-primary);
       }
       @media (max-width: 850px) {
         .plans {
@@ -54,34 +61,14 @@ class BnbSubscriptions extends connect(store)(PolymerElement) {
           grid-template-columns: 100%;
         }
       }
-    </style>
+      `,
+    ];
+  }
+
+  render() {
+    return html`
     <div class="plans">
-      <template is="dom-repeat" items="[[plans]]">
-        <paper-card>
-          <div class="card-content">
-            <div class="card-header">[[item.name]]</div>
-            <div class="card-price">$[[item.amount]] per month</div>
-            <ul>
-              <li>
-                <span class="card-label">Pages</span>
-                <span class="card-value">[[item.pages]]</span>
-              </li>
-              <li>
-                <span class="card-label">Team members</span>
-                <span class="card-value">[[_computeTeamMembers(item.members)]]</span>
-              </li>
-              <li>
-                <span class="card-label">Uptime check every</span>
-                <span class="card-value">[[item.uptime]]m</span>
-              </li>
-            </ul>
-          </div>
-          <div class="card-actions">
-            <paper-button hidden$="[[_computeHideSubscribe(item, currentPlan)]]" on-tap="_subscribeTapped">Subscribe</paper-button>
-            <div class="card-current" hidden$="[[!_computeHideSubscribe(item, currentPlan)]]">YOUR CURRENT PLAN</div>
-          </div>
-        </paper-card>
-      </template>
+      ${this.plans.map((i) => this.renderPlan(i))}
     </div>
     <mwc-dialog id="downgradePlanDlg" heading="Downgrading your plan">
       <p>You are downgrading your current plan.
@@ -109,41 +96,66 @@ class BnbSubscriptions extends connect(store)(PolymerElement) {
     `;
   }
 
-  static get properties() {
-    return {
-      plans: Object,
-      currentPlan: Object,
-      stripeKey: Object,
-    };
+  renderPlan(item) {
+    return html`
+    <paper-card>
+      <div class="card-content">
+        <div class="card-header">${item.name}</div>
+        <div class="card-price">${item.amount} per month</div>
+        <ul>
+          <li>
+            <span class="card-label">Pages</span>
+            <span class="card-value">${item.pages}</span>
+          </li>
+          <li>
+            <span class="card-label">Team members</span>
+            <span class="card-value">${this.computeTeamMembers(item.members)}</span>
+          </li>
+          <li>
+            <span class="card-label">Uptime check every</span>
+            <span class="card-value">${item.uptime}m</span>
+          </li>
+        </ul>
+      </div>
+      <div class="card-actions">
+        ${this.renderCardButton(item)}
+      </div>
+    </paper-card>
+    `;
   }
 
-  ready() {
-    super.ready();
-    this.checkout = this._initCheckout();
+  renderCardButton(item) {
+    return this.computeHideSubscribe(item, this.currentPlan)
+      ? html`<div class="card-current">YOUR CURRENT PLAN</div>`
+      : html`<mwc-button @click="${this.subscribeTapped}">Subscribe</mwc-button>`;
+  }
+
+  firstUpdated() {
+    this.checkout = this.initCheckout();
     window.addEventListener('popstate', () => this.checkout.close());
-    this.$.freePlanDlg.addEventListener('closed', (e) => this._onFreePlanDialogClosed(e.detail.action));
-    this.$.upgradePlanDlg.addEventListener('closed', (e) => this._onUpgradePlanDialogClosed(e.detail.action));
-    this.$.downgradePlanDlg.addEventListener('closed', (e) => this._onDowngradePlanDialogClosed(e.detail.action));
+    this.shadowRoot.getElementById('freePlanDlg').addEventListener('closed', (e) => this.onFreePlanDialogClosed(e.detail.action));
+    this.shadowRoot.getElementById('upgradePlanDlg').addEventListener('closed', (e) => this.onUpgradePlanDialogClosed(e.detail.action));
+    this.shadowRoot.getElementById('downgradePlanDlg').addEventListener('closed', (e) => this.onDowngradePlanDialogClosed(e.detail.action));
   }
 
-  _stateChanged(state) {
+  stateChanged(state) {
     this.stripeKey = state.app.stripeKey;
     this.plans = state.app.subscriptionPlans;
     this.currentPlan = state.account.stripeSubscription;
   }
 
-  _computeTeamMembers(value) {
+  computeTeamMembers(value) {
     return value < 0 ? 'infinite' : value;
   }
 
-  _computeHideSubscribe(item, plan) {
+  computeHideSubscribe(item, plan) {
     if (item && plan) {
       return plan.pages === item.pages;
     }
     return false;
   }
 
-  _subscribeTapped(e) {
+  subscribeTapped(e) {
     this.selectedPlan = e.model.item;
 
     if (this.selectedPlan.id !== -1) {
@@ -155,34 +167,34 @@ class BnbSubscriptions extends connect(store)(PolymerElement) {
         };
         this.checkout.open(config);
       } else if (this.currentPlan.pages > this.selectedPlan.pages) {
-        this.$.downgradePlanDlg.show();
+        this.shadowRoot.getElementById('downgradePlanDlg').show();
       } else {
-        this.$.upgradePlanDlg.show();
+        this.shadowRoot.getElementById('upgradePlanDlg').show();
       }
     } else {
-      this.$.freePlanDlg.show();
+      this.shadowRoot.getElementById('freePlanDlg').show();
     }
   }
 
-  _onFreePlanDialogClosed(action) {
+  onFreePlanDialogClosed(action) {
     if (action === 'ok') {
       store.dispatch(deleteStripeSubscription());
     }
   }
 
-  _onUpgradePlanDialogClosed(action) {
+  onUpgradePlanDialogClosed(action) {
     if (action === 'ok') {
       store.dispatch(updateStripeSubscription(this.selectedPlan.id));
     }
   }
 
-  _onDowngradePlanDialogClosed(action) {
+  onDowngradePlanDialogClosed(action) {
     if (action === 'ok') {
       store.dispatch(updateStripeSubscription(this.selectedPlan.id));
     }
   }
 
-  _initCheckout() {
+  initCheckout() {
     return StripeCheckout.configure({
       allowRememberMe: true,
       locale: 'auto',

@@ -1,18 +1,24 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element';
-import { GestureEventListeners } from '@polymer/polymer/lib/mixins/gesture-event-listeners';
-import '@polymer/iron-icon/iron-icon';
+import { LitElement, css, html } from 'lit-element';
+import '@material/mwc-icon';
+import '@material/mwc-ripple';
 import '@polymer/paper-card/paper-card';
-import '@polymer/paper-ripple/paper-ripple';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
 import { getRequestUrl } from '../common';
 import { updateRoute } from '../actions/app';
-import './bnb-icons';
+import { styles } from './bnb-styles';
 
-class BnbPageCard extends connect(store)(GestureEventListeners(PolymerElement)) {
-  static get template() {
-    return html`
-    <style>
+class BnbPageCard extends connect(store)(LitElement) {
+  static get properties() {
+    return {
+      page: { type: Object },
+    };
+  }
+
+  static get styles() {
+    return [
+      styles,
+      css`
       paper-card {
         display: block;
         cursor: pointer;
@@ -37,9 +43,9 @@ class BnbPageCard extends connect(store)(GestureEventListeners(PolymerElement)) 
         };
       }
 
-      iron-icon {
+      mwc-icon {
         display: inline-block;
-        width: 16px;
+        padding-right: 4px;
         vertical-align: sub;
       }
 
@@ -77,29 +83,40 @@ class BnbPageCard extends connect(store)(GestureEventListeners(PolymerElement)) 
         50% {filter: grayscale(100%)}
         100% {filter: grayscale(0)}
       }
-    </style>
+      `,
+    ];
+  }
 
-    <paper-card placeholder-image="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAADwAQMAAABL4y8oAAAAA1BMVEW9vb2OR09dAAAAIElEQVR4Xu3AgQAAAADDoPtTX2EAtQAAAAAAAAAAAAAOJnAAAZexSsoAAAAASUVORK5CYII=" fade-image preload-image image="[[_computeScreenshotUrl(page)]]" animated="true" on-tap="cardTapped" class$="[[_computeCardClass(page)]]">
+  render() {
+    return html`
+    <paper-card
+      placeholder-image="${this.getPlaceHolderImage()}"
+      fade-image
+      preload-image
+      image="${this.getScreenshotUrl(this.page)}"
+      animated="true"
+      class="${this.computeCardClass(this.page)}"
+      @click="${this.cardTapped}"
+      @focus="${this.handleRippleFocus}"
+      @blur="${this.handleRippleBlur}"
+      @mousedown="${this.handleRippleActivate}"
+      @mouseup="${this.handleRippleDeactivate}"
+      @mouseenter="${this.handleRippleMouseEnter}"
+      @mouseleave="${this.handleRippleMouseLeave}"
+      @touchstart="${this.handleRippleActivate}"
+      @touchend="${this.handleRippleDeactivate}"
+      @touchcancel="${this.handleRippleDeactivate}">
       <div class="card-content">
-        <h2><iron-icon icon="[[_computeIcon(page)]]"></iron-icon> [[page.name]]</h2>
-        <a href="[[page.url]]" on-tap="urlTapped" target="_blank" title="Open url in a new tab" rel="noopener">[[page.url]]</a>
+        <h2><mwc-icon>${this.computeIcon(this.page)}</mwc-icon>${this.page.name}</h2>
+        <a href="${this.page.url}" @click="urlTapped" target="_blank" title="Open url in a new tab" rel="noopener">${this.page.url}</a>
       </div>
-      <paper-ripple></paper-ripple>
+      <mwc-ripple id="ripple"></mwc-ripple>
 
     </paper-card>
     `;
   }
 
-  static get properties() {
-    return {
-      page: {
-        type: Object,
-        value: null,
-      },
-    };
-  }
-
-  _stateChanged() {
+  stateChanged() {
     // Nothing to do
   }
 
@@ -111,22 +128,56 @@ class BnbPageCard extends connect(store)(GestureEventListeners(PolymerElement)) 
     e.stopPropagation();
   }
 
-  _computeScreenshotUrl(item) {
+  getPlaceHolderImage() {
+    return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAADwAQMAAABL4y8oAAAAA1BMVEW9vb2OR09dAAAAIElEQVR4Xu3AgQAAAADDoPtTX2EAtQAAAAAAAAAAAAAOJnAAAZexSsoAAAAASUVORK5CYII=';
+  }
+
+  getScreenshotUrl(item) {
     return getRequestUrl(`pages/${item.id}/screenshot?style=thumb`);
   }
 
-  _computeIcon(item) {
-    return item.device === 'mobile' ? 'bnb:smartphone' : 'bnb:computer';
+  computeIcon(item) {
+    return item.device === 'mobile' ? 'smartphone' : 'computer';
   }
 
-  _computeCardClass(item) {
+  computeCardClass(item) {
     if (item.locked) {
       return 'locked';
     }
-    else if (item.uptime_status === 0) {
+
+    if (item.uptime_status === 0) {
       return 'hurt';
     }
+
     return '';
+  }
+
+  get ripple() {
+    return this.shadowRoot.getElementById('ripple');
+  }
+
+  handleRippleActivate(e) {
+    this.ripple.startPress(e);
+  }
+
+  handleRippleDeactivate() {
+    this.ripple.endPress();
+  }
+
+  handleRippleMouseEnter() {
+    this.ripple.startHover();
+  }
+
+  handleRippleMouseLeave() {
+    this.ripple.endHover();
+  }
+
+  handleRippleFocus() {
+    this.ripple.startFocus();
+  }
+
+  handleRippleBlur() {
+    this.ripple.endFocus();
   }
 }
 window.customElements.define('bnb-page-card', BnbPageCard);

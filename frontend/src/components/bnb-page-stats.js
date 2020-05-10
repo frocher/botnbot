@@ -1,45 +1,31 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element';
+import { LitElement, html } from 'lit-element';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
 import { updateRoute } from '../actions/app';
 import './bnb-chart-card';
 import './bnb-period-bar';
+import { styles } from './bnb-styles';
 
-class BnbPageStats extends connect(store)(PolymerElement) {
-  static get template() {
-    return html`
-    <bnb-period-bar></bnb-period-bar>
-    <bnb-chart-card id="lighthouseChart" name="Lighthouse scores" type="bar" data="[[stats.lighthouse]]" model="[[lighthouseModel]]" has-details="true"></bnb-chart-card>
-    <bnb-chart-card id="performanceChart" name="Performance" type="line" data="[[stats.performance]]" model="[[performanceModel]]" has-details="true"></bnb-chart-card>
-    <bnb-chart-card id="uptimeChart" name="Uptime" type="line" data="[[stats.uptime]]" model="[[uptimeModel]]" has-details="true"></bnb-chart-card>
-    <bnb-chart-card id="requestsChart" name="Assets count" type="area" data="[[stats.requests]]" model="[[requestsModel]]" has-details="true"></bnb-chart-card>
-    <bnb-chart-card id="bytesChart" name="Assets size" type="area" data="[[stats.bytes]]" model="[[bytesModel]]" has-details="true"></bnb-chart-card>
-    `;
-  }
 
+class BnbPageStats extends connect(store)(LitElement) {
   static get properties() {
     return {
-      page: {
-        type: Object,
-      },
-      stats: {
-        type: Object,
-      },
-      lighthouseModel: Object,
-      performanceModel: Object,
-      uptimeModel: Object,
-      requestsModel: Object,
-      bytesModel: Object,
+      page: { type: Object },
+      stats: { type: Object },
+      lighthouseModel: { type: Object },
+      performanceModel: { type: Object },
+      uptimeModel: { type: Object },
+      requestsModel: { type: Object },
+      bytesModel: { type: Object },
     };
   }
 
-  _stateChanged(state) {
-    this.page = state.pages.current;
-    this.stats = state.stats.all;
+  static get styles() {
+    return styles;
   }
 
-  ready() {
-    super.ready();
+  constructor() {
+    super();
 
     this.lighthouseModel = [
       { name: 'pwa', color: '#4A148C', label: 'pwa' },
@@ -99,12 +85,30 @@ class BnbPageStats extends connect(store)(PolymerElement) {
         name: 'other', color: '#F8BBD0', label: 'other', suffix: 'kb',
       },
     ];
+  }
 
-    this.$.lighthouseChart.addEventListener('details', this.lightHouseChartDetailsTapped.bind(this));
-    this.$.performanceChart.addEventListener('details', this.performanceChartDetailsTapped.bind(this));
-    this.$.uptimeChart.addEventListener('details', this.uptimeChartDetailsTapped.bind(this));
-    this.$.requestsChart.addEventListener('details', this.requestsChartDetailsTapped.bind(this));
-    this.$.bytesChart.addEventListener('details', this.bytesChartDetailsTapped.bind(this));
+  render() {
+    return html`
+    <bnb-period-bar></bnb-period-bar>
+    <bnb-chart-card id="lighthouseChart" name="Lighthouse scores" type="bar" .data="${this.stats.lighthouse}" .model="${this.lighthouseModel}" hasDetails></bnb-chart-card>
+    <bnb-chart-card id="performanceChart" name="Performance" type="line" .data="${this.stats.performance}" .model="${this.performanceModel}" hasDetails></bnb-chart-card>
+    <bnb-chart-card id="uptimeChart" name="Uptime" type="line" .data="${this.stats.uptime}" .model="${this.uptimeModel}" hasDetails></bnb-chart-card>
+    <bnb-chart-card id="requestsChart" name="Assets count" type="area" .data="${this.stats.requests}" .model="${this.requestsModel}" hasDetails></bnb-chart-card>
+    <bnb-chart-card id="bytesChart" name="Assets size" type="area" .data="${this.stats.bytes}" .model="${this.bytesModel}" hasDetails></bnb-chart-card>
+    `;
+  }
+
+  stateChanged(state) {
+    this.page = state.pages.current;
+    this.stats = state.stats.all;
+  }
+
+  firstUpdated() {
+    this.shadowRoot.getElementById('lighthouseChart').addEventListener('details', this.lightHouseChartDetailsTapped.bind(this));
+    this.shadowRoot.getElementById('performanceChart').addEventListener('details', this.performanceChartDetailsTapped.bind(this));
+    this.shadowRoot.getElementById('uptimeChart').addEventListener('details', this.uptimeChartDetailsTapped.bind(this));
+    this.shadowRoot.getElementById('requestsChart').addEventListener('details', this.requestsChartDetailsTapped.bind(this));
+    this.shadowRoot.getElementById('bytesChart').addEventListener('details', this.bytesChartDetailsTapped.bind(this));
   }
 
   lightHouseChartDetailsTapped() {

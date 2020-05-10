@@ -1,37 +1,36 @@
-/* global clients */
-/* global importScripts */
-/* global registration */
-/* global workbox */
 /* eslint no-restricted-globals: ["off", "self"] */
+import { clientsClaim, skipWaiting } from 'workbox-core';
+import { precacheAndRoute } from 'workbox-precaching';
+import { registerRoute } from 'workbox-routing';
+import { NetworkFirst, NetworkOnly, StaleWhileRevalidate } from 'workbox-strategies';
 
-// Note: Ignore the error that Glitch raises about workbox being undefined.
-workbox.skipWaiting();
-workbox.clientsClaim();
+skipWaiting();
+clientsClaim();
 
-workbox.routing.registerRoute(
+registerRoute(
   /.*\.js/,
-  workbox.strategies.staleWhileRevalidate({
+  new StaleWhileRevalidate({
     cacheName: 'js-cache',
   }),
 );
 
-workbox.routing.registerRoute(
+registerRoute(
   /.*\.(?:png|jpg|jpeg|svg|gif)/,
-  workbox.strategies.staleWhileRevalidate({
+  new StaleWhileRevalidate({
     cacheName: 'image-cache',
   }),
 );
 
-workbox.routing.registerRoute(
+registerRoute(
   /\/api\//,
-  workbox.strategies.networkFirst({
+  new NetworkFirst({
     cacheName: 'api-cache',
   }),
 );
 
-workbox.routing.registerRoute(
+registerRoute(
   /\/omniauth\//,
-  workbox.strategies.networkOnly(),
+  new NetworkOnly(),
 );
 
 function handlePushEvent(event) {
@@ -66,4 +65,4 @@ self.addEventListener('notificationclick', (e) => {
   notification.close();
 });
 
-workbox.precaching.precacheAndRoute(self.__precacheManifest || []);
+precacheAndRoute(self.__precacheManifest || self.__WB_MANIFEST);
