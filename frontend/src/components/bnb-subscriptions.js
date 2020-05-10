@@ -68,7 +68,7 @@ class BnbSubscriptions extends connect(store)(LitElement) {
   render() {
     return html`
     <div class="plans">
-      ${this.plans.map((i) => this.renderPlan(i))}
+      ${this.plans.map((item, index) => this.renderPlan(item, index))}
     </div>
     <mwc-dialog id="downgradePlanDlg" heading="Downgrading your plan">
       <p>You are downgrading your current plan.
@@ -96,7 +96,7 @@ class BnbSubscriptions extends connect(store)(LitElement) {
     `;
   }
 
-  renderPlan(item) {
+  renderPlan(item, index) {
     return html`
     <paper-card>
       <div class="card-content">
@@ -118,16 +118,16 @@ class BnbSubscriptions extends connect(store)(LitElement) {
         </ul>
       </div>
       <div class="card-actions">
-        ${this.renderCardButton(item)}
+        ${this.renderCardButton(item, index)}
       </div>
     </paper-card>
     `;
   }
 
-  renderCardButton(item) {
+  renderCardButton(item, index) {
     return this.computeHideSubscribe(item, this.currentPlan)
       ? html`<div class="card-current">YOUR CURRENT PLAN</div>`
-      : html`<mwc-button @click="${this.subscribeTapped}">Subscribe</mwc-button>`;
+      : html`<mwc-button @click="${this.subscribeTapped}" data-index="${index}">Subscribe</mwc-button>`;
   }
 
   firstUpdated() {
@@ -156,14 +156,14 @@ class BnbSubscriptions extends connect(store)(LitElement) {
   }
 
   subscribeTapped(e) {
-    this.selectedPlan = e.model.item;
+    this.selectedPlan = this.plans[e.currentTarget.dataset.index];
 
     if (this.selectedPlan.id !== -1) {
       if (this.currentPlan.planId === -1) {
         const config = {
-          amount: e.model.item.amount * 100,
+          amount: this.selectedPlan.amount * 100,
           key: this.stripeKey,
-          name: e.model.item.name,
+          name: this.selectedPlan.name,
         };
         this.checkout.open(config);
       } else if (this.currentPlan.pages > this.selectedPlan.pages) {
