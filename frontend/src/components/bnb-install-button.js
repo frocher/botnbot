@@ -1,7 +1,8 @@
-import { LitElement, css, html } from 'lit-element';
+import { LitElement, html } from 'lit-element';
 import { connect } from 'pwa-helpers';
 import '@material/mwc-button';
 import { store } from '../store';
+import { styles } from './bnb-styles';
 
 class BnbInstallButton extends connect(store)(LitElement) {
   static get properties() {
@@ -13,11 +14,7 @@ class BnbInstallButton extends connect(store)(LitElement) {
   }
 
   static get styles() {
-    return css`
-    mwc-button {
-      --mdc-theme-primary: var(--google-blue-300);
-    }
-    `;
+    return styles;
   }
 
   render() {

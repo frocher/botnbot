@@ -59,7 +59,7 @@ class BnbPageLockedCard extends connect(store)(LitElement) {
     if (this.isOwner) {
       return html`
         <span>Because of your current plan, this page is no longer monitored.</span>
-        <mwc-button @click="${this.upgradeTapped}">Upgrade your plan</paper-button>
+        <mwc-button @click="${this.upgradeTapped}">Upgrade your plan</mwc-button>
       `;
     }
     return html`

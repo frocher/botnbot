@@ -20,7 +20,7 @@ class BnbValueChip extends LitElement {
     p {
       margin-top: 5px;
       margin-bottom: 5px;
-      color: var(--secondary-text-color);
+      color: var(--mdc-theme-on-surface);
       font-size: 16px;
     }
     `;

@@ -75,7 +75,7 @@ class BnbMembers extends connect(store)(LitElement) {
     }
 
     #buttons {
-      padding-top: 8px;
+      padding-top: 12px;
     }
 
     #members {

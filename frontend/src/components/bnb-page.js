@@ -7,19 +7,17 @@ import '@material/mwc-list/mwc-list-item';
 import '@material/mwc-menu';
 import '@material/mwc-tab';
 import '@material/mwc-tab-bar';
-
-import '@polymer/paper-dialog/paper-dialog';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
 import { updateRoute } from '../actions/app';
 import { deletePageMember } from '../actions/members';
 import { deletePage } from '../actions/pages';
 import './bnb-divider';
-import './bnb-icons';
 import './bnb-page-budget';
 import './bnb-page-locked-card';
 import './bnb-page-stats';
 import './bnb-top-app-bar';
+import { styles } from './bnb-styles';
 
 class BnbPage extends connect(store)(LitElement) {
   static get properties() {
@@ -30,32 +28,30 @@ class BnbPage extends connect(store)(LitElement) {
   }
 
   static get styles() {
-    return css`
-    :host {
-      display: flex;
-      flex-direction: column;
-    }
+    return [
+      styles,
+      css`
+        :host {
+          display: flex;
+          flex-direction: column;
+        }
 
-    mwc-tab-bar {
-      --mdc-theme-primary: var(--google-blue-300);
-      --mdc-tab-text-label-color-default: var(--mdc-theme-text-primary-on-background);
-    }
+        #charts {
+          display: flex;
+          flex-direction: column;
+          flex-wrap: wrap;
+          justify-content: center;
+        }
 
-    #charts {
-      display: flex;
-      flex-direction: column;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
+        .view {
+          display: none;
+        }
 
-    .view {
-      display: none;
-    }
-
-    .view.active {
-      display: block;
-    }
-    `;
+        .view.active {
+          display: block;
+        }
+        `,
+    ];
   }
 
 
@@ -94,11 +90,11 @@ class BnbPage extends connect(store)(LitElement) {
       <mwc-button dialogAction="cancel" slot="secondaryAction">Cancel</mwc-button>
     </mwc-dialog>
 
-    <paper-dialog id="leaveDlg">
+    <mwc-dialog id="leaveDlg">
       <p>Leave this page, sure ?</p>
       <mwc-button dialogAction="ok" slot="primaryAction">Leave</mwc-button>
       <mwc-button dialogAction="cancel" slot="secondaryAction">Cancel</mwc-button>
-    </paper-dialog>
+    </mwc-dialog>
     `;
   }
 

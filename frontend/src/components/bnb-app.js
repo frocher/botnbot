@@ -16,9 +16,9 @@ import {
 import { loadStripeSubscription, loadUser } from '../actions/account';
 import { isLogged, storeCredentials, getFullPath } from '../common';
 import './bnb-analytics';
-import './bnb-common-styles';
 import './bnb-home';
 import './bnb-signin';
+import { styles } from './bnb-styles';
 
 
 class BnbApp extends connect(store)(LitElement) {
@@ -35,96 +35,34 @@ class BnbApp extends connect(store)(LitElement) {
   }
 
   static get styles() {
-    return css`
-    :host {
-      --dark-primary-color: #000000;
-      --default-primary-color:var(--paper-grey-900);
-      --light-primary-color: #303030;
-      --text-primary-color: #ffffff;
-      --accent-color: #FF5722;
-      --primary-background-color: #303030;
-      --primary-text-color: #ffffff;
-      --secondary-text-color: var(--paper-grey-300);
-      --disabled-text-color: #bdbdbd;
-      --divider-color: #B6B6B6;
-      --error-color: #db4437;
+    return [
+      styles,
+      css`
+      :host {
+        display: flex;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
 
-      --mdc-theme-primary: var(--google-blue-300);
-      --mdc-theme-secondary: var(--google-blue-300);
-      --mdc-theme-surface: #000;
-      --mdc-theme-background: #303030;
-
-      --mdc-theme-on-primary: #212121;
-      --mdc-theme-on-secondary: var(--paper-grey-900);
-      --mdc-theme-on-surface: var(--paper-grey-900);
-
-      --mdc-theme-error: #cf6679;
-      --mdc-theme-text-primary-on-background: #fff;
-      --mdc-theme-text-secondary-on-background: #fff;
-      --mdc-theme-text-disabled-on-background: var(--paper-grey-900);
-
-      --mdc-dialog-heading-ink-color: var(--mdc-theme-text-primary-on-background);
-      --mdc-dialog-content-ink-color: var(--mdc-theme-text-primary-on-background);
-
-      --mdc-radio-unchecked-color: var(--mdc-theme-text-primary-on-background);
-
-      --mdc-ripple-color: var(--google-blue-300);
-
-      --mdc-select-ink-color: var(--mdc-theme-text-primary-on-background);
-      --mdc-select-label-ink-color: var(--mdc-theme-text-primary-on-background);
-      --mdc-select-focused-label-color: var(--mdc-theme-primary);
-      --mdc-select-outlined-idle-border-color: var(--mdc-theme-text-primary-on-background);
-      --mdc-select-outlined-hover-border-color: var(--mdc-theme-primary);
-      --mdc-select-dropdown-icon-color: var(--mdc-theme-text-primary-on-background);
-
-      --mdc-text-field-label-ink-color: var(--mdc-theme-text-primary-on-background);
-      --mdc-text-field-ink-color: var(--mdc-theme-text-primary-on-background);
-      --mdc-text-field-outlined-idle-border-color: var(--mdc-theme-text-primary-on-background);
-      --mdc-text-field-outlined-hover-border-color: var(--mdc-theme-secondary);
-
-
-      --paper-card-background-color: var(--paper-grey-800);
-      --paper-card-header-color: var(--text-primary-color);
-      --paper-dialog-button-color: var(--google-blue-300);
-      --paper-divider-color: #B6B6B6;
-      --paper-input-container-color: var(--secondary-text-color);
-      --paper-input-container-focus-color: var(--google-blue-300);
-      --paper-tabs-selection-bar-color: var(--google-blue-300);
-
-      --range-datepicker-cell-hover: var(--google-blue-300);
-      --range-datepicker-cell-selected: var(--google-blue-300);
-      --range-datepicker-cell-hovered: var(--google-blue-500);
-
-      --app-nav-background-color: var(--primary-background-color);
-      --app-nav-text-color: var(--secondary-text-color);
-
-      display: flex;
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-
-      background-color: var(--primary-background-color);
-
-      mwc-button {
-        --mdc-theme-primary: var(--google-blue-300);
+        background-color: var(--mdc-theme-background);
       }
-    }
 
-    .view {
-      display: none;
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-    }
+      .view {
+        display: none;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+      }
 
-    .view.active {
-      display: block;
-    }
-    `;
+      .view.active {
+        display: block;
+      }
+      `,
+    ];
   }
 
   constructor() {

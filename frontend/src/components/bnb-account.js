@@ -11,10 +11,11 @@ import { store } from '../store';
 import { updateRoute } from '../actions/app';
 import { updateUser, savePushSubscription } from '../actions/account';
 import { BnbFormElement } from './bnb-form-element';
-import './bnb-icons';
 import './bnb-install-button';
 import './bnb-subscriptions';
 import './bnb-top-app-bar';
+import { styles } from './bnb-styles';
+
 
 class BnbAccount extends connect(store)(BnbFormElement(LitElement)) {
   static get properties() {
@@ -27,45 +28,47 @@ class BnbAccount extends connect(store)(BnbFormElement(LitElement)) {
   }
 
   static get styles() {
-    return css`
-    :host {
-      display: flex;
-      flex-direction: column;
-    }
+    return [
+      styles,
+      css`
+      :host {
+        display: flex;
+        flex-direction: column;
+      }
 
-    mwc-textfield {
-      width: 100%;
-      --mdc-theme-primary: #fff;
-    }
+      mwc-textfield {
+        width: 100%;
+      }
 
-    paper-card {
-      width: 100%;
-      padding: 16px;
-    }
+      paper-card {
+        width: 100%;
+        padding: 16px;
+      }
 
-    #content {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-    }
+      #content {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+      }
 
-    #container {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      max-width: 1000px;
-      padding: 10px 22px 10px 22px;
-    }
+      #container {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-width: 1000px;
+        padding: 10px 22px 10px 22px;
+      }
 
-    #name {
-      margin-bottom: 16px;
-    }
+      #name {
+        margin-bottom: 16px;
+      }
 
-    #installBtn {
-      display: block;
-      margin-top: 12px;
-    }
-    `;
+      #installBtn {
+        display: block;
+        margin-top: 12px;
+      }
+      `,
+    ];
   }
 
   render() {

@@ -33,7 +33,7 @@ class BnbAuthForm extends LitElement {
       margin: 0;
       padding: 8px 8px 8px 24px;
 
-      color: var(--paper-dialog-button-color);
+      color: var(--mdc-theme-primary);
 
       display: flex;
       justify-content: flex-end;

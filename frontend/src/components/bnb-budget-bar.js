@@ -5,6 +5,8 @@ import '@material/mwc-select';
 import '@material/mwc-textfield';
 import '@polymer/paper-card/paper-card';
 import './bnb-period-dropdown';
+import { styles } from './bnb-styles';
+
 
 class BnbBudgetBar extends LitElement {
   static get properties() {
@@ -15,59 +17,61 @@ class BnbBudgetBar extends LitElement {
   }
 
   static get styles() {
-    return css`
-    :host {
-      display: flex;
-    }
+    return [
+      styles,
+      css`
+      :host {
+        display: flex;
+      }
 
-    paper-card {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      margin: 16px;
-      padding: 16px;
-    }
-
-    #budgetTools {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-      margin-top: 16px;
-    }
-
-    #itemField {
-      margin-left: 5px;
-    }
-
-    #budgetField {
-      min-width: 170px;
-      margin-left: 5px;
-      width: 150px;
-    }
-
-    #budgetBtn {
-      margin-top: 12px;
-    }
-
-
-    @media (max-width: 700px) {
-      #budgetTools {
+      paper-card {
         display: flex;
         flex-direction: column;
+        width: 100%;
+        margin: 16px;
+        padding: 16px;
+      }
+
+      #budgetTools {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        margin-top: 16px;
       }
 
       #itemField {
-        margin-top: 16px;
-        margin-left: 0;
+        margin-left: 5px;
       }
 
       #budgetField {
-        margin-left: 0;
-        width: 100%;
+        min-width: 170px;
+        margin-left: 5px;
+        width: 150px;
       }
 
-    }
-    `;
+      #budgetBtn {
+        margin-top: 12px;
+      }
+
+
+      @media (max-width: 700px) {
+        #budgetTools {
+          display: flex;
+          flex-direction: column;
+        }
+
+        #itemField {
+          margin-top: 16px;
+          margin-left: 0;
+        }
+
+        #budgetField {
+          margin-left: 0;
+          width: 100%;
+        }
+      }
+      `,
+    ];
   }
 
   constructor() {

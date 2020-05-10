@@ -4,6 +4,8 @@ import { store } from '../store';
 import { updateRoute } from '../actions/app';
 import './bnb-chart-card';
 import './bnb-period-bar';
+import { styles } from './bnb-styles';
+
 
 class BnbPageStats extends connect(store)(LitElement) {
   static get properties() {
@@ -16,6 +18,10 @@ class BnbPageStats extends connect(store)(LitElement) {
       requestsModel: { type: Object },
       bytesModel: { type: Object },
     };
+  }
+
+  static get styles() {
+    return styles;
   }
 
   constructor() {

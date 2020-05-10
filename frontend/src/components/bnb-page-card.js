@@ -6,6 +6,7 @@ import { connect } from 'pwa-helpers';
 import { store } from '../store';
 import { getRequestUrl } from '../common';
 import { updateRoute } from '../actions/app';
+import { styles } from './bnb-styles';
 
 class BnbPageCard extends connect(store)(LitElement) {
   static get properties() {
@@ -15,102 +16,75 @@ class BnbPageCard extends connect(store)(LitElement) {
   }
 
   static get styles() {
-    return css`
-    paper-card {
-      display: block;
-      cursor: pointer;
-      width: 100%;
-      height: 100%;
-    }
-
-    :host {
-      --paper-card-header: {
-        height: 0;
-        overflow: hidden;
-        padding-top: calc(3 / 4 * 100%);
-        background: white;
-        position: relative;
-      };
-      --paper-card-header-image: {
-        position: absolute;
-        top: 0;
-        left: 0;
+    return [
+      styles,
+      css`
+      paper-card {
+        display: block;
+        cursor: pointer;
         width: 100%;
         height: 100%;
-      };
-    }
+      }
 
-    mwc-icon {
-      display: inline-block;
-      padding-right: 4px;
-      vertical-align: sub;
-    }
+      :host {
+        --paper-card-header: {
+          height: 0;
+          overflow: hidden;
+          padding-top: calc(3 / 4 * 100%);
+          background: white;
+          position: relative;
+        };
+        --paper-card-header-image: {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+        };
+      }
 
-    .card-content h2 {
-      margin: 0;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+      mwc-icon {
+        display: inline-block;
+        padding-right: 4px;
+        vertical-align: sub;
+      }
 
-    .card-content a {
-      display: block;
-      color: #9e9e9e;
-      text-decoration: none;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+      .card-content h2 {
+        margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
 
-    .card-content a:hover {
-      text-decoration: underline;
-    }
+      .card-content a {
+        display: block;
+        color: #9e9e9e;
+        text-decoration: none;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
 
-    .locked {
-      filter: blur(3px);
-    }
+      .card-content a:hover {
+        text-decoration: underline;
+      }
 
-    .hurt {
-      animation: pulse 5s infinite;
-      filter: grayscale(0);
-    }
+      .locked {
+        filter: blur(3px);
+      }
 
-    @keyframes pulse {
-      0% {filter: grayscale(0)}
-      50% {filter: grayscale(100%)}
-      100% {filter: grayscale(0)}
-    }
+      .hurt {
+        animation: pulse 5s infinite;
+        filter: grayscale(0);
+      }
 
-    .demo-box {
-      min-width: 128px;
-      min-height: 128px;
-      border: 1px solid gray;
-      display: inline-flex;
-      position: relative;
-      justify-content: center;
-      text-align: center;
-      flex-direction: column;
-      padding: 8px;
-    }
-    `;
-  }
-
-  rendertr() {
-    return html`
-    <div class="demo-box"
-      @click="${this.cardTapped}"
-      @focus="${this.handleRippleFocus}"
-      @blur="${this.handleRippleBlur}"
-      @mousedown="${this.handleRippleActivate}"
-      @mouseup="${this.handleRippleDeactivate}"
-      @mouseenter="${this.handleRippleMouseEnter}"
-      @mouseleave="${this.handleRippleMouseLeave}"
-      @touchstart="${this.handleRippleActivate}"
-      @touchend="${this.handleRippleDeactivate}"
-      @touchcancel="${this.handleRippleDeactivate}">
-      <mwc-ripple id="ripple"></mwc-ripple>
-    </div>
-    `;
+      @keyframes pulse {
+        0% {filter: grayscale(0)}
+        50% {filter: grayscale(100%)}
+        100% {filter: grayscale(0)}
+      }
+      `,
+    ];
   }
 
   render() {
