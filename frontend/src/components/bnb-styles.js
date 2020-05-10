@@ -53,6 +53,11 @@ export const styles = css`
     --mdc-theme-primary: #64B5F6;
   }
 
+  mwc-linear-progress {
+    width: 100%;
+    --mdc-theme-primary: #64B5F6;
+  }
+
   mwc-tab-bar {
     --mdc-theme-primary: #64B5F6;
   }

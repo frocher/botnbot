@@ -1,26 +1,35 @@
 import { LitElement, css, html } from 'lit-element';
 import '@material/mwc-icon-button';
+import '@material/mwc-linear-progress';
 import '@material/mwc-list/mwc-list-item';
 import '@material/mwc-menu';
-import '@polymer/paper-spinner/paper-spinner';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
 import { updateRoute } from '../actions/app';
 import { signout } from '../actions/auth';
 import './bnb-page-card';
 import './bnb-top-app-bar';
+import { styles } from './bnb-styles';
 
 class BnbHome extends connect(store)(LitElement) {
   static get styles() {
-    return css`
+    return [
+      styles,
+      css`
       #noData, #loading {
         display: flex;
+        justify-content: center;
+        align-items: center;
         width: 100%;
         height: calc(100vh - 65px);
         color: #999;
         font-size: 24px;
-        align-items: center;
-        justify-content: center;
+      }
+
+      #loading div {
+        width: 50%;
+        margin: auto;
+        text-align: center;
       }
 
       #withData {
@@ -90,7 +99,8 @@ class BnbHome extends connect(store)(LitElement) {
           margin: 5px;
         }
       }
-      `;
+      `,
+    ];
   }
 
   render() {
@@ -113,8 +123,10 @@ class BnbHome extends connect(store)(LitElement) {
       case 0:
         return html`
           <div id="loading">
-            <span>Loading&nbsp;</span>
-            <paper-spinner active></paper-spinner>
+            <div>
+              <div>Loading</div>
+              <mwc-linear-progress indeterminate></mwc-linear-progress>
+            </div>
           </div>
         `;
 
