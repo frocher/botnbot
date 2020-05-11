@@ -42,6 +42,8 @@ export const styles = css`
     --range-datepicker-cell-selected: var(--mdc-theme-primary);
     --range-datepicker-cell-hovered: #2196F3;
 
+    --fulfilling-bouncing-circle-spinner-color: var(--mdc-theme-primary);
+
     --bnb-divider-color: #B6B6B6;
   }
 
