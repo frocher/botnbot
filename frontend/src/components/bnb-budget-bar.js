@@ -27,7 +27,6 @@ class BnbBudgetBar extends LitElement {
         display: flex;
         flex-direction: column;
         width: 100%;
-        margin: 16px;
       }
 
       #budgetTools {
@@ -35,6 +34,11 @@ class BnbBudgetBar extends LitElement {
         flex-direction: row;
         flex-wrap: wrap;
         margin-top: 16px;
+        margin-bottom: -20px;
+      }
+
+      p {
+        margin: 0;
       }
 
       #itemField {
@@ -105,7 +109,7 @@ class BnbBudgetBar extends LitElement {
           ${this.items.map((i) => this.renderFieldItem(i))}
         </mwc-select>
 
-        <mwc-textfield id="budgetField" outlined label="Budget" type="number" min="0" required validationMessage="This field is required" value="{{budget}}">
+        <mwc-textfield id="budgetField" outlined label="Budget" type="number" min="0" required validationMessage="This field is required">
         </mwc-textfield>
 
         <mwc-button id="budgetBtn">Add</mwc-button>
