@@ -1,5 +1,5 @@
 import { LitElement, css, html } from 'lit-element';
-import '@material/mwc-linear-progress';
+import 'wc-epic-spinners';
 import { isEqual } from 'lodash-es';
 import { styles } from './bnb-styles';
 
@@ -28,6 +28,10 @@ class BnbChart extends LitElement {
         height: 100%;
       }
 
+      #spinner {
+        margin-left: 24px;
+      }
+
       #loading {
         display: flex;
         align-items: center;
@@ -36,12 +40,6 @@ class BnbChart extends LitElement {
         height: 100%;
         color: #999;
         font-size: 24px;
-      }
-
-      #loading div {
-        width: 50%;
-        margin: auto;
-        text-align: center;
       }
 
       #noData {
@@ -71,10 +69,8 @@ class BnbChart extends LitElement {
   render() {
     return html`
     <div id="loading" style="${this.renderStyle(0)}">
-      <div>
-        <div>Loading</div>
-        <mwc-linear-progress indeterminate></mwc-linear-progress>
-      </div>
+      <div>Loading</div>
+      <fulfilling-bouncing-circle-spinner id="spinner"></fulfilling-bouncing-circle-spinner>
     </div>
     <div id="noData" style="${this.renderStyle(1)}">
       <span>No data</span>

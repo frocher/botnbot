@@ -1,8 +1,8 @@
 import { LitElement, css, html } from 'lit-element';
 import '@material/mwc-icon-button';
-import '@material/mwc-linear-progress';
 import '@material/mwc-list/mwc-list-item';
 import '@material/mwc-menu';
+import 'wc-epic-spinners';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
 import { updateRoute } from '../actions/app';
@@ -26,10 +26,8 @@ class BnbHome extends connect(store)(LitElement) {
         font-size: 24px;
       }
 
-      #loading div {
-        width: 50%;
-        margin: auto;
-        text-align: center;
+      #spinner {
+        margin-left: 24px;
       }
 
       #withData {
@@ -123,10 +121,8 @@ class BnbHome extends connect(store)(LitElement) {
       case 0:
         return html`
           <div id="loading">
-            <div>
-              <div>Loading</div>
-              <mwc-linear-progress indeterminate></mwc-linear-progress>
-            </div>
+            <div>Loading</div>
+            <fulfilling-bouncing-circle-spinner id="spinner"></fulfilling-bouncing-circle-spinner>
           </div>
         `;
 
