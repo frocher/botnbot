@@ -127,8 +127,8 @@ class BnbPage extends connect(store)(LitElement) {
   firstUpdated() {
     this.shadowRoot.getElementById('moreBtn').addEventListener('click', () => this.moreTapped());
     this.shadowRoot.getElementById('tabs').addEventListener('MDCTabBar:activated', () => this.tabActivated());
-    this.shadowRoot.getElementById('deleteDlg').addEventListener('closed', (e) => this.leaveDialogClosed(e.detail.action));
-    this.shadowRoot.getElementById('leaveDlg').addEventListener('closed', (e) => this.deleteDialogClosed(e.detail.action));
+    this.shadowRoot.getElementById('deleteDlg').addEventListener('closed', (e) => this.deleteDialogClosed(e.detail.action));
+    this.shadowRoot.getElementById('leaveDlg').addEventListener('closed', (e) => this.leaveDialogClosed(e.detail.action));
   }
 
   stateChanged(state) {
