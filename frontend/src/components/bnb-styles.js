@@ -14,6 +14,7 @@ export const styles = css`
 
     --mdc-theme-error: #cf6679;
     --mdc-theme-warning: #f57c00;
+    --mdc-theme-success: #4bb543;
     --mdc-theme-text-primary-on-background: #fff;
     --mdc-theme-text-secondary-on-background: #fff;
     --mdc-theme-text-disabled-on-background: #424242;
