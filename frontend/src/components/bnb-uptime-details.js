@@ -99,9 +99,7 @@ class BnbUptimeDetails extends BnbPageDetails {
 
   renderIconButton(item) {
     if (!item.key) {
-      return html`
-        <mwc-icon-button disabled icon="visibility"></mwc-icon-button>
-      `;
+      return html``;
     }
 
     return html`
