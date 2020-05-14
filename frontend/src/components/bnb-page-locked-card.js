@@ -5,6 +5,8 @@ import { connect } from 'pwa-helpers';
 import { store } from '../store';
 import { updateRoute } from '../actions/app';
 import './bnb-card';
+import { styles } from './bnb-styles';
+
 
 class BnbPageLockedCard extends connect(store)(LitElement) {
   static get properties() {
@@ -14,28 +16,31 @@ class BnbPageLockedCard extends connect(store)(LitElement) {
   }
 
   static get styles() {
-    return css`
-    .card-content {
-      display: flex;
-      align-items: center;
-      color: var(--paper-orange-700);
-    }
+    return [
+      styles,
+      css`
+      .card-content {
+        display: flex;
+        align-items: center;
+        color: var(--mdc-theme-warning);
+      }
 
-    .card-content mwc-icon {
-      font-size: 48px;
-    }
+      .card-content mwc-icon {
+        margin-right: 8px;
+        font-size: 48px;
+      }
 
-    .card-content div {
-      position: relative;
-      padding-left: 8px;
-      font-size: 14px;
-    }
+      .card-content div {
+        position: relative;
+        padding-left: 8px;
+        font-size: 14px;
+      }
 
-    .card-content mwc-button {
-      margin-left: 8px;
-      --mdc-theme-primary: var(--google-blue-300);
-    }
-    `;
+      .card-content mwc-button {
+        margin-left: 8px;
+      }
+      `,
+    ];
   }
 
   render() {

@@ -7,6 +7,7 @@ import '@material/mwc-list/mwc-list-item';
 import '@material/mwc-menu';
 import '@material/mwc-tab';
 import '@material/mwc-tab-bar';
+import '@material/mwc-top-app-bar-fixed';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
 import { updateRoute } from '../actions/app';
@@ -16,7 +17,6 @@ import './bnb-divider';
 import './bnb-page-budget';
 import './bnb-page-locked-card';
 import './bnb-page-stats';
-import './bnb-top-app-bar';
 import { styles } from './bnb-styles';
 
 class BnbPage extends connect(store)(LitElement) {
@@ -62,7 +62,7 @@ class BnbPage extends connect(store)(LitElement) {
 
   render() {
     return html`
-    <bnb-top-app-bar>
+    <mwc-top-app-bar-fixed>
       <mwc-icon-button icon="arrow_back" slot="navigationIcon" @click="${this.backTapped}"></mwc-icon-button>
       <span slot="title">${this.page.name}</span>
       <mwc-icon-button id="moreBtn" slot="actionItems" icon="more_vert"></mwc-icon-button>
@@ -82,7 +82,7 @@ class BnbPage extends connect(store)(LitElement) {
           <bnb-page-budget class="${classMap(this.renderClass(1))}"></bnb-page-budget>
         </div>
       </div>
-    </app-header-layout>
+    </mwc-top-app-bar-fixed>
 
     <mwc-dialog id="deleteDlg">
       <p>Are you really sure you want to delete page ? All data will be lost</p>

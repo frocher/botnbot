@@ -13,6 +13,7 @@ export const styles = css`
     --mdc-theme-on-surface: #fff;
 
     --mdc-theme-error: #cf6679;
+    --mdc-theme-warning: #f57c00;
     --mdc-theme-text-primary-on-background: #fff;
     --mdc-theme-text-secondary-on-background: #fff;
     --mdc-theme-text-disabled-on-background: #424242;
@@ -47,7 +48,7 @@ export const styles = css`
     --bnb-divider-color: #B6B6B6;
   }
 
-  mwc-textfield {
+  bnb-textfield {
     --mdc-theme-primary: #fff;
   }
 
@@ -60,8 +61,25 @@ export const styles = css`
     --mdc-theme-primary: #64B5F6;
   }
 
+  mwc-select {
+    --mdc-theme-primary: #64B5F6;
+  }
+
+  mwc-switch {
+    --mdc-theme-surface: var(--mdc-theme-text-primary-on-background);
+    --mdc-theme-on-surface: var(--mdc-theme-text-primary-on-background);
+  }
+
   mwc-tab-bar {
     --mdc-theme-primary: #64B5F6;
   }
 
+  mwc-textfield {
+    --mdc-theme-primary: #fff;
+  }
+
+  mwc-top-app-bar-fixed {
+    --mdc-theme-primary: #212121;
+    --mdc-theme-on-primary: #fff;
+  }
   `;

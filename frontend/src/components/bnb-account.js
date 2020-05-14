@@ -5,6 +5,7 @@ import '@material/mwc-formfield';
 import '@material/mwc-icon-button';
 import '@material/mwc-switch';
 import '@material/mwc-textfield';
+import '@material/mwc-top-app-bar-fixed';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
 import { updateRoute } from '../actions/app';
@@ -13,7 +14,6 @@ import { BnbFormElement } from './bnb-form-element';
 import './bnb-card';
 import './bnb-install-button';
 import './bnb-subscriptions';
-import './bnb-top-app-bar';
 import { styles } from './bnb-styles';
 
 
@@ -68,7 +68,7 @@ class BnbAccount extends connect(store)(BnbFormElement(LitElement)) {
 
   render() {
     return html`
-    <bnb-top-app-bar>
+    <mwc-top-app-bar-fixed>
       <mwc-icon-button id="closeBtn" icon="close" slot="navigationIcon"></mwc-icon-button>
       <div slot="title">My account</div>
       <mwc-button id="saveBtn" slot="actionItems">Save</mwc-button>
@@ -98,7 +98,7 @@ class BnbAccount extends connect(store)(BnbFormElement(LitElement)) {
 
         </div>
       </div>
-    </bnb-top-app-bar>
+    </mwc-top-app-bar-fixed>
 
     <mwc-dialog id="discardDlg" modal>
       <p>Discard edit.</p>
