@@ -41,8 +41,21 @@ export default class BnbLazyImage extends LitElement {
 
   firstUpdated() {
     const el = this.shadowRoot.getElementById('el');
-    const observer = lozad(el);
-    observer.observe();
+    this.observer = lozad(el);
+    this.observer.observe();
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    super.attributeChangedCallback(name, oldValue, newValue);
+    if (name === 'src') {
+      if (this.shadowRoot) {
+        const img = this.shadowRoot.getElementById('el');
+        // We have to force reload for images already lazy loaded
+        if (img && img.dataset.loaded) {
+          img.src = newValue;
+        }
+      }
+    }
   }
 }
 
