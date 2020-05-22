@@ -40,9 +40,9 @@ export const styles = css`
     --mdc-text-field-outlined-idle-border-color: var(--mdc-theme-text-primary-on-background);
     --mdc-text-field-outlined-hover-border-color: var(--mdc-theme-secondary);
 
-    --range-datepicker-cell-hover: var(--mdc-theme-primary);
-    --range-datepicker-cell-selected: var(--mdc-theme-primary);
-    --range-datepicker-cell-hovered: #2196F3;
+    --wc-range-datepicker-cell-hover: var(--mdc-theme-primary);
+    --wc-range-datepicker-cell-selected: var(--mdc-theme-primary);
+    --wc-range-datepicker-cell-hovered: #2196F3;
 
     --fulfilling-bouncing-circle-spinner-color: var(--mdc-theme-primary);
 
