@@ -28,7 +28,7 @@ router.get('/', function (req, res, next) {
       res.setHeader('X-Lighthouse-scores', `${pwa};${performance};${accessibility};${bestPractices};${seo}`);
 
       const audits = results['lhr']['audits'];
-      const ttfb = Math.round(audits['time-to-first-byte']['numericValue']);
+      const ttfb = Math.round(audits['server-response-time']['numericValue']);
       const firstMeaningfulPaint = Math.round(audits['first-meaningful-paint']['numericValue']);
       const interactive = Math.round(audits['interactive']['numericValue']);
       const speedIndex = Math.round(audits['speed-index']['numericValue']);
