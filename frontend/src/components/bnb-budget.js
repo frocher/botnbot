@@ -1,5 +1,5 @@
 import { LitElement, css, html } from 'lit-element';
-import 'wc-epic-spinners';
+import 'wc-epic-spinners/dist/FulfillingBouncingCircleSpinner';
 import { styles } from './bnb-styles';
 
 class BnbBudget extends LitElement {

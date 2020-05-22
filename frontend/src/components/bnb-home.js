@@ -3,7 +3,7 @@ import '@material/mwc-icon-button';
 import '@material/mwc-list/mwc-list-item';
 import '@material/mwc-menu';
 import '@material/mwc-top-app-bar-fixed';
-import 'wc-epic-spinners';
+import 'wc-epic-spinners/dist/FulfillingBouncingCircleSpinner';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
 import { updateRoute } from '../actions/app';
