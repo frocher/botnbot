@@ -92,7 +92,7 @@ class BnbPageCard extends connect(store)(LitElement) {
       <bnb-lazy-image src="${this.getScreenshotUrl(this.page)}"></bnb-lazy-image>
       <div class="cardContent">
         <h2><mwc-icon>${this.computeIcon(this.page)}</mwc-icon>${this.page.name}</h2>
-        <a href="${this.page.url}" @click="urlTapped" target="_blank" title="Open url in a new tab" rel="noopener">${this.page.url}</a>
+        <a href="${this.page.url}" @click="${this.urlTapped}" target="_blank" title="Open url in a new tab" rel="noopener">${this.page.url}</a>
       </div>
       <mwc-ripple id="ripple"></mwc-ripple>
     </bnb-card>
