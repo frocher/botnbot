@@ -105,7 +105,7 @@ class BnbSubscriptions extends connect(store)(LitElement) {
         If you have more pages than the free plan allows, you will not loose your current data
         but the monitoring for the more recent pages will be stopped.
         Are you sure to downgrade to free plan ?
-        If you confirm, your paiement informations will be deleted and there will be no more billing.
+        If you confirm, your payment informations will be deleted and there will be no more billing.
       </p>
       <mwc-button dialogAction="ok" slot="primaryAction">Yes, I confirm !</mwc-button>
       <mwc-button dialogAction="cancel" slot="secondaryAction">No</mwc-button>
