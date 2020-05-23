@@ -64,7 +64,7 @@ class BnbPage extends connect(store)(LitElement) {
     return html`
     <mwc-top-app-bar-fixed>
       <mwc-icon-button icon="arrow_back" slot="navigationIcon" @click="${this.backTapped}"></mwc-icon-button>
-      <span slot="title">${this.page.name}</span>
+      <span slot="title">${this.page?.name}</span>
       <mwc-icon-button id="moreBtn" slot="actionItems" icon="more_vert"></mwc-icon-button>
       <mwc-menu id="moreMenu">
         ${this.renderMenuContent()}
