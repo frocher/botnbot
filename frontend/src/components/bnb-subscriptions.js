@@ -85,7 +85,7 @@ class BnbSubscriptions extends connect(store)(LitElement) {
   render() {
     return html`
     <div class="plans">
-      ${this.plans.map((item, index) => this.renderPlan(item, index))}
+      ${this.plans?.map((item, index) => this.renderPlan(item, index))}
     </div>
     <mwc-dialog id="downgradePlanDlg" heading="Downgrading your plan">
       <p>You are downgrading your current plan.
