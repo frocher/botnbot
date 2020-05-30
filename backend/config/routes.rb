@@ -19,7 +19,7 @@ Rails.application.routes.draw do
 
   resources :users, only: [:show, :update] do
     scope module: :users do
-      resource :subscription, except [:create]
+      resource :subscription, except: :create
     end
   end
 
