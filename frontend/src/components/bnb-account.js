@@ -77,7 +77,7 @@ class BnbAccount extends connect(store)(BnbFormElement(LitElement)) {
         <div id="container">
           <h3>General</h3>
           <bnb-card>
-            <mwc-textfield id="name" label="Name" type="text" outlined value="${this.user.name}"></mwc-textfield>
+            <mwc-textfield id="name" label="Name" type="text" outlined value="${this.user?.name}"></mwc-textfield>
             <mwc-formfield label="Send me notifications on this device">
               <mwc-switch id="pushButton" ?disabled="${!this.isNotificationsEnabled()}"></mwc-switch>
             </mwc-formfield>

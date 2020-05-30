@@ -46,6 +46,10 @@ class ApplicationController < ActionController::API
     end
   end
 
+  def bad_request!
+    render_api_error!('400 Bad request', 400)
+  end
+
   def forbidden!
     render_api_error!('403 Forbidden', 403)
   end

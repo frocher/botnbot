@@ -1,12 +1,13 @@
 import { createAction } from '@reduxjs/toolkit';
-import { getRequestUrl, getResource } from '../common';
+import { loadStripe } from '@stripe/stripe-js';
+import { getRequestUrl, getResource, fetchCredentials } from '../common';
 
 // ***** User account management
 
 export const fetchUserSuccess = createAction('USER_FETCH_SUCCESS');
 export const fetchUserError = createAction('USER_FETCH_ERROR');
 
-export const loadUser = () => async dispatch => {
+export const loadUser = () => async (dispatch) => {
   getResource({
     url: getRequestUrl('/users/-1', {}),
     method: 'GET',
@@ -25,7 +26,7 @@ export const updateUserStart = createAction('USER_FETCH_START');
 export const updateUserSuccess = createAction('USER_UPDATE_SUCCESS');
 export const updateUserError = createAction('USER_UPDATE_ERROR');
 
-export const updateUser = (id, user) => async dispatch => {
+export const updateUser = (id, user) => async (dispatch) => {
   dispatch(updateUserStart());
   getResource({
     url: getRequestUrl(`/users/${id}`, user),
@@ -44,7 +45,7 @@ export const updateUser = (id, user) => async dispatch => {
 export const savePushSubscriptionSuccess = createAction('PUSH_SUBSCRIPTION_SUCCESS');
 export const savePushSubscriptionError = createAction('PUSH_SUBSCRIPTION_ERROR');
 
-export const savePushSubscription = subscription => async dispatch => {
+export const savePushSubscription = (subscription) => async (dispatch) => {
   getResource({
     url: getRequestUrl('/users/-1/save-subscription', { subscription: JSON.stringify(subscription) }),
     method: 'POST',
@@ -62,7 +63,7 @@ export const savePushSubscription = subscription => async dispatch => {
 export const fetchStripeSubscriptionSuccess = createAction('STRIPE_SUBSCRIPTION_FETCH_SUCCESS');
 export const fetchStripeSubscriptionError = createAction('STRIPE_SUBSCRIPTION_FETCH_ERROR');
 
-export const loadStripeSubscription = () => async dispatch => {
+export const loadStripeSubscription = () => async (dispatch) => {
   getResource({
     url: getRequestUrl('/users/-1/subscription', {}),
     method: 'GET',
@@ -77,28 +78,33 @@ export const loadStripeSubscription = () => async dispatch => {
   });
 };
 
-export const createStripeSubscriptionSuccess = createAction('STRIPE_SUBSCRIPTION_CREATE_SUCCESS');
-export const createStripeSubscriptionError = createAction('STRIPE_SUBSCRIPTION_CREATE_ERROR');
+export const stripeCheckoutSuccess = createAction('STRIPE_CHECKOUT_SUCCESS');
+export const stripeCheckoutError = createAction('STRIPE_CHECKOUT_ERROR');
 
-export const createStripeSubscription = (stripeEmail, stripeToken, stripePlan) => async dispatch => {
-  getResource({
-    url: getRequestUrl('/users/-1/subscription', { stripeEmail, stripeToken, stripePlan }),
-    method: 'POST',
-    onLoad(e) {
-      const response = JSON.parse(e.target.responseText);
-      if (e.target.status === 200) {
-        dispatch(createStripeSubscriptionSuccess(response));
-      } else {
-        dispatch(createStripeSubscriptionError(response));
-      }
-    },
-  });
+export const stripeCheckout = (stripeKey, priceId) => async (dispatch) => {
+  try {
+    const options = {
+      method: 'POST',
+      headers: fetchCredentials(),
+    };
+
+    const response = await (await fetch(`/api/stripe/session?price_id=${priceId}`, options)).json();
+    const stripe = await loadStripe(stripeKey);
+    const { error } = await stripe.redirectToCheckout({ sessionId: response.id });
+    if (error) {
+      dispatch(stripeCheckoutError(error));
+    } else {
+      dispatch(stripeCheckoutSuccess());
+    }
+  } catch (err) {
+    dispatch(stripeCheckoutError(err));
+  }
 };
 
 export const updateStripeSubscriptionSuccess = createAction('STRIPE_SUBSCRIPTION_UPDATE_SUCCESS');
 export const updateStripeSubscriptionError = createAction('STRIPE_SUBSCRIPTION_UPDATE_ERROR');
 
-export const updateStripeSubscription = stripePlan => async dispatch => {
+export const updateStripeSubscription = (stripePlan) => async (dispatch) => {
   getResource({
     url: getRequestUrl('/users/-1/subscription', { stripePlan }),
     method: 'PUT',
@@ -116,7 +122,7 @@ export const updateStripeSubscription = stripePlan => async dispatch => {
 export const deleteStripeSubscriptionSuccess = createAction('STRIPE_SUBSCRIPTION_DELETE_SUCCESS');
 export const deleteStripeSubscriptionError = createAction('STRIPE_SUBSCRIPTION_DELETE_ERROR');
 
-export const deleteStripeSubscription = () => async dispatch => {
+export const deleteStripeSubscription = () => async (dispatch) => {
   getResource({
     url: getRequestUrl('/users/-1/subscription', {}),
     method: 'DELETE',
