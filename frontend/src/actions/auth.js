@@ -6,7 +6,7 @@ import { getRequestUrl, getResource } from '../common';
 /**
  * Extract credentials from a HTTP response
  */
-const extractCredentials = xhr => ({
+const extractCredentials = (xhr) => ({
   'access-token': xhr.getResponseHeader('access-token'),
   uid: xhr.getResponseHeader('uid'),
   client: xhr.getResponseHeader('client'),
@@ -16,7 +16,7 @@ const extractCredentials = xhr => ({
 export const signInSuccess = createAction('SIGN_IN_SUCCESS');
 export const signInError = createAction('SIGN_IN_ERROR');
 
-export const signin = (email, password) => async dispatch => {
+export const signin = (email, password) => async (dispatch) => {
   const url = getRequestUrl('/auth/sign_in', { email, password });
   getResource({
     url,
@@ -35,7 +35,7 @@ export const signin = (email, password) => async dispatch => {
 export const signUpSuccess = createAction('SIGN_UP_SUCCESS');
 export const signUpError = createAction('SIGN_UP_ERROR');
 
-export const signup = (name, email, password, confirmation, successUrl) => async dispatch => {
+export const signup = (name, email, password, confirmation, successUrl) => async (dispatch) => {
   const url = getRequestUrl('/auth/', {
     name,
     email,
@@ -62,7 +62,7 @@ export const signup = (name, email, password, confirmation, successUrl) => async
 export const forgotPasswordSuccess = createAction('FORGOT_PASSWORD_SUCCESS');
 export const forgotPasswordError = createAction('FORGOT_PASSWORD_ERROR');
 
-export const forgotPassword = (email, redirectUrl) => async dispatch => {
+export const forgotPassword = (email, redirectUrl) => async (dispatch) => {
   const url = getRequestUrl('/auth/password', {
     email,
     redirect_url: redirectUrl,
@@ -85,7 +85,7 @@ export const forgotPassword = (email, redirectUrl) => async dispatch => {
 export const updatePasswordSuccess = createAction('UPDATE_PASSWORD_SUCCESS');
 export const updatePasswordError = createAction('UPDATE_PASSWORD_ERROR');
 
-export const updatePassword = (password, passwordConfirmation, headers) => async dispatch => {
+export const updatePassword = (password, passwordConfirmation, headers) => async (dispatch) => {
   const url = getRequestUrl('/auth/password', {
     password,
     password_confirmation: passwordConfirmation,
