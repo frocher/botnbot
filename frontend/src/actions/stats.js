@@ -1,3 +1,4 @@
+/* eslint-disable no-mixed-operators */
 import { createAction } from '@reduxjs/toolkit';
 import { getRequestUrl, getResource } from '../common';
 
@@ -36,7 +37,7 @@ const _updateBytes = (data) => {
 };
 
 
-export const loadPageStats = (pageId, period) => async dispatch => {
+export const loadPageStats = (pageId, period) => async (dispatch) => {
   dispatch(fetchPageStatsStart());
 
   getResource({
@@ -63,7 +64,7 @@ export const fetchLighthouseDetailsStart = createAction('LIGHTHOUSE_DETAILS_STAR
 export const fetchLighthouseDetailsSuccess = createAction('LIGHTHOUSE_DETAILS_FETCH_SUCCESS');
 export const fetchLighthouseDetailsError = createAction('LIGHTHOUSE_DETAILS_FETCH_ERROR');
 
-export const loadLighthouseDetails = (pageId, period) => async dispatch => {
+export const loadLighthouseDetails = (pageId, period) => async (dispatch) => {
   dispatch(fetchLighthouseDetailsStart());
   getResource({
     url: getRequestUrl(`/pages/${pageId}/lighthouse`, { start: new Date(period.start), end: new Date(period.end) }),
@@ -83,7 +84,7 @@ export const fetchUptimeDetailsStart = createAction('UPTIME_DETAILS_START');
 export const fetchUptimeDetailsSuccess = createAction('UPTIME_DETAILS_FETCH_SUCCESS');
 export const fetchUptimeDetailsError = createAction('UPTIME_DETAILS_FETCH_ERROR');
 
-export const loadUptimeDetails = (pageId, period) => async dispatch => {
+export const loadUptimeDetails = (pageId, period) => async (dispatch) => {
   dispatch(fetchUptimeDetailsStart());
   getResource({
     url: getRequestUrl(`/pages/${pageId}/uptime`, { start: new Date(period.start), end: new Date(period.end) }),
@@ -103,10 +104,10 @@ export const fetchAssetsDetailsStart = createAction('ASSETS_DETAILS_START');
 export const fetchAssetsDetailsSuccess = createAction('ASSETS_DETAILS_FETCH_SUCCESS');
 export const fetchAssetsDetailsError = createAction('ASSETS_DETAILS_FETCH_ERROR');
 
-export const loadAssetsDetails = (pageId, period) => async dispatch => {
+export const loadAssetsDetails = (pageId, period) => async (dispatch) => {
   dispatch(fetchAssetsDetailsStart());
   getResource({
-    url: getRequestUrl(`/pages/${  pageId  }/assets`, { start: new Date(period.start), end: new Date(period.end) }),
+    url: getRequestUrl(`/pages/${pageId}/assets`, { start: new Date(period.start), end: new Date(period.end) }),
     method: 'GET',
     onLoad(e) {
       const response = JSON.parse(e.target.responseText);

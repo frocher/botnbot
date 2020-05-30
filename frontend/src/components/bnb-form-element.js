@@ -20,7 +20,7 @@ export const BnbFormElement = (baseElement) => class extends baseElement {
     * Validate or invalidate fields from an errors Array.
     * For lit elements
     */
-   _litErrorsChanged() {
+  _litErrorsChanged() {
     if (this.errors) {
       for (let prop in this.errors) {
         if (this.errors.hasOwnProperty(prop)) {
@@ -39,7 +39,7 @@ export const BnbFormElement = (baseElement) => class extends baseElement {
       return;
     }
 
-    fields.forEach(id => {
+    fields.forEach((id) => {
       const obj = this.shadowRoot.getElementById(id);
       if (obj) {
         obj.setCustomValidity('');

@@ -1,4 +1,4 @@
-import { combineReducers } from '@reduxjs/toolkit'
+import { combineReducers } from '@reduxjs/toolkit';
 import accountReducer from './accountReducer';
 import appReducer from './appReducer';
 import authReducer from './authReducer';
@@ -17,4 +17,4 @@ const rootReducer = combineReducers({
   stats: statsReducer,
 });
 
-export default rootReducer
+export default rootReducer;

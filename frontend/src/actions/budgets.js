@@ -6,7 +6,7 @@ import { getRequestUrl, getResource } from '../common';
 export const fetchBudgetsSuccess = createAction('BUDGETS_FETCH_SUCCESS');
 export const fetchBudgetsError = createAction('BUDGETS_FETCH_ERROR');
 
-export const loadBudgets = pageId => async dispatch => {
+export const loadBudgets = (pageId) => async (dispatch) => {
   getResource({
     url: getRequestUrl(`/pages/${pageId}/budgets`, {}),
     method: 'GET',
@@ -24,7 +24,7 @@ export const loadBudgets = pageId => async dispatch => {
 export const createBudgetSuccess = createAction('BUDGET_CREATE_SUCCESS');
 export const createBudgetError = createAction('BUDGET_CREATE_ERROR');
 
-export const createBudget = (pageId, category, item, budget) => async dispatch => {
+export const createBudget = (pageId, category, item, budget) => async (dispatch) => {
   getResource({
     url: getRequestUrl(`/pages/${pageId}/budgets`, { category, item, budget }),
     method: 'POST',
@@ -43,7 +43,7 @@ export const createBudget = (pageId, category, item, budget) => async dispatch =
 export const deleteBudgetSuccess = createAction('BUDGET_DELETE_SUCCESS');
 export const deleteBudgetError = createAction('BUDGET_DELETE_ERROR');
 
-export const deleteBudget = (pageId, budgetId) => async dispatch => {
+export const deleteBudget = (pageId, budgetId) => async (dispatch) => {
   getResource({
     url: getRequestUrl(`/pages/${pageId}/budgets/${budgetId}`, {}),
     method: 'DELETE',
