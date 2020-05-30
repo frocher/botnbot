@@ -5,13 +5,15 @@ import '@material/mwc-textfield';
 import '@material/mwc-button';
 import '@material/mwc-dialog';
 import '@material/mwc-icon-button';
+import '@material/mwc-top-app-bar-fixed';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
 import { updateRoute } from '../actions/app';
 import { createPage } from '../actions/pages';
 import { BnbFormElement } from './bnb-form-element';
 import './bnb-card';
-import './bnb-top-app-bar';
+import { styles } from './bnb-styles';
+
 
 class BnbAddPage extends connect(store)(BnbFormElement(LitElement)) {
   static get properties() {
@@ -24,33 +26,35 @@ class BnbAddPage extends connect(store)(BnbFormElement(LitElement)) {
   }
 
   static get styles() {
-    return css`
-    :host {
-      display: flex;
-      flex-direction: column;
-    }
+    return [
+      styles,
+      css`
+      :host {
+        display: flex;
+        flex-direction: column;
+      }
 
-    mwc-textfield {
-      width: 100%;
-      --mdc-theme-primary: #fff;
-    }
+      mwc-textfield {
+        width: 100%;
+      }
 
-    #content {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-    }
+      #content {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+      }
 
-    #container {
-      width:100%;
-      max-width: 1000px;
-      padding: 10px 22px 10px 22px;
-    }
+      #container {
+        width:100%;
+        max-width: 1000px;
+        padding: 10px 22px 10px 22px;
+      }
 
-    #name {
-      margin-bottom: 16px;
-    }
-    `;
+      #name {
+        margin-bottom: 16px;
+      }
+      `,
+    ];
   }
 
   get fields() {
@@ -59,7 +63,7 @@ class BnbAddPage extends connect(store)(BnbFormElement(LitElement)) {
 
   render() {
     return html`
-    <bnb-top-app-bar>
+    <mwc-top-app-bar-fixed>
       <mwc-icon-button id="closeBtn" icon="close" slot="navigationIcon"></mwc-icon-button>
       <span slot="title">New page</span>
       <mwc-button id="createBtn" slot="actionItems">Create</mwc-button>
@@ -79,7 +83,7 @@ class BnbAddPage extends connect(store)(BnbFormElement(LitElement)) {
           </bnb-card>
         </div>
       </div>
-    </bnb-top-app-bar>
+    </mwc-top-app-bar-fixed>
 
     <mwc-dialog id="discardDlg" >
       <p>Are you sure you want to discard this new page.</p>

@@ -6,76 +6,75 @@ import '@material/mwc-icon-button';
 import '@material/mwc-radio';
 import '@material/mwc-switch';
 import '@material/mwc-textfield';
+import '@material/mwc-top-app-bar-fixed';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
 import { updateRoute } from '../actions/app';
 import { updatePage } from '../actions/pages';
 import { BnbFormElement } from './bnb-form-element';
 import './bnb-card';
-import './bnb-top-app-bar';
+import { styles } from './bnb-styles';
+
 
 class BnbEditPage extends connect(store)(BnbFormElement(LitElement)) {
   static get styles() {
-    return css`
-    :host {
-      display: flex;
-      flex-direction: column;
-    }
+    return [
+      styles,
+      css`
+      :host {
+        display: flex;
+        flex-direction: column;
+      }
 
-    mwc-switch {
-      margin-left: 12px;
-      --mdc-theme-surface: var(--mdc-theme-text-primary-on-background);
-      --mdc-theme-on-surface: var(--mdc-theme-text-primary-on-background);
-    }
+      mwc-switch {
+        margin-left: 12px;
+        padding-left: 8px;
+      }
 
-    mwc-switch {
-      padding-left: 8px;
-    }
+      .mdc-label {
+        margin-top: -12px !important;
+      }
 
-    .mdc-label {
-      margin-top: -12px !important;
-    }
+      mwc-textfield {
+        width: 100%;
+      }
 
-    mwc-textfield {
-      width: 100%;
-      --mdc-theme-primary: #fff;
-    }
+      #content {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+      }
 
-    #content {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-    }
+      #container {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-width: 1000px;
+        padding: 10px 22px 10px 22px;
+      }
 
-    #container {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      max-width: 1000px;
-      padding: 10px 22px 10px 22px;
-    }
+      #name {
+        margin-bottom: 16px;
+      }
 
-    #name {
-      margin-bottom: 16px;
-    }
+      #slackInformations {
+        display: flex;
+        flex-direction: row;
+        margin-top: 12px;
+        margin-right: 40px;
+        margin-left: 40px;
+      }
 
-    #slackInformations {
-      display: flex;
-      flex-direction: row;
-      margin-top: 12px;
-      margin-right: 40px;
-      margin-left: 40px;
-    }
-
-    #slack_webhook {
-      margin-right: 16px;
-    }
-    `;
+      #slack_webhook {
+        margin-right: 16px;
+      }
+      `,
+    ];
   }
 
   render() {
     return html`
-    <bnb-top-app-bar>
+    <mwc-top-app-bar-fixed>
       <mwc-icon-button id="closeBtn" icon="close" slot="navigationIcon"></mwc-icon-button>
       <span slot="title">Edit page</span>
       <mwc-button id="saveBtn" slot="actionItems">Save</mwc-button>
@@ -118,7 +117,7 @@ class BnbEditPage extends connect(store)(BnbFormElement(LitElement)) {
           </bnb-card>
         </div>
       </div>
-    </bnb-top-app-bar>
+    </mwc-top-app-bar-fixed>
 
     <mwc-dialog id="discardDlg">
       <p>Are you sure you want to discard your modifications.</p>

@@ -65,7 +65,7 @@ class BnbChartCard extends LitElement {
       <div class="card-header">${this.name}</div>
       <div class="card-content">
         <div id="chips">
-          ${this.data.map((i) => this.renderChip(i))}
+          ${this.data?.map((i) => this.renderChip(i))}
         </div>
         <bnb-chart id="chart" type="${this.type}" .data="${this.data}" .model="${this.model}"></bnb-chart>
       </div>

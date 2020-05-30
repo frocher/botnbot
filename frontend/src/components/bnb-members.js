@@ -5,6 +5,7 @@ import '@material/mwc-icon-button';
 import '@material/mwc-list/mwc-list-item';
 import '@material/mwc-select';
 import '@material/mwc-textfield';
+import '@material/mwc-top-app-bar-fixed';
 import { find } from 'lodash-es';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
@@ -14,7 +15,7 @@ import {
 } from '../actions/members';
 import './bnb-card';
 import './bnb-textfield';
-import './bnb-top-app-bar';
+import { styles } from './bnb-styles';
 
 class BnbMembers extends connect(store)(LitElement) {
   static get properties() {
@@ -27,95 +28,84 @@ class BnbMembers extends connect(store)(LitElement) {
   }
 
   static get styles() {
-    return css`
+    return [
+      styles,
+      css`
+      #content {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+      }
 
-    mwc-button {
-      --mdc-theme-primary: var(--google-blue-300);
-    }
+      #container {
+        width: 100%;
+        max-width: 1000px;
+        padding: 10px 22px 10px 22px;
+      }
 
-    bnb-textfield {
-      --mdc-theme-primary: #fff;
-    }
+      #form {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        margin-bottom: 12px;
+      }
 
-    mwc-select {
-      --mdc-theme-primary: var(--google-blue-300);
-    }
+      #email {
+        min-width: 280px;
+        margin-right: 16px;
+      }
 
-    #content {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-    }
+      #roleMenu {
+        min-width: 200px;
+      }
 
-    #container {
-      width: 100%;
-      max-width: 1000px;
-      padding: 10px 22px 10px 22px;
-    }
+      #buttons {
+        padding-top: 12px;
+      }
 
-    #form {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-      margin-bottom: 12px;
-    }
+      #members {
+        max-height: 400px;
+      }
 
-    #email {
-      min-width: 280px;
-      margin-right: 16px;
-    }
+      table {
+        border-collapse: collapse;
+        background: #fff;
+        border-radius: 4px;
+        width: 100%;
+      }
 
-    #roleMenu {
-      min-width: 200px;
-    }
+      table thead tr {
+        height: 60px;
+        background: #212121;
+        font-size: 16px;
+        color: #fff;
+        line-height: 1.2;
+        font-weight: unset;
+      }
 
-    #buttons {
-      padding-top: 12px;
-    }
+      table tbody tr {
+        height: 50px;
+        font-size: 14px;
+        color: gray;
+        line-height: 1.2;
+        font-weight: unset;
+      }
 
-    #members {
-      max-height: 400px;
-    }
+      table tbody tr td:nth-child(1n) {
+        padding-left: 16px;
+      }
 
-    table {
-      border-collapse: collapse;
-      background: #fff;
-      border-radius: 4px;
-      width: 100%;
-    }
-
-    table thead tr {
-      height: 60px;
-      background: #212121;
-      font-size: 16px;
-      color: #fff;
-      line-height: 1.2;
-      font-weight: unset;
-    }
-
-    table tbody tr {
-      height: 50px;
-      font-size: 14px;
-      color: gray;
-      line-height: 1.2;
-      font-weight: unset;
-    }
-
-    table tbody tr td:nth-child(1n) {
-      padding-left: 16px;
-    }
-
-    table tbody tr:hover {
-      background-color: var(--google-blue-300);
-      color: #fff;
-    }
-
-    `;
+      table tbody tr:hover {
+        background-color: var(--mdc-theme-secondary);
+        color: var(--mdc-theme-on-secondary);
+      }
+      `,
+    ];
   }
 
   render() {
     return html`
-    <bnb-top-app-bar>
+    <mwc-top-app-bar-fixed>
       <mwc-icon-button id="closeBtn" icon="arrow_back" slot="navigationIcon"></mwc-icon-button>
       <span slot="title">Members</span>
 
@@ -153,7 +143,8 @@ class BnbMembers extends connect(store)(LitElement) {
           </bnb-card>
         </div>
       </div>
-    </bnb-top-app-bar>
+    </mwc-top-app-bar-fixed>
+
     <mwc-dialog id="confirmTransferDlg" heading="Transfering ownership">
       <p>Are you sure to you want to loose ownership of this page ?</p>
       <mwc-button dialogAction="ok" slot="primaryAction">Yes, sure !</mwc-button>

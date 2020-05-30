@@ -3,7 +3,7 @@ import '@material/mwc-icon-button';
 import '@material/mwc-list/mwc-list-item';
 import '@material/mwc-menu';
 import '@material/mwc-textfield';
-import 'range-datepicker/range-datepicker';
+import 'wc-range-datepicker/dist/wc-range-datepicker';
 import {
   addDays, addMonths, addWeeks, format, endOfDay, endOfMonth, endOfWeek,
   startOfDay, startOfMonth, startOfWeek,
@@ -41,7 +41,7 @@ class BnbPeriodDropdown extends connect(store)(LitElement) {
     <mwc-textfield id="startDate" label="Date from" outlined value="${this.startDate}" readonly @click="${this.dateClicked}"></mwc-textfield>
     <mwc-textfield id="endDate" label="Date to" outlined value="${this.endDate}" readonly @click="${this.dateClicked}"></mwc-textfield>
     <mwc-menu id="rangeMenu">
-      <range-datepicker id="datePicker" @date-to-changed="${this.dateToChanged}"></range-datepicker>
+      <wc-range-datepicker id="datePicker" @date-to-changed="${this.dateToChanged}"></wc-range-datepicker>
     </mwc-menu>
 
     <div style="position:relative">
@@ -81,8 +81,8 @@ class BnbPeriodDropdown extends connect(store)(LitElement) {
     if (picker.dateTo) {
       this.shadowRoot.getElementById('rangeMenu').close();
       const period = {
-        start: new Date(picker.dateFrom),
-        end: new Date(picker.dateTo),
+        start: new Date(picker.dateFrom * 1000),
+        end: new Date(picker.dateTo * 1000),
       };
       store.dispatch(updatePeriod(period));
     }

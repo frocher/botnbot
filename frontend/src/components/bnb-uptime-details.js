@@ -36,7 +36,7 @@ class BnbUptimeDetails extends BnbPageDetails {
         border-radius: 4px;
         text-align: center;
         padding: 4px;
-        background-color: #B71C1C;
+        background-color: var(--mdc-theme-error);
       }
 
       .up {
@@ -45,7 +45,7 @@ class BnbUptimeDetails extends BnbPageDetails {
         border-radius: 4px;
         text-align: center;
         padding: 4px;
-        background-color: #1B5E20;
+        background-color: var(--mdc-theme-success);
       }
 
       @media screen and (max-width: 820px) {
@@ -99,9 +99,7 @@ class BnbUptimeDetails extends BnbPageDetails {
 
   renderIconButton(item) {
     if (!item.key) {
-      return html`
-        <mwc-icon-button disabled icon="visibility"></mwc-icon-button>
-      `;
+      return html``;
     }
 
     return html`

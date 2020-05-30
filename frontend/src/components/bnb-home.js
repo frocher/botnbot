@@ -2,13 +2,13 @@ import { LitElement, css, html } from 'lit-element';
 import '@material/mwc-icon-button';
 import '@material/mwc-list/mwc-list-item';
 import '@material/mwc-menu';
-import 'wc-epic-spinners';
+import '@material/mwc-top-app-bar-fixed';
+import 'wc-epic-spinners/dist/FulfillingBouncingCircleSpinner';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
 import { updateRoute } from '../actions/app';
 import { signout } from '../actions/auth';
 import './bnb-page-card';
-import './bnb-top-app-bar';
 import { styles } from './bnb-styles';
 
 class BnbHome extends connect(store)(LitElement) {
@@ -103,7 +103,7 @@ class BnbHome extends connect(store)(LitElement) {
 
   render() {
     return html`
-      <bnb-top-app-bar>
+      <mwc-top-app-bar-fixed>
         <div slot="title">All pages</div>
         <mwc-icon-button id="addBtn" slot="actionItems" icon="add"></mwc-icon-button>
         <mwc-icon-button id="moreBtn" slot="actionItems" icon="more_vert"></mwc-icon-button>
@@ -112,7 +112,7 @@ class BnbHome extends connect(store)(LitElement) {
           <mwc-list-item id="logoutItem">Log out</mwc-list-item>
         </mwc-menu>
         ${this.renderContent()}
-      </bnb-top-app-bar>
+      </mwc-top-app-bar-fixed>
       `;
   }
 

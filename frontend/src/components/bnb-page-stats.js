@@ -90,11 +90,11 @@ class BnbPageStats extends connect(store)(LitElement) {
   render() {
     return html`
     <bnb-period-bar></bnb-period-bar>
-    <bnb-chart-card id="lighthouseChart" name="Lighthouse scores" type="bar" .data="${this.stats.lighthouse}" .model="${this.lighthouseModel}" hasDetails></bnb-chart-card>
-    <bnb-chart-card id="performanceChart" name="Performance" type="line" .data="${this.stats.performance}" .model="${this.performanceModel}" hasDetails></bnb-chart-card>
-    <bnb-chart-card id="uptimeChart" name="Uptime" type="line" .data="${this.stats.uptime}" .model="${this.uptimeModel}" hasDetails></bnb-chart-card>
-    <bnb-chart-card id="requestsChart" name="Assets count" type="area" .data="${this.stats.requests}" .model="${this.requestsModel}" hasDetails></bnb-chart-card>
-    <bnb-chart-card id="bytesChart" name="Assets size" type="area" .data="${this.stats.bytes}" .model="${this.bytesModel}" hasDetails></bnb-chart-card>
+    <bnb-chart-card id="lighthouseChart" name="Lighthouse scores" type="bar" .data="${this.stats?.lighthouse}" .model="${this.lighthouseModel}" hasDetails></bnb-chart-card>
+    <bnb-chart-card id="performanceChart" name="Performance" type="line" .data="${this.stats?.performance}" .model="${this.performanceModel}" hasDetails></bnb-chart-card>
+    <bnb-chart-card id="uptimeChart" name="Uptime" type="line" .data="${this.stats?.uptime}" .model="${this.uptimeModel}" hasDetails></bnb-chart-card>
+    <bnb-chart-card id="requestsChart" name="Assets count" type="area" .data="${this.stats?.requests}" .model="${this.requestsModel}" hasDetails></bnb-chart-card>
+    <bnb-chart-card id="bytesChart" name="Assets size" type="area" .data="${this.stats?.bytes}" .model="${this.bytesModel}" hasDetails></bnb-chart-card>
     `;
   }
 
