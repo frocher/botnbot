@@ -8,29 +8,6 @@ class Users::SubscriptionsController < ApplicationController
     render json: @user.stripe_subscription
   end
 
-  def create
-    return not_found! unless can?(current_user, :create_subscription, @user)
-
-    Stripe.api_key = Figaro.env.stripe_secret_key
-
-    customer = Stripe::Customer.create(
-      email: params[:stripeEmail],
-      source: params[:stripeToken]
-    )
-
-    subscription = Stripe::Subscription.create({
-      customer: customer.id,
-      items: [{plan: params[:stripePlan]}]
-    })
-
-    @user.subscription = subscription.id
-    @user.save!
-
-    @user.update_pages_lock
-
-    render json: @user.stripe_subscription
-  end
-
   def update
     return not_found! unless can?(current_user, :update_subscription, @user)
 

@@ -19,10 +19,15 @@ Rails.application.routes.draw do
 
   resources :users, only: [:show, :update] do
     scope module: :users do
-      resource :subscription
+      resource :subscription, except [:create]
     end
   end
 
   get "/pages/:id/screenshot" => "pages#screenshot"
   post "/users/:id/save-subscription" => "users#save_subscription"
+
+  unless Figaro.env.stripe_secret_key.blank?
+    post "/stripe/session" => "stripe#create_session"
+    post Figaro.env.stripe_wh_path => "stripe#checkout_completed"
+  end
 end

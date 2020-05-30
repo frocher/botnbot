@@ -3,7 +3,7 @@ import '@material/mwc-button/mwc-button';
 import '@material/mwc-dialog';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
-import { createStripeSubscription, updateStripeSubscription, deleteStripeSubscription } from '../actions/account';
+import { stripeCheckout, updateStripeSubscription, deleteStripeSubscription } from '../actions/account';
 import { styles } from './bnb-styles';
 import './bnb-card';
 
@@ -148,8 +148,6 @@ class BnbSubscriptions extends connect(store)(LitElement) {
   }
 
   firstUpdated() {
-    this.checkout = this.initCheckout();
-    window.addEventListener('popstate', () => this.checkout.close());
     this.shadowRoot.getElementById('freePlanDlg').addEventListener('closed', (e) => this.onFreePlanDialogClosed(e.detail.action));
     this.shadowRoot.getElementById('upgradePlanDlg').addEventListener('closed', (e) => this.onUpgradePlanDialogClosed(e.detail.action));
     this.shadowRoot.getElementById('downgradePlanDlg').addEventListener('closed', (e) => this.onDowngradePlanDialogClosed(e.detail.action));
@@ -177,12 +175,7 @@ class BnbSubscriptions extends connect(store)(LitElement) {
 
     if (this.selectedPlan.id !== -1) {
       if (this.currentPlan.planId === -1) {
-        const config = {
-          amount: this.selectedPlan.amount * 100,
-          key: this.stripeKey,
-          name: this.selectedPlan.name,
-        };
-        this.checkout.open(config);
+        store.dispatch(stripeCheckout(this.stripeKey, this.selectedPlan.id));
       } else if (this.currentPlan.pages > this.selectedPlan.pages) {
         this.shadowRoot.getElementById('downgradePlanDlg').show();
       } else {
@@ -209,19 +202,6 @@ class BnbSubscriptions extends connect(store)(LitElement) {
     if (action === 'ok') {
       store.dispatch(updateStripeSubscription(this.selectedPlan.id));
     }
-  }
-
-  initCheckout() {
-    return StripeCheckout.configure({
-      allowRememberMe: true,
-      locale: 'auto',
-      image: 'https://my.botnbot.com/images/ms-touch-icon-144x144-precomposed.png',
-      key: this.stripeKey,
-      zipCode: true,
-      token: (token) => {
-        store.dispatch(createStripeSubscription(token.email, token.id, this.selectedPlan.id));
-      },
-    });
   }
 }
 
