@@ -10,6 +10,7 @@ class BnbChart extends LitElement {
       model: { type: Array },
       symbol: { type: String },
       type: { type: String },
+      footer: { type: String },
       selectedPage: { type: Number },
     };
   }
@@ -133,9 +134,6 @@ class BnbChart extends LitElement {
           case 'line':
             chartType = 'line';
             break;
-          case 'bar':
-            chartType = 'bar';
-            break;
         }
 
         const options = {
@@ -154,7 +152,6 @@ class BnbChart extends LitElement {
           },
           scales: {
             xAxes: [{
-              stacked: this.type === 'bar',
               type: 'time',
               time: {
                 unit: this.computeTickFormat(chartData),
@@ -167,7 +164,7 @@ class BnbChart extends LitElement {
               },
             }],
             yAxes: [{
-              stacked: this.type === 'area' || this.type === 'bar',
+              stacked: this.type === 'area',
               ticks: {
                 fontColor: '#fff',
                 beginAtZero: true,
@@ -176,7 +173,7 @@ class BnbChart extends LitElement {
           },
         };
 
-        if (this.type === 'area') {
+        if (this.footer === 'sum') {
           options.tooltips.callbacks.footer = (tooltipItems, data) => {
             let sum = 0;
             tooltipItems.forEach((tooltipItem) => {
@@ -184,7 +181,7 @@ class BnbChart extends LitElement {
             });
             return `Total: ${Math.round(sum)}`;
           };
-        } else if (this.type === 'bar') {
+        } else if (this.footer === 'average') {
           options.tooltips.callbacks.footer = (tooltipItems, data) => {
             let sum = 0;
             tooltipItems.forEach((tooltipItem) => {

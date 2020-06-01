@@ -11,6 +11,7 @@ class BnbChartCard extends LitElement {
       data: { type: Array },
       model: { type: Array },
       type: { type: String },
+      footer: { type: String },
       hasDetails: { type: Boolean },
     };
   }
@@ -67,7 +68,7 @@ class BnbChartCard extends LitElement {
         <div id="chips">
           ${this.data?.map((i) => this.renderChip(i))}
         </div>
-        <bnb-chart id="chart" type="${this.type}" .data="${this.data}" .model="${this.model}"></bnb-chart>
+        <bnb-chart id="chart" type="${this.type}" footer="${this.footer}" .data="${this.data}" .model="${this.model}"></bnb-chart>
       </div>
       ${this.renderDetails()}
     </bnb-card>
