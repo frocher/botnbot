@@ -40,13 +40,13 @@ class BnbPageStats extends connect(store)(LitElement) {
         name: 'first_byte', color: '#E65100', label: 'first byte', suffix: 'ms',
       },
       {
-        name: 'first_paint', color: '#F57C00', label: 'first paint', suffix: 'ms',
+        name: 'first_paint', color: '#F57C00', label: 'largest paint', suffix: 'ms',
       },
       {
         name: 'speed_index', color: '#FF9800', label: 'speed index',
       },
       {
-        name: 'interactive', color: '#FFB74D', label: 'interactive', suffix: 'ms',
+        name: 'interactive', color: '#FFB74D', label: 'total blocking time', suffix: 'ms',
       },
     ];
 
@@ -90,11 +90,11 @@ class BnbPageStats extends connect(store)(LitElement) {
   render() {
     return html`
     <bnb-period-bar></bnb-period-bar>
-    <bnb-chart-card id="lighthouseChart" name="Lighthouse scores" type="bar" .data="${this.stats?.lighthouse}" .model="${this.lighthouseModel}" hasDetails></bnb-chart-card>
+    <bnb-chart-card id="lighthouseChart" name="Lighthouse scores" type="area" footer="average" .data="${this.stats?.lighthouse}" .model="${this.lighthouseModel}" hasDetails></bnb-chart-card>
     <bnb-chart-card id="performanceChart" name="Performance" type="line" .data="${this.stats?.performance}" .model="${this.performanceModel}" hasDetails></bnb-chart-card>
     <bnb-chart-card id="uptimeChart" name="Uptime" type="line" .data="${this.stats?.uptime}" .model="${this.uptimeModel}" hasDetails></bnb-chart-card>
-    <bnb-chart-card id="requestsChart" name="Assets count" type="area" .data="${this.stats?.requests}" .model="${this.requestsModel}" hasDetails></bnb-chart-card>
-    <bnb-chart-card id="bytesChart" name="Assets size" type="area" .data="${this.stats?.bytes}" .model="${this.bytesModel}" hasDetails></bnb-chart-card>
+    <bnb-chart-card id="requestsChart" name="Assets count" type="area" footer="sum" .data="${this.stats?.requests}" .model="${this.requestsModel}" hasDetails></bnb-chart-card>
+    <bnb-chart-card id="bytesChart" name="Assets size" type="area" footer="sum" .data="${this.stats?.bytes}" .model="${this.bytesModel}" hasDetails></bnb-chart-card>
     `;
   }
 

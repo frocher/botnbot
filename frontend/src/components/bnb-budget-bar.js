@@ -129,7 +129,7 @@ class BnbBudgetBar extends LitElement {
   selectedItemChanged() {
     const data = [
       ['PWA', 'Performance', 'Accessibility', 'Best practices', 'SEO', 'Average'],
-      ['First byte', 'First paint', 'Speed index', 'Interactive'],
+      ['First byte', 'Largest paint', 'Speed index', 'Total blocking time'],
       ['HTML', 'CSS', 'Javascript', 'Image', 'Font', 'Other', 'Total'],
       ['HTML', 'CSS', 'Javascript', 'Image', 'Font', 'Other', 'Total'],
     ];

@@ -266,7 +266,7 @@ class BnbApp extends connect(store)(LitElement) {
             import('./bnb-members.js').then(cb);
             break;
           case 'page':
-            import('./bnb-page.js').then(cb);
+            import(/* webpackPrefetch: true */ './bnb-page.js').then(cb);
             break;
           case 'performance-details':
             import('./bnb-performance-details.js').then(cb);

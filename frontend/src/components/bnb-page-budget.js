@@ -129,7 +129,7 @@ class BnbPageBudget extends connect(store)(LitElement) {
   createBudgetName(category, item) {
     const data = [
       { name: 'Lighthouse', values: ['PWA', 'Performance', 'Accessibility', 'Best practices', 'SEO', 'Average'] },
-      { name: 'Performance', values: ['First byte', 'First paint', 'Speed index', 'Interactive'] },
+      { name: 'Performance', values: ['First byte', 'Largest paint', 'Speed index', 'Total blocking time'] },
       { name: 'Assets count', values: ['HTML', 'CSS', 'Javascript', 'Image', 'Font', 'Other', 'Total'] },
       { name: 'Assets size', values: ['HTML', 'CSS', 'Javascript', 'Image', 'Font', 'Other', 'Total'] },
     ];
