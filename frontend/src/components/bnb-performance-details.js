@@ -29,7 +29,7 @@ class BnbPerformanceDetails extends BnbPageDetails {
         }
 
         table tbody tr td:nth-child(3):before {
-          content: "first paint";
+          content: "largest paint";
         }
 
         table tbody tr td:nth-child(4):before {
@@ -37,7 +37,7 @@ class BnbPerformanceDetails extends BnbPageDetails {
         }
 
         table tbody tr td:nth-child(5):before {
-          content: "interactivity";
+          content: "total blocking time";
         }
         table tbody tr td:nth-child(6):before {
           content: "open report";
@@ -57,9 +57,9 @@ class BnbPerformanceDetails extends BnbPageDetails {
       <tr>
         <th>date</th>
         <th><abbr title="Time To First Byte">ttfb</abbr></th>
-        <th>first paint</th>
+        <th>largest paint</th>
         <th>speed index</th>
-        <th>interactivity</th>
+        <th><abbr title="Total Blocking Time">blocking time</abbr></th>
         <th></th>
       </tr>
     `;
@@ -70,9 +70,9 @@ class BnbPerformanceDetails extends BnbPageDetails {
       <tr>
         <td>${this.formatTime(item.time)}</td>
         <td>${this.formatNumber(item.ttfb)}</td>
-        <td>${this.formatNumber(item.first_meaningful_paint)}</td>
+        <td>${this.formatNumber(item.largest_contentful_paint)}</td>
         <td>${this.formatNumber(item.speed_index)}</td>
-        <td>${this.formatNumber(item.first_interactive)}</td>
+        <td>${this.formatNumber(item.total_blocking_time)}</td>
         <td>
           <a href="${this.computeUrl(item.time_key)}" title="Show HAR" target="_blank">
             <mwc-icon-button icon="visibility"></mwc-icon-button>

@@ -25,14 +25,29 @@ router.get('/', function (req, res, next) {
       const accessibility = Math.round(categories['accessibility']['score'] * 100);
       const bestPractices = Math.round(categories['best-practices']['score'] * 100);
       const seo = Math.round(categories['seo']['score'] * 100);
-      res.setHeader('X-Lighthouse-scores', `${pwa};${performance};${accessibility};${bestPractices};${seo}`);
+      const scores = {
+        pwa,
+        performance,
+        accessibility,
+        bestPractices,
+        seo,
+      };
+      res.setHeader('X-Lighthouse-scores', JSON.stringify(scores));
 
       const audits = results['lhr']['audits'];
       const ttfb = Math.round(audits['server-response-time']['numericValue']);
-      const firstMeaningfulPaint = Math.round(audits['first-meaningful-paint']['numericValue']);
-      const interactive = Math.round(audits['interactive']['numericValue']);
+      const lcp = Math.round(audits['largest-contentful-paint']['numericValue']);
+      const tbt = Math.round(audits['total-blocking-time']['numericValue']);
+      const cls = Math.round(audits['cumulative-layout-shift']['numericValue']);
       const speedIndex = Math.round(audits['speed-index']['numericValue']);
-      res.setHeader('X-Lighthouse-metrics', `${ttfb};${firstMeaningfulPaint};${interactive};${speedIndex}`);
+      const metrics = {
+        ttfb,
+        lcp,
+        tbt,
+        cls,
+        speedIndex,
+      };
+      res.setHeader('X-Lighthouse-metrics', JSON.stringify(metrics));
 
       delete results.lhr.artifacts;
 

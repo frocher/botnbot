@@ -40,13 +40,13 @@ class BnbPageStats extends connect(store)(LitElement) {
         name: 'first_byte', color: '#E65100', label: 'first byte', suffix: 'ms',
       },
       {
-        name: 'first_paint', color: '#F57C00', label: 'first paint', suffix: 'ms',
+        name: 'first_paint', color: '#F57C00', label: 'largest paint', suffix: 'ms',
       },
       {
         name: 'speed_index', color: '#FF9800', label: 'speed index',
       },
       {
-        name: 'interactive', color: '#FFB74D', label: 'interactive', suffix: 'ms',
+        name: 'interactive', color: '#FFB74D', label: 'total blocking time', suffix: 'ms',
       },
     ];
 

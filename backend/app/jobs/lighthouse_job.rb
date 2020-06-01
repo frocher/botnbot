@@ -58,18 +58,18 @@ class LighthouseJob < StatisticsJob
     metric = LighthouseMetrics.new page_id: page.id, probe: probe["name"]
     metric.time_key = generate_time_key
 
-    values = scores.split(";").map(&:to_f)
-    metric.pwa            = values[0]
-    metric.performance    = values[1]
-    metric.accessibility  = values[2]
-    metric.best_practices = values[3]
-    metric.seo            = values[4]
+    values = JSON.parse(scores)
+    metric.pwa            = values["pwa"]
+    metric.performance    = values["performance"]
+    metric.accessibility  = values["accessibility"]
+    metric.best_practices = values["bestPractices"]
+    metric.seo            = values["seo"]
 
-    values = metrics.split(";").map(&:to_f)
-    metric.ttfb                   = values[0]
-    metric.first_meaningful_paint = values[1]
-    metric.first_interactive      = values[2]
-    metric.speed_index            = values[3]
+    values = JSON.parse(metrics)
+    metric.ttfb                     = values["ttfb"]
+    metric.largest_contentful_paint = values["lcp"]
+    metric.total_blocking_time      = values["tbt"]
+    metric.speed_index              = values["speedIndex"]
 
     metric.write!
   end

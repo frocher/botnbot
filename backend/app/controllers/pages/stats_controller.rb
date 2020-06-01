@@ -54,8 +54,8 @@ class Pages::StatsController < ApplicationController
 
   def read_performance_summary(page, start_date, end_date)
     select_value = "mean(ttfb) as ttfb," \
-                   "mean(first_meaningful_paint) as first_meaningful_paint," \
-                   "mean(first_interactive) as first_interactive," \
+                   "mean(largest_contentful_paint) as largest_contentful_paint," \
+                   "mean(total_blocking_time) as total_blocking_time," \
                    "mean(speed_index) as speed_index"
     data = LighthouseMetrics.select(select_value).by_page(page.id).where(time: start_date..end_date)
     data.to_a
@@ -63,8 +63,8 @@ class Pages::StatsController < ApplicationController
 
   def read_performance_points(page, start_date, end_date)
     select_value = "mean(ttfb) as ttfb," \
-                   "mean(first_meaningful_paint) as first_meaningful_paint," \
-                   "mean(first_interactive) as first_interactive," \
+                   "mean(largest_contentful_paint) as largest_contentful_paint," \
+                   "mean(total_blocking_time) as total_blocking_time," \
                    "mean(speed_index) as speed_index"
 
     nb_days = (end_date - start_date).to_i / 86400
@@ -167,15 +167,15 @@ class Pages::StatsController < ApplicationController
     data = read_performance_summary(page, start_date, end_date)
     if data.length > 0
       result[0]["summary"] = data[0]["ttfb"]
-      result[1]["summary"] = data[0]["first_meaningful_paint"]
+      result[1]["summary"] = data[0]["largest_contentful_paint"]
       result[2]["summary"] = data[0]["speed_index"]
-      result[3]["summary"] = data[0]["first_interactive"]
+      result[3]["summary"] = data[0]["total_blocking_time"]
       points = read_performance_points(page, start_date, end_date)
       points.each do |point|
         result[0]["values"].push({"time" => point["time"], "value" => point["ttfb"]})
-        result[1]["values"].push({"time" => point["time"], "value" => point["first_meaningful_paint"]})
+        result[1]["values"].push({"time" => point["time"], "value" => point["largest_contentful_paint"]})
         result[2]["values"].push({"time" => point["time"], "value" => point["speed_index"]})
-        result[3]["values"].push({"time" => point["time"], "value" => point["first_interactive"]})
+        result[3]["values"].push({"time" => point["time"], "value" => point["total_blocking_time"]})
       end
     end
     result
