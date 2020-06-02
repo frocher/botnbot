@@ -1,5 +1,11 @@
 # Botnbot Frontend
 
+The botnbot Frontend is a [frameworkless](http://frameworklessmovement.org/) PWA written with :
+- [LitElement](https://lit-element.polymer-project.org/) webcomponents
+- [Redux](https://redux.js.org/) for state management
+- [Navigo](https://github.com/krasimir/navigo) as a simple vanilla router
+- and other JS libraries...
+
 ## Usage
 
 ### Dependencies
