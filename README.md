@@ -1,12 +1,13 @@
-# Botnbot
+<p align="center"><img src="https://my.botnbot.com/images/icon-128x128.png" alt="Botnbot logo" width="128" height="128">
+</p>
 
-## Summary
+# Welcome to Botnbot 
 
-Botnbot is an uptime and front-end performance monitoring tool.
+> Botnbot is an uptime and front-end performance monitoring tool.
 For more information about its features, visit [https://www.botnbot.com](https://www.botnbot.com).
 
-The Botnbot application contains 3 components :
-* [The front end](frontend/README.md) : the Single Page Application written with [Polymer](https://www.polymer-project.org/) components.
+The Botnbot application is divided in 3 components :
+* [The front end](frontend/README.md) : the Single Page Application written with [LitElement](https://lit-element.polymer-project.org/) webcomponents.
 * [The backend](backend/README.md) : the API and the core of the application.
 * [The probes](probe/README.md) : you can use as many probes as you want to measure your pages performance.
 
@@ -33,3 +34,6 @@ Once launched, you can create a new account:
 Each component uses environment variables for configuration. Default values are defined directly in the *docker-compose.yml* file. You can replace them with your own values by creating a [env](https://docs.docker.com/compose/env-file/) in the directory where the *docker-compose* command is executed.
 
 
+## License
+
+This project is [Apache License 2.0](https://github.com/frocher/botnbot/blob/master/LICENSE) licensed.
