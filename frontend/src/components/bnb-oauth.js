@@ -167,9 +167,9 @@ class BnbOAuth extends LitElement {
   }
 
   firstUpdated() {
-    this.shadowRoot.getElementById('facebook').addEventListener('tap', () => this.facebookTapped());
-    this.shadowRoot.getElementById('github').addEventListener('tap', () => this.githubTapped());
-    this.shadowRoot.getElementById('google').addEventListener('tap', () => this.googleTapped());
+    this.shadowRoot.getElementById('facebook').addEventListener('click', () => this.facebookTapped());
+    this.shadowRoot.getElementById('github').addEventListener('click', () => this.githubTapped());
+    this.shadowRoot.getElementById('google').addEventListener('click', () => this.googleTapped());
   }
 
   facebookTapped() {
