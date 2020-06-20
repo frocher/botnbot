@@ -23,7 +23,7 @@ class BnbSignUp extends connect(store)(BnbFormElement(LitElement)) {
 
   render() {
     return html`
-      <bnb-auth-form id="signup-form" name="signup" title="Sign up" .buttons="${this.signupButtons}">
+      <bnb-auth-form id="signup-form" name="signup" title="Sign up for Botnbot" .buttons="${this.signupButtons}">
 
         <mwc-textfield id="name" label="Full name" type="text" outlined value="${this.fullname}">
         </mwc-textfield>

@@ -13,6 +13,9 @@ class BnbOAuth extends LitElement {
         --mdc-typography-button-text-transform: none;
       }
 
+      .buttons {
+        margin-bottom: 24px;
+      }
 
       .icon {
         width: 24px;
@@ -24,19 +27,6 @@ class BnbOAuth extends LitElement {
       .buttons {
         display: flex;
         justify-content: space-around;
-      }
-
-      .title {
-        display: flex;
-        flex-direction: column;
-        margin-bottom: 16px;
-      }
-
-      .title span {
-        padding-left: 16px;
-        padding-right: 16px;
-        color: var(--mdc-theme-on-surface);
-        text-align: center;
       }
 
       #facebook {
@@ -72,11 +62,6 @@ class BnbOAuth extends LitElement {
   render() {
     return html`
     <div>
-      <div class="title">
-        <bnb-divider></bnb-divider>
-        <span>or log in using</span>
-        <bnb-divider></bnb-divider>
-      </div>
       <div class="buttons">
         <mwc-button unelevated id="facebook">
           <span name="icon">${this.facebookIcon}</span>
