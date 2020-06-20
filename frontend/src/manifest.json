@@ -30,8 +30,8 @@
     "type": "image/png"
     },
     {
-    "src": "images/chrome-touch-icon-192x192.png",
-    "sizes": "192x192",
+    "src": "images/icon-213x213.png",
+    "sizes": "213x213",
     "type": "image/png",
     "purpose": "any maskable"
     },
