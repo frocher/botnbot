@@ -139,7 +139,7 @@ const plugins = sharedPlugins.concat(IS_DEV_SERVER ? devPlugins : buildPlugins);
 
 module.exports = {
   mode: ENV,
-  entry: './src/components/bnb-app.js',
+  entry: './src/app-entry.js',
   output: {
     path: OUTPUT_PATH,
     filename: '[name].[hash].bundle.js',
