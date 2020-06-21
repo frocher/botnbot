@@ -3,24 +3,30 @@ require 'chronic_duration'
 #
 # Table name: pages
 #
-#  id                      :bigint(8)        not null, primary key
+#  id                      :bigint           not null, primary key
+#  device                  :integer          default("mobile")
+#  locked                  :boolean          default(FALSE)
+#  mail_notify             :boolean          default(TRUE)
 #  name                    :string(255)
+#  push_notify             :boolean          default(TRUE)
+#  screenshot_content_type :string(255)
+#  screenshot_file_name    :string(255)
+#  screenshot_file_size    :integer
+#  screenshot_updated_at   :datetime
+#  slack_channel           :string(255)
+#  slack_notify            :boolean          default(FALSE)
+#  slack_webhook           :string(255)
+#  uptime_keyword          :string(255)
+#  uptime_keyword_type     :string(255)
+#  uptime_status           :integer          default(0)
 #  url                     :string(255)
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
-#  screenshot_file_name    :string(255)
-#  screenshot_content_type :string(255)
-#  screenshot_file_size    :integer
-#  screenshot_updated_at   :datetime
-#  uptime_keyword          :string(255)
-#  uptime_keyword_type     :string(255)
-#  slack_webhook           :string(255)
-#  slack_channel           :string(255)
-#  mail_notify             :boolean          default(TRUE)
-#  slack_notify            :boolean          default(FALSE)
-#  uptime_status           :integer          default(0)
-#  push_notify             :boolean          default(TRUE)
-#  device                  :integer          default("mobile")
+#  owner_id                :integer          not null
+#
+# Indexes
+#
+#  index_pages_on_owner_id  (owner_id)
 #
 
 class Page < ActiveRecord::Base

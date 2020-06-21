@@ -2,12 +2,18 @@
 #
 # Table name: page_members
 #
-#  id         :bigint(8)        not null, primary key
-#  user_id    :integer          not null
-#  page_id    :integer          not null
+#  id         :bigint           not null, primary key
 #  role       :integer          default("guest"), not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  page_id    :integer          not null
+#  user_id    :integer          not null
+#
+# Indexes
+#
+#  index_page_members_on_page_id              (page_id)
+#  index_page_members_on_user_id              (user_id)
+#  index_page_members_on_user_id_and_page_id  (user_id,page_id) UNIQUE
 #
 
 class PageMember < ActiveRecord::Base
