@@ -46,25 +46,6 @@
   </head>
   <body>
     <bnb-app unresolved>BOTNBOT</bnb-app>
-
-    <script>
-      // Register service worker if supported.
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-          navigator.serviceWorker.register('/service-worker.js');
-        });
-      }
-
-      // HACK(keanulee): The Redux package assumes `process` exists - mock it here before
-      // the module is loaded.
-      window.process = {
-        env: {
-          NODE_ENV: 'production'
-        }
-      };
-    </script>
-
-
     <script src="<%= htmlWebpackPlugin.options.paths.webcomponents %>"></script>
     <script src="<%= htmlWebpackPlugin.options.paths.webanimations %>" defer></script>
     <script src="<%= htmlWebpackPlugin.options.paths.chartjs %>" defer></script>

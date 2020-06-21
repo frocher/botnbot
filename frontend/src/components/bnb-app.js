@@ -93,6 +93,10 @@ class BnbApp extends connect(store)(LitElement) {
     <bnb-404-warning         class=${classMap(this.renderClass('404-warning'))}></bnb-404-warning>
 
     <mwc-snackbar id="messageSnack"></mwc-snackbar>
+    <mwc-snackbar id="reloadSnack" labelText="Application has been updated" timeoutMs="-1">
+      <mwc-button slot="action" @click="${this.reloadClosed}">RELOAD</mwc-button>
+      <mwc-icon-button icon="close" slot="dismiss"></mwc-icon-button>
+    </mwc-snackbar>
     `;
   }
 
@@ -183,6 +187,15 @@ class BnbApp extends connect(store)(LitElement) {
     this.router.resolve();
   }
 
+  showReloadSnack(params) {
+    this.reloadParams = params;
+    this.shadowRoot.getElementById('reloadSnack').show();
+  }
+
+  reloadClosed() {
+    this.reloadParams.onAccept();
+  }
+
   updateView(view) {
     if (this.view !== view) {
       // Check if we find credentials in parameters (used for omniauth)
@@ -222,7 +235,7 @@ class BnbApp extends connect(store)(LitElement) {
       store.dispatch(showInstallPrompt(e));
     });
 
-
+    this.shadowRoot.getElementById('reloadSnack').addEventListener('closed', (e) => this.reloadClosed(e.detail.reason));
     window.addEventListener('online', (e) => this.notifyNetworkStatus(e));
     window.addEventListener('offline', (e) => this.notifyNetworkStatus(e));
   }

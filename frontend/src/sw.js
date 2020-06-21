@@ -1,11 +1,37 @@
 /* eslint no-restricted-globals: ["off", "self"] */
-import { clientsClaim, skipWaiting } from 'workbox-core';
 import { precacheAndRoute } from 'workbox-precaching';
 import { registerRoute } from 'workbox-routing';
-import { NetworkFirst, NetworkOnly, StaleWhileRevalidate } from 'workbox-strategies';
+import {
+  CacheFirst, NetworkFirst, NetworkOnly, StaleWhileRevalidate,
+} from 'workbox-strategies';
+import { CacheableResponsePlugin } from 'workbox-cacheable-response';
+import { ExpirationPlugin } from 'workbox-expiration';
 
-skipWaiting();
-clientsClaim();
+
+// Cache the Google Fonts stylesheets with a stale-while-revalidate strategy.
+registerRoute(
+  ({ url }) => url.origin === 'https://fonts.googleapis.com',
+  new StaleWhileRevalidate({
+    cacheName: 'google-fonts-stylesheets',
+  }),
+);
+
+// Cache the underlying font files with a cache-first strategy for 1 year.
+registerRoute(
+  ({ url }) => url.origin === 'https://fonts.gstatic.com',
+  new CacheFirst({
+    cacheName: 'google-fonts-webfonts',
+    plugins: [
+      new CacheableResponsePlugin({
+        statuses: [0, 200],
+      }),
+      new ExpirationPlugin({
+        maxAgeSeconds: 60 * 60 * 24 * 365,
+        maxEntries: 30,
+      }),
+    ],
+  }),
+);
 
 registerRoute(
   /.*\.js/,
@@ -33,6 +59,12 @@ registerRoute(
   new NetworkOnly(),
 );
 
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+});
+
 function handlePushEvent(event) {
   return Promise.resolve()
     .then(() => event.data.json())
@@ -41,6 +73,7 @@ function handlePushEvent(event) {
       if (!options.icon) {
         options.icon = '/images/icon-512x512.png';
       }
+      // eslint-disable-next-line no-undef
       return registration.showNotification(data.title, options);
     })
     .catch(() => {
@@ -49,6 +82,7 @@ function handlePushEvent(event) {
         body: event.data.text(),
         icon: '/images/icon-512x512.png',
       };
+      // eslint-disable-next-line no-undef
       return registration.showNotification(title, options);
     });
 }
@@ -60,6 +94,7 @@ self.addEventListener('push', (event) => {
 self.addEventListener('notificationclick', (e) => {
   const { notification, action } = e;
   if (action !== 'close' && notification.data && notification.data.url) {
+    // eslint-disable-next-line no-undef
     clients.openWindow(notification.data.url);
   }
   notification.close();

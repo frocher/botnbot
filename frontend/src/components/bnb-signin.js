@@ -22,7 +22,9 @@ class BnbSignIn extends connect(store)(LitElement) {
 
   render() {
     return html`
-    <bnb-auth-form id="signinForm" name="signin" title="Sign in" .buttons="${this.signinButtons}">
+    <bnb-auth-form id="signinForm" name="signin" title="Welcome to Botnbot" .buttons="${this.signinButtons}">
+
+      <bnb-oauth></bnb-oauth>
 
       <mwc-textfield id="email" label="E-mail" type="email" outlined value="${this.email}">
       </mwc-textfield>
@@ -34,7 +36,7 @@ class BnbSignIn extends connect(store)(LitElement) {
         <mwc-button id="signinBtn">Log in</mwc-button>
       </div>
 
-      <bnb-oauth></bnb-oauth>
+
 
     </bnb-auth-form>
     `;

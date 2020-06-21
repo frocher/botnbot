@@ -31,6 +31,21 @@ class BnbSubscriptions extends connect(store)(LitElement) {
         padding-bottom: 0;
       }
 
+      .dollar {
+        font-size: 0.6em;
+        vertical-align: top;
+        position: relative;
+        line-height: 2em;
+      }
+
+      .currency {
+        font-size: 0.5em;
+        position: absolute;
+        bottom: -2.4em;
+        right: -0.35em;
+        font-weight: normal;
+      }
+
       .plans {
         display: grid;
         grid-template-columns: 25% 25% 25% 25%;
@@ -42,7 +57,7 @@ class BnbSubscriptions extends connect(store)(LitElement) {
       }
 
       .card-price {
-        font-size: 20px;
+        font-size: 22px;
       }
 
       .card-label {
@@ -118,7 +133,9 @@ class BnbSubscriptions extends connect(store)(LitElement) {
     <bnb-card>
       <div class="card-content">
         <div class="card-header">${item.name}</div>
-        <div class="card-price">${item.amount} per month</div>
+        <div class="card-price">
+          <span class="dollar">$<span class="currency">USD</span></span>
+          ${item.amount} per month</div>
         <ul>
           <li>
             <span class="card-label">Pages</span>
