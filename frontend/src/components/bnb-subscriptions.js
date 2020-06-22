@@ -3,7 +3,8 @@ import '@material/mwc-button/mwc-button';
 import '@material/mwc-dialog';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
-import { stripeCheckout, updateStripeSubscription, deleteStripeSubscription } from '../actions/account';
+import { updateStripeSubscription, deleteStripeSubscription } from '../actions/account';
+import { stripeCheckout } from '../actions/stripe';
 import { styles } from './bnb-styles';
 import './bnb-card';
 
