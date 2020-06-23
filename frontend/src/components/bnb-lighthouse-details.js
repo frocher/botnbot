@@ -81,7 +81,7 @@ class BnbLighthouseDetails extends BnbPageDetails {
         <td>${this.formatNumber(item.best_practices)}</td>
         <td>${this.formatNumber(item.seo)}</td>
         <td>
-          <a href="${this.computeUrl(item.time_key)}" title="Show HAR" target="_blank">
+          <a href="${this.computeUrl(item.time_key)}" title="Show lighthouse report" target="_blank">
             <mwc-icon-button icon="visibility"></mwc-icon-button>
           </a>
       </tr>
