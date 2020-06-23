@@ -3,9 +3,6 @@ import { addDays } from 'date-fns/esm';
 
 // Initial state
 const initial = {
-  // Google analytics jey
-  analyticsKey: null,
-
   // Push notification key
   pushKey: null,
 
@@ -70,7 +67,6 @@ const appReducer = (state = initial, action) => {
     case 'ENVIRONMENT_FETCH_SUCCESS':
       return {
         ...state,
-        analyticsKey: action.payload.analyticsKey,
         pushKey: action.payload.pushKey,
         stripeKey: action.payload.stripeKey,
       };

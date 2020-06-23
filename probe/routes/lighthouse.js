@@ -4,6 +4,11 @@ const chromeLauncher = require('chrome-launcher');
 const lighthouse = require('lighthouse');
 const ReportGenerator = require('lighthouse/lighthouse-core/report/report-generator.js');
 
+const LR_PRESETS = {
+  mobile: require('lighthouse/lighthouse-core/config/lr-mobile-config.js'),
+  desktop: require('lighthouse/lighthouse-core/config/lr-desktop-config.js'),
+};
+
 function launchChromeAndRunLighthouse(url, flags = {}, config = null) {
   return chromeLauncher.launch({chromeFlags: ['--disable-gpu', '--headless']}).then(chrome => {
     flags.port = chrome.port;
@@ -15,8 +20,9 @@ function launchChromeAndRunLighthouse(url, flags = {}, config = null) {
 router.get('/', function (req, res, next) {
   const flags = {};
   flags.emulatedFormFactor = req.query.emulation || 'mobile';
+  const config = flags.emulatedFormFactor === 'desktop' ? LR_PRESETS.desktop : LR_PRESETS.mobile;
 
-  launchChromeAndRunLighthouse(req.query.url, flags)
+  launchChromeAndRunLighthouse(req.query.url, flags, config)
     .then(results => {
 
       const categories = results['lhr']['categories'];

@@ -7,9 +7,6 @@ SECRET_TOKEN: <Rails needs a secret token>
 # Here is an example with one probe running on localhost
 probes: '[{ "name": "mylocalhost", "host":"localhost", "port":3333, "token": "my probe token" }]'
 
-# You can add a google analytics key if you want user tracking
-#GOOGLE_ANALYTICS_KEY: "UA-something"
-
 # Omniauth keys and secrets
 FACEBOOK_KEY: <Your facebook key>
 FACEBOOK_SECRET: <Your facebook secret>

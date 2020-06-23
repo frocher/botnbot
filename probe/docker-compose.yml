@@ -2,7 +2,7 @@ version: "3"
 services:
   probe:
     build: .
-    container_name: botnbot_probe
+    container_name: botnbot_simple_probe
     cap_add:
       - ALL
     shm_size: 1G

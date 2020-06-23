@@ -58,11 +58,10 @@ An application.yml.sample file is included in the config directory.
 | PROBES | '[{ "name":"localhost", "host":"localhost", "port":3333}]' | array of probes defined as a json string |
 | SECRET_TOKEN | none | Rails needs a secret token |
 
-### External services and mail configuration
+### Mail configuration
 
 | Name    | Default Value | Description  |
 | --------|:---------:| -----|
-| GOOGLE_ANALYTICS_KEY | none | if you want to track usage statistics |
 | MAILER_SENDER | jeeves.thebot@botnbot.com | Mail sender |
 
 ### MySQL Configuration

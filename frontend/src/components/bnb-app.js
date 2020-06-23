@@ -15,7 +15,6 @@ import {
 } from '../actions/stats';
 import { loadStripeSubscription, loadUser } from '../actions/account';
 import { isLogged, storeCredentials, getFullPath } from '../common';
-import './bnb-analytics';
 import './bnb-home';
 import './bnb-signin';
 import { styles } from './bnb-styles';
@@ -24,7 +23,6 @@ import { styles } from './bnb-styles';
 class BnbApp extends connect(store)(LitElement) {
   static get properties() {
     return {
-      analyticsKey: { type: String },
       message: { type: Object },
       offline: { type: Boolean },
       params: { type: Object },
@@ -73,8 +71,6 @@ class BnbApp extends connect(store)(LitElement) {
 
   render() {
     return html`
-    <bnb-analytics id="analytics" key="${this.analyticsKey}"></bnb-analytics>
-
     <bnb-add-page            class=${classMap(this.renderClass('add-page'))}></bnb-add-page>
     <bnb-account             class=${classMap(this.renderClass('account'))}></bnb-account>
     <bnb-bytes-details       class=${classMap(this.renderClass('bytes-details'))}></bnb-bytes-details>
@@ -105,7 +101,6 @@ class BnbApp extends connect(store)(LitElement) {
   }
 
   stateChanged(state) {
-    this.analyticsKey = state.app.analyticsKey;
     if (this.route !== state.app.route) {
       this.scrollPositions.set(this.route, window.scrollY);
       this.route = state.app.route;
@@ -311,8 +306,6 @@ class BnbApp extends connect(store)(LitElement) {
   }
 
   viewLoaded() {
-    this.sendAnalytics(this.route);
-
     if (isLogged()) {
       this.loadCurrentViewData();
     }
@@ -345,15 +338,6 @@ class BnbApp extends connect(store)(LitElement) {
     } else if (this.view === 'requests-details' || this.view === 'bytes-details') {
       store.dispatch(loadPage(this.pageId));
       store.dispatch(loadAssetsDetails(this.pageId, this.period));
-    }
-  }
-
-  sendAnalytics(route) {
-    if (this.shadowRoot) {
-      const analytics = this.shadowRoot.getElementById('analytics');
-      if (analytics) {
-        analytics.sendPath(route);
-      }
     }
   }
 

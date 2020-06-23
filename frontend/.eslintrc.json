@@ -11,7 +11,6 @@
       "default-case": "off"
     },
     "globals": {
-      "ga": true,
       "Chart": true,
       "Color": true
     }
