@@ -6,7 +6,6 @@ import './bnb-chart-card';
 import './bnb-period-bar';
 import { styles } from './bnb-styles';
 
-
 class BnbPageStats extends connect(store)(LitElement) {
   static get properties() {
     return {
@@ -67,22 +66,22 @@ class BnbPageStats extends connect(store)(LitElement) {
 
     this.bytesModel = [
       {
-        name: 'html', color: '#880E4F', label: 'html', suffix: 'kb',
+        name: 'html', color: '#880E4F', label: 'html', suffix: 'KiB',
       },
       {
-        name: 'css', color: '#C2185B', label: 'css', suffix: 'kb',
+        name: 'css', color: '#C2185B', label: 'css', suffix: 'KiB',
       },
       {
-        name: 'js', color: '#D81B60', label: 'javascript', suffix: 'kb',
+        name: 'js', color: '#D81B60', label: 'javascript', suffix: 'KiB',
       },
       {
-        name: 'image', color: '#EC407A', label: 'image', suffix: 'kb',
+        name: 'image', color: '#EC407A', label: 'image', suffix: 'KiB',
       },
       {
-        name: 'font', color: '#F48FB1', label: 'font', suffix: 'kb',
+        name: 'font', color: '#F48FB1', label: 'font', suffix: 'KiB',
       },
       {
-        name: 'other', color: '#F8BBD0', label: 'other', suffix: 'kb',
+        name: 'other', color: '#F8BBD0', label: 'other', suffix: 'KiB',
       },
     ];
   }
