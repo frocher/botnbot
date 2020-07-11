@@ -6,9 +6,9 @@ const { resolve, join } = require('path');
 const webpack = require('webpack');
 const { InjectManifest } = require('workbox-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const HtmlWebpackExcludeAssetsPlugin = require('html-webpack-exclude-assets-plugin');
+const HtmlWebpackTagsPlugin = require('html-webpack-tags-plugin');
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 
 const pkg = require('./package.json');
@@ -88,7 +88,7 @@ const copyStatics = {
 const renderHtmlPlugins = () => [
   new HtmlWebpackPlugin({
     filename: resolve(OUTPUT_PATH, 'index.html'),
-    template: `!!ejs-loader!${resolve('./src/index.html')}`,
+    template: resolve('./src/index.html'),
     minify: ENV === 'production' && {
       collapseWhitespace: true,
       removeScriptTypeAttributes: true,
@@ -98,15 +98,16 @@ const renderHtmlPlugins = () => [
     },
     inject: true,
     compile: true,
-    excludeAssets: [/(bundle|polyfills)(\..*)?\.js$/],
-    paths: {
-      webcomponents: './vendor/webcomponents-loader.js',
-      webanimations: './vendor/web-animations-next.min.js',
-      chartjs: './vendor/Chart.bundle.min.js',
-      chartjsannotation: './vendor/chartjs-plugin-annotation.min.js',
-    },
   }),
-  new HtmlWebpackExcludeAssetsPlugin(),
+  new HtmlWebpackTagsPlugin({
+    tags: [
+      './vendor/webcomponents-loader.js',
+      './vendor/web-animations-next.min.js',
+      './vendor/Chart.bundle.min.js',
+      './vendor/chartjs-plugin-annotation.min.js',
+    ],
+    append: true,
+  }),
   new ScriptExtHtmlWebpackPlugin({
     defaultAttribute: 'defer',
   }),
@@ -116,11 +117,13 @@ const sharedPlugins = [
   new webpack.DefinePlugin({ 'process.env': processEnv }),
   ...renderHtmlPlugins(),
 ];
-const devPlugins = [new CopyWebpackPlugin(copyStatics.copyWebcomponents)];
+
+const devPlugins = [new CopyWebpackPlugin({ patterns: copyStatics.copyWebcomponents })];
+
 const buildPlugins = [
-  new CopyWebpackPlugin(
-    [].concat(copyStatics.copyWebcomponents, copyStatics.copyOthers),
-  ),
+  new CopyWebpackPlugin({
+    patterns: [].concat(copyStatics.copyWebcomponents, copyStatics.copyOthers),
+  }),
   new InjectManifest({
     swSrc: './src/sw.js',
     swDest: join(OUTPUT_PATH, 'service-worker.js'),
@@ -132,14 +135,14 @@ const buildPlugins = [
       /sw\.js$/,
     ],
   }),
-  new CleanWebpackPlugin([OUTPUT_PATH], { verbose: true }),
+  new CleanWebpackPlugin(),
 ];
 
 const plugins = sharedPlugins.concat(IS_DEV_SERVER ? devPlugins : buildPlugins);
 
 module.exports = {
   mode: ENV,
-  entry: './src/app-entry.js',
+  entry: './src/index.js',
   output: {
     path: OUTPUT_PATH,
     filename: '[name].[hash].bundle.js',
@@ -147,14 +150,7 @@ module.exports = {
   devtool: 'source-map',
   module: {
     rules: [
-      {
-        test: /\.html$/,
-        use: ['text-loader'],
-      },
-      {
-        test: /\.pcss$/,
-        use: ['text-loader', 'postcss-loader'],
-      },
+      { test: /\.html$/, use: ['html-loader'] },
       {
         test: /\.js$/,
         // We need to transpile Polymer itself and other ES6 code

@@ -16,21 +16,21 @@
   },
   "dependencies": {
     "chrome-har-capturer": "^0.13.7",
-    "chrome-launcher": "^0.13.2",
+    "chrome-launcher": "^0.13.4",
     "compression": "^1.7.4",
-    "debug": "^3.2.6",
-    "dotenv": "^4.0.0",
+    "debug": "^4.1.1",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "lighthouse": "6.0.0",
+    "lighthouse": "6.1.1",
     "morgan": "^1.10.0",
-    "puppeteer": "^2.1.1",
-    "superagent": "^5.2.2"
+    "puppeteer": "^4.0.1",
+    "superagent": "^5.3.1"
   },
   "devDependencies": {
-    "eslint": "^6.8.0",
+    "eslint": "^7.3.1",
     "eslint-config-standard": "^14.1.1",
-    "eslint-plugin-import": "^2.20.2",
-    "eslint-plugin-node": "^10.0.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1"
   }
