@@ -15,13 +15,13 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
-    "chrome-har-capturer": "^0.13.7",
+    "chrome-har-capturer": "^0.13.8",
     "chrome-launcher": "^0.13.4",
     "compression": "^1.7.4",
-    "debug": "^4.1.1",
+    "debug": "^4.2.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "lighthouse": "6.1.1",
+    "lighthouse": "^6.3.0",
     "morgan": "^1.10.0",
     "puppeteer": "^4.0.1",
     "superagent": "^5.3.1"
