@@ -1,4 +1,4 @@
-FROM debian:stretch-slim
+FROM debian:buster-slim
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV INITRD No
@@ -16,7 +16,7 @@ RUN set -ex; \
     libssl-dev \
     libreadline-dev \
     libmariadbclient-dev \
-    mysql-client \
+    mariadb-client \
     libyaml-dev \
     libxml2-dev \
     libxslt1-dev \
@@ -48,15 +48,15 @@ RUN git clone https://github.com/sstephenson/ruby-build.git /usr/local/rbenv/plu
 ENV RBENV_ROOT /usr/local/rbenv
 ENV PATH $RBENV_ROOT/bin:$RBENV_ROOT/shims:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
-RUN rbenv install -v 2.7.0
-RUN rbenv global 2.7.0
+RUN rbenv install -v 2.7.2
+RUN rbenv global 2.7.2
 
 RUN ruby -v
 RUN echo "gem: --no-document" > ~/.gemrc
 RUN gem install bundler
 
 ### Install node
-RUN curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash - &&\
+RUN curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash - &&\
 sudo apt-get install -y nodejs
 
 # for paperclip image manipulation

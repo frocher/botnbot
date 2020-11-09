@@ -13,7 +13,7 @@ const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 
 const pkg = require('./package.json');
 
-const ENV = process.argv.find((arg) => arg.includes('NODE_ENV=production')) ? 'production' : 'development';
+const ENV = process.argv.mode;
 const IS_DEV_SERVER = process.argv.find((arg) => arg.includes('webpack-dev-server'));
 const OUTPUT_PATH = IS_DEV_SERVER ? resolve('src') : resolve('dist');
 
@@ -145,7 +145,7 @@ module.exports = {
   entry: './src/index.js',
   output: {
     path: OUTPUT_PATH,
-    filename: '[name].[hash].bundle.js',
+    filename: '[name].[fullhash].bundle.js',
   },
   devtool: 'source-map',
   module: {
