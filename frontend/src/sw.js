@@ -7,7 +7,6 @@ import {
 import { CacheableResponsePlugin } from 'workbox-cacheable-response';
 import { ExpirationPlugin } from 'workbox-expiration';
 
-
 // Cache the Google Fonts stylesheets with a stale-while-revalidate strategy.
 registerRoute(
   ({ url }) => url.origin === 'https://fonts.googleapis.com',

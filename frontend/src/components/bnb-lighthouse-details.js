@@ -97,7 +97,6 @@ class BnbLighthouseDetails extends BnbPageDetails {
     }
   }
 
-
   computeUrl(key) {
     if (key) {
       return getRequestUrl(`pages/${this.page.id}/lighthouse/${key}#performance`);

@@ -1,4 +1,3 @@
-
 import { addDays } from 'date-fns/esm';
 
 // Initial state
@@ -27,7 +26,6 @@ const initial = {
   // Selected period
   period: { start: addDays(new Date(), -30).getTime(), end: new Date().getTime() },
 };
-
 
 const appReducer = (state = initial, action) => {
   // Process specific error returned by devise

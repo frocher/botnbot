@@ -42,7 +42,6 @@ export function fetchCredentials() {
   return undefined;
 }
 
-
 /**
   * Store credentials in session storage.
   */
@@ -75,7 +74,6 @@ export function getRequestUrl(url, params) {
 export function isLogged() {
   return fetchCredentials();
 }
-
 
 /**
   * Perform a XMLHttpRequest

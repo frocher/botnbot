@@ -1,6 +1,5 @@
 import { LitElement, css, html } from 'lit-element';
 
-
 class BnbCard extends LitElement {
   static get styles() {
     return css`

@@ -1,4 +1,3 @@
-
 // Initial state
 const initial = {
   // Loaded pages
@@ -7,7 +6,6 @@ const initial = {
   // Current page
   current: undefined,
 };
-
 
 const pagesReducer = (state = initial, action) => {
   switch (action.type) {

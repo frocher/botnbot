@@ -7,7 +7,6 @@ import { updateRoute } from '../actions/app';
 import './bnb-card';
 import { styles } from './bnb-styles';
 
-
 class BnbPageLockedCard extends connect(store)(LitElement) {
   static get properties() {
     return {

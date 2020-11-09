@@ -36,7 +36,6 @@ const _updateBytes = (data) => {
   }
 };
 
-
 export const loadPageStats = (pageId, period) => async (dispatch) => {
   dispatch(fetchPageStatsStart());
 

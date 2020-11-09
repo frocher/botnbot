@@ -1,10 +1,8 @@
-
 // Initial state
 const initial = {
   user: undefined,
   stripeSubscription: undefined,
 };
-
 
 const accountReducer = (state = initial, action) => {
   switch (action.type) {

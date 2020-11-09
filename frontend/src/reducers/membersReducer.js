@@ -1,4 +1,3 @@
-
 // Initial state
 const initial = {
   all: [],

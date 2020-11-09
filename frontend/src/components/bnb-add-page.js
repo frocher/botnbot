@@ -14,7 +14,6 @@ import { BnbFormElement } from './bnb-form-element';
 import './bnb-card';
 import { styles } from './bnb-styles';
 
-
 class BnbAddPage extends connect(store)(BnbFormElement(LitElement)) {
   static get properties() {
     return {
