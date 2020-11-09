@@ -1,5 +1,5 @@
 import { LitElement, css, html } from 'lit-element';
-import 'wc-epic-spinners/dist/FulfillingBouncingCircleSpinner';
+import 'wc-spinners/dist/fulfilling-bouncing-circle-spinner';
 import { isEqual } from 'lodash-es';
 import { styles } from './bnb-styles';
 

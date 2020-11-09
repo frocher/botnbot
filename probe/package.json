@@ -21,17 +21,17 @@
     "debug": "^4.2.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "lighthouse": "^6.3.0",
+    "lighthouse": "^6.4.1",
     "morgan": "^1.10.0",
-    "puppeteer": "^4.0.1",
-    "superagent": "^5.3.1"
+    "puppeteer": "^5.4.1",
+    "superagent": "^6.1.0"
   },
   "devDependencies": {
-    "eslint": "^7.3.1",
+    "eslint": "^7.13.0",
     "eslint-config-standard": "^14.1.1",
-    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.1"
+    "eslint-plugin-standard": "^4.0.2"
   }
 }

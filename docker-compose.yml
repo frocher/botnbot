@@ -65,7 +65,7 @@ services:
       - STRIPE_WH_PATH=${STRIPE_WH_PATH}
 
   db:
-    image: mariadb:10.4
+    image: mariadb:10.5
     volumes:
       - ./docker/mysql:/var/lib/mysql
     environment:

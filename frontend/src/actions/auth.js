@@ -58,7 +58,6 @@ export const signup = (name, email, password, confirmation, successUrl) => async
   });
 };
 
-
 export const forgotPasswordSuccess = createAction('FORGOT_PASSWORD_SUCCESS');
 export const forgotPasswordError = createAction('FORGOT_PASSWORD_ERROR');
 

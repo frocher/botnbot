@@ -19,7 +19,6 @@ import './bnb-home';
 import './bnb-signin';
 import { styles } from './bnb-styles';
 
-
 class BnbApp extends connect(store)(LitElement) {
   static get properties() {
     return {
@@ -360,7 +359,6 @@ class BnbApp extends connect(store)(LitElement) {
       snack.show();
     }
   }
-
 
   getUrlParameter(name) {
     // eslint-disable-next-line no-useless-escape

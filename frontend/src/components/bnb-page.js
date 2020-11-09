@@ -54,7 +54,6 @@ class BnbPage extends connect(store)(LitElement) {
     ];
   }
 
-
   constructor() {
     super();
     this.selectedTab = 0;

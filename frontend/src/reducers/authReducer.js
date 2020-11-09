@@ -1,4 +1,3 @@
-
 import { fetchCredentials } from '../common';
 
 // Initial state

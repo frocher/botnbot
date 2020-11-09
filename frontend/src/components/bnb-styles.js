@@ -44,9 +44,11 @@ export const styles = css`
     --wc-range-datepicker-cell-selected: var(--mdc-theme-primary);
     --wc-range-datepicker-cell-hovered: #2196F3;
 
-    --fulfilling-bouncing-circle-spinner-color: var(--mdc-theme-primary);
-
     --bnb-divider-color: #B6B6B6;
+  }
+
+  fulfilling-bouncing-circle-spinner {
+    --fulfilling-bouncing-circle-spinner__color: var(--mdc-theme-primary);
   }
 
   bnb-textfield {

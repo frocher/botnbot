@@ -1,4 +1,3 @@
-
 // Initial state
 const initial = {
   // Statistics of current page
@@ -13,7 +12,6 @@ const initial = {
   // Assets details of current page
   assets_details: undefined,
 };
-
 
 const statsReducer = (state = initial, action) => {
   switch (action.type) {

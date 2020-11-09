@@ -77,7 +77,6 @@ export const loadStripeSubscription = () => async (dispatch) => {
   });
 };
 
-
 export const updateStripeSubscriptionSuccess = createAction('STRIPE_SUBSCRIPTION_UPDATE_SUCCESS');
 export const updateStripeSubscriptionError = createAction('STRIPE_SUBSCRIPTION_UPDATE_ERROR');
 

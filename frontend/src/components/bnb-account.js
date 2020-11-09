@@ -16,7 +16,6 @@ import './bnb-install-button';
 import './bnb-subscriptions';
 import { styles } from './bnb-styles';
 
-
 class BnbAccount extends connect(store)(BnbFormElement(LitElement)) {
   static get properties() {
     return {
@@ -118,7 +117,6 @@ class BnbAccount extends connect(store)(BnbFormElement(LitElement)) {
       `
       : html``;
   }
-
 
   stateChanged(state) {
     this.user = state.account.user;

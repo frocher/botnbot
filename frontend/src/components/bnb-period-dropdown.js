@@ -12,7 +12,6 @@ import { connect } from 'pwa-helpers';
 import { store } from '../store';
 import { updatePeriod } from '../actions/app';
 
-
 class BnbPeriodDropdown extends connect(store)(LitElement) {
   static get properties() {
     return {
