@@ -1,6 +1,6 @@
 {
   "name": "bnb_probe",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "license": "Apache-2.0",
   "description": "Botnbot Probe",
   "repository": {
@@ -18,20 +18,20 @@
     "chrome-har-capturer": "^0.13.8",
     "chrome-launcher": "^0.13.4",
     "compression": "^1.7.4",
-    "debug": "^4.2.0",
+    "debug": "^4.3.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "lighthouse": "^6.4.1",
     "morgan": "^1.10.0",
-    "puppeteer": "^5.4.1",
+    "puppeteer": "^5.5.0",
     "superagent": "^6.1.0"
   },
   "devDependencies": {
-    "eslint": "^7.13.0",
+    "eslint": "^7.14.0",
     "eslint-config-standard": "^14.1.1",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.2"
+    "eslint-plugin-standard": "^4.1.0"
   }
 }
