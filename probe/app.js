@@ -7,6 +7,7 @@ const har = require('./routes/har');
 const lighthouse = require('./routes/lighthouse');
 const uptime = require('./routes/uptime');
 const screenshot = require('./routes/screenshot');
+const carbon = require('./routes/carbon');
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use('/har', har);
 app.use('/lighthouse', lighthouse);
 app.use('/uptime', uptime);
 app.use('/screenshot', screenshot);
+app.use('/carbon', carbon);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
