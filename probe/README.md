@@ -89,7 +89,6 @@ http://your_domain/lighthouse?url=<url>&token=<token>
 ```
 http://your_domain/screenshot?url=<url>&token=<token>
 ```
-
 | Param   | Mandatory | Description  |
 | --------|:---------:| -----|
 | url     | yes       | URL to check (e.g. http://www.google.com)|
@@ -97,3 +96,20 @@ http://your_domain/screenshot?url=<url>&token=<token>
 | emulation | no      | Can be 'mobile' or 'desktop'. Default is 'mobile' |
 | width   | no        | Screenshot width in pixels. Default is 1280 for desktop and 412 for mobile |
 | height  | no        | Screenshot height in pixels. Default is 960 for desktop and 732 for mobile |
+
+
+#### PDF
+
+```
+http://your_domain/pdf?url=<url>&token=<token>
+```
+
+| Param   | Mandatory | Description  |
+| --------|:---------:| -----|
+| url     | yes       | URL to check (e.g. http://www.google.com)|
+| token   | no        | Secret token used to restrict access |
+| orientation | no    | Can be 'portrait' or 'landscape'. Default is 'portrait' |
+| media   | no        | Can be 'print' or 'screen'. Default is 'print' |
+| format  | no        | Can be 'Letter', 'Legal', 'A0' to 'A4'. Default is 'A4' |
+| background | no     | Can be 'true' or 'false'. Default is 'false' |
+ 
