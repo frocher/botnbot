@@ -113,3 +113,20 @@ http://your_domain/pdf?url=<url>&token=<token>
 | format  | no        | Can be 'Letter', 'Legal', 'A0' to 'A4'. Default is 'A4' |
 | background | no     | Can be 'true' or 'false'. Default is 'false' |
  
+#### Carbon (experimental)
+
+```
+http://your_domain/carbon?url=<url>&token=<token>
+```
+
+This test is based on the original carbon api (https://gitlab.com/wholegrain/carbon-api-2-0).
+
+It is still **experimental**.
+
+| Param   | Mandatory | Description  |
+| --------|:---------:| -----|
+| url     | yes       | URL to check (e.g. http://www.google.com)|
+| token   | no        | Secret token used to restrict access |
+| emulation | no      | Can be 'mobile' or 'desktop'. Default is 'mobile' |
+| width   | no        | Screenshot width in pixels. Default is 1280 for desktop and 412 for mobile |
+| height  | no        | Screenshot height in pixels. Default is 960 for desktop and 732 for mobile |
