@@ -1,49 +1,59 @@
-const chromeLauncher = require('chrome-launcher');
-const chc = require('chrome-har-capturer');
 const express = require('express');
 const router = express.Router();
-
-function launchChrome(headless = true) {
-  return chromeLauncher.launch({
-    chromeFlags: [
-      '--disable-gpu',
-      headless ? '--headless' : ''
-    ]
-  });
-}
+const puppeteer = require('puppeteer');
+const { harFromMessages } = require('chrome-har');
 
 router.get('/', function (req, res, next) {
-  launchChrome()
-    .then(chrome => {
-      const opts = {port: chrome.port};
-      const emulation = req.query.emulation || 'mobile';
-      opts.width = emulation === 'mobile' ? 412 : 1350;
-      opts.height = emulation === 'mobile' ? 732 : 940;
-      const urls = [req.query.url];
-
-      res.type('application/json');
-
-      chc.run(urls, opts)
-        .on('load', (url) => {
-          process.stdout.write(url);
-        })
-        .on('har', (har) => {
-          if (!res.headersSent) {
-            const json = JSON.stringify(har, null, 4);
-            res.send(json);
-          }
-        })
-        .on('done', (url) => {
-          process.stdout.write('✓\n');
-          chrome.kill();
-        })
-        .on('fail', (url, err) => {
-          process.stdout.write('- error\n');
-          console.log(err);
-          res.status(500).send({error: 'Error generating har'});
-          chrome.kill();
-        });
+  const chromePath = process.env.CHROME_PATH || '/usr/bin/google-chrome';
+  puppeteer.launch({executablePath: chromePath}).then(async browser => {
+    const page = await browser.newPage();
+    const emulation = req.query.emulation || 'mobile';
+    const defaultWidth = emulation === 'mobile' ? 412 : 1280;
+    const defaultHeight = emulation === 'mobile' ? 732 : 960;
+    page.setViewport({
+      width: req.query.width ? parseInt(req.query.width, 10) : defaultWidth,
+      height: req.query.heigh ? parseInt(req.query.height, 10) : defaultHeight
     });
+
+    // list of events for converting to HAR
+    const events = [];
+
+    // event types to observe
+    const observe = [
+      'Page.loadEventFired',
+      'Page.domContentEventFired',
+      'Page.frameStartedLoading',
+      'Page.frameAttached',
+      'Network.requestWillBeSent',
+      'Network.requestServedFromCache',
+      'Network.dataReceived',
+      'Network.responseReceived',
+      'Network.resourceChangedPriority',
+      'Network.loadingFinished',
+      'Network.loadingFailed',
+    ];
+    
+    // register events listeners
+    const client = await page.target().createCDPSession();
+    await client.send('Page.enable');
+    await client.send('Network.enable');
+    observe.forEach(method => {
+      client.on(method, params => {
+        events.push({ method, params });
+      });
+    });
+
+    await page.goto(req.query.url, {timeout: 60000});  
+    const har = harFromMessages(events);
+    const json = JSON.stringify(har, null, 4);
+    await browser.close();
+
+    res.setHeader('Content-Type', 'application/json');
+    res.status(200).send(json);
+  }).catch(e => {
+    console.error(e);
+    res.status(500).send({error: 'Could not generate har'});
+  });
 });
 
 module.exports = router;
