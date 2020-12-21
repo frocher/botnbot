@@ -1,29 +1,31 @@
 const express = require('express');
 const router = express.Router();
-const chromeLauncher = require('chrome-launcher');
 const lighthouse = require('lighthouse');
 const ReportGenerator = require('lighthouse/lighthouse-core/report/report-generator.js');
+const puppeteer = require('puppeteer');
 
 const LR_PRESETS = {
   mobile: require('lighthouse/lighthouse-core/config/lr-mobile-config.js'),
   desktop: require('lighthouse/lighthouse-core/config/lr-desktop-config.js'),
 };
 
-function launchChromeAndRunLighthouse(url, flags = {}, config = null) {
-  return chromeLauncher.launch({chromeFlags: ['--disable-gpu', '--headless']}).then(chrome => {
-    flags.port = chrome.port;
-    return lighthouse(url, flags, config).then(results =>
-      chrome.kill().then(() => results));
-  });
-}
+
 
 router.get('/', function (req, res, next) {
-  const flags = {};
-  flags.emulatedFormFactor = req.query.emulation || 'mobile';
-  const config = flags.emulatedFormFactor === 'desktop' ? LR_PRESETS.desktop : LR_PRESETS.mobile;
 
-  launchChromeAndRunLighthouse(req.query.url, flags, config)
-    .then(results => {
+  try {
+    (async() => {
+      const browser = await puppeteer.launch({
+        headless: false,
+        defaultViewport: null,
+      });
+
+      const flags = {};
+      flags.emulatedFormFactor = req.query.emulation || 'mobile';
+      const config = flags.emulatedFormFactor === 'desktop' ? LR_PRESETS.desktop : LR_PRESETS.mobile;
+
+      const results = await lighthouse(req.query.url, flags, config);
+      await browser.close();
 
       const categories = results['lhr']['categories'];
       const performance = Math.round(categories['performance']['score'] * 100);
@@ -63,11 +65,12 @@ router.get('/', function (req, res, next) {
       }
 
       res.send(results);
-    })
-    .catch(e => {
-      console.error(e);
-      res.status(500).send({error: 'Could not execute lighthouse'});
-    });
+    })();
+  }
+  catch(e) {
+    console.error(e);
+    res.status(500).send({error: 'Could not execute lighthouse'});
+  };
 });
 
 module.exports = router;
