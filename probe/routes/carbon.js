@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const puppeteer = require('puppeteer');
+const {launchBrowser, setPageViewport} = require('./util');
 
 const KWG_PER_GB = 1.805;
 const RETURNING_VISITOR_PERCENTAGE = 0.75;
@@ -43,20 +43,11 @@ function co2ToLitres(co2) {
   return co2 * CO2_GRAMS_TO_LITRES;
 }
 
-
-router.get('/', function (req, res, next) {
-  const chromePath = process.env.CHROME_PATH || '/usr/bin/google-chrome';
-  puppeteer.launch({executablePath: chromePath, args: ['--no-sandbox']}).then(async browser => {
+router.get('/', function (req, res) {
+  launchBrowser().then(async browser => {
     const page = await browser.newPage();
     await page.setBypassCSP(true);
-
-    const emulation = req.query.emulation || 'mobile';
-    const defaultWidth = emulation === 'mobile' ? 412 : 1280;
-    const defaultHeight = emulation === 'mobile' ? 732 : 960;
-    await page.setViewport({
-      width: req.query.width ? parseInt(req.query.width, 10) : defaultWidth,
-      height: req.query.heigh ? parseInt(req.query.height, 10) : defaultHeight
-    });
+    setPageViewport(page, req);
 
     await page.setCacheEnabled(false);
     let firstBytes = await getPageInformations(page, req.query.url);
