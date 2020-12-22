@@ -24,7 +24,7 @@ function getScores(results) {
     bestPractices,
     seo,
   };  
-  return JSON.stringify(scores)
+  return JSON.stringify(scores);
 }
 
 function getMetrics(results) {
