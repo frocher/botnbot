@@ -47,9 +47,15 @@ function getMetrics(results) {
 router.get('/', function (req, res) {
   launchBrowser().then(async browser => {
     const flags = {};
-    flags.emulatedFormFactor = req.query.emulation || 'mobile';
+    flags.formFactor = req.query.emulation || 'mobile';
     flags.port = (new URL(browser.wsEndpoint())).port;
-    const config = flags.emulatedFormFactor === 'desktop' ? LR_PRESETS.desktop : LR_PRESETS.mobile;
+    if (flags.formFactor === 'mobile') {
+      flags.screenEmulation = {
+        mobile: true,
+        disabled: false,
+      };
+    }
+    const config = flags.formFactor === 'desktop' ? LR_PRESETS.desktop : LR_PRESETS.mobile;
 
     let results = await lighthouse(req.query.url, flags, config);
     await browser.close();
