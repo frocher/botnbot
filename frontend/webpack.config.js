@@ -68,10 +68,6 @@ const copyStatics = {
     context: resolve('.'),
     to: OUTPUT_PATH,
   }, {
-    from: './src/robots.txt',
-    context: resolve('.'),
-    to: OUTPUT_PATH,
-  }, {
     from: resolve('./src/index.html'),
     to: OUTPUT_PATH,
     flatten: true,
