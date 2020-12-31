@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const {launchBrowser, setPageViewport} = require('./util');
+const fetch = require('node-fetch');
 
 const KWG_PER_GB = 1.805;
 const RETURNING_VISITOR_PERCENTAGE = 0.75;
@@ -9,7 +10,6 @@ const CARBON_PER_KWG_GRID = 475;
 const CARBON_PER_KWG_RENEWABLE = 33.4;
 const PERCENTAGE_OF_ENERGY_IN_DATACENTER = 0.1008;
 const PERCENTAGE_OF_ENERGY_IN_TRANSMISSION_AND_END_USER = 0.8992;
-const CO2_GRAMS_TO_LITRES = 0.5562;
 
 async function getPageInformations(page, url) {
   let encodedDataLength = 0;
@@ -39,8 +39,22 @@ function getCo2Renewable(energy) {
     (energy * PERCENTAGE_OF_ENERGY_IN_TRANSMISSION_AND_END_USER * CARBON_PER_KWG_GRID);
 }
 
-function co2ToLitres(co2) {
-  return co2 * CO2_GRAMS_TO_LITRES;
+/**
+ * Return the url without the protocol.
+ * @param {*} url 
+ */
+function removeHttp(url) {
+  return url.replace(/(^\w+:|^)\/\//, '');
+}
+
+/**
+ * Call the green web foundation to check hostings
+ * @param {*} url 
+ */
+async function checkGreenAPI(url) {
+  const domain = removeHttp(url);
+  const res = await fetch(`https://api.thegreenwebfoundation.org/greencheck/${domain}`);
+  return await res.json();
 }
 
 router.get('/', function (req, res) {
@@ -53,13 +67,17 @@ router.get('/', function (req, res) {
     let firstBytes = await getPageInformations(page, req.query.url);
     await page.setCacheEnabled(true);
     let secondBytes = await getPageInformations(page, req.query.url);
+    await browser.close();
 
-    let bytesAdjusted = adjustDataTransfer(firstBytes, secondBytes);
-    let energy = energyConsumption(bytesAdjusted);
-    let co2Grid = getCo2Grid(energy);
-    let co2Renewable = getCo2Renewable(energy);
+    const greenCheck = await checkGreenAPI(req.query.url);
 
+    const bytesAdjusted = adjustDataTransfer(firstBytes, secondBytes);
+    const energyFirst = energyConsumption(firstBytes);
+    const energySecond = energyConsumption(secondBytes);
+    const energyAdjusted = energyConsumption(bytesAdjusted);
+    
     let response = {
+      host: greenCheck,
       bytes: {
         first: firstBytes,
         second: secondBytes,
@@ -67,17 +85,18 @@ router.get('/', function (req, res) {
       },
       co2: {
         grid: {
-          grams: co2Grid,
-          litres: co2ToLitres(co2Grid),
+          first: getCo2Grid(energyFirst),
+          second: getCo2Grid(energySecond),
+          adjusted: getCo2Grid(energyAdjusted),
         },
         renewable: {
-          grams: co2Renewable,
-          litres: co2ToLitres(co2Renewable),
+          first: getCo2Renewable(energyFirst),
+          second: getCo2Renewable(energySecond),
+          adjusted: getCo2Renewable(energyAdjusted),
         },
       }
     };
 
-    await browser.close();
     res.setHeader('Content-Type', 'application/json');
     res.status(200).send(response);
   }).catch(e => {
