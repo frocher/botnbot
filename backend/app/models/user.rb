@@ -4,6 +4,7 @@
 #
 #  id                     :bigint           not null, primary key
 #  admin                  :boolean          default(FALSE)
+#  allow_password_change  :boolean          default(FALSE), not null
 #  bio                    :string(255)
 #  confirmation_sent_at   :datetime
 #  confirmation_token     :string(255)
@@ -73,9 +74,11 @@ class User < ActiveRecord::Base
 
     unless subscription.nil?
       Stripe.api_key = Figaro.env.stripe_secret_key
-      subscription_object = Stripe::Subscription.retrieve(subscription)
-      if subscription_object.status != "canceled" && subscription_object.status != "unpaid"
-        plan_id = subscription_object.plan.id
+      unless Stripe.api_key.nil?
+        subscription_object = Stripe::Subscription.retrieve(subscription)
+        if !subscription.nil? && subscription_object.status != "canceled" && subscription_object.status != "unpaid"
+          plan_id = subscription_object.plan.id
+        end
       end
     end
 
