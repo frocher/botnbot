@@ -10,9 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_19_121758) do
+ActiveRecord::Schema.define(version: 2021_01_01_204032) do
 
-  create_table "budgets", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "budgets", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "page_id", null: false
     t.integer "category", default: 0, null: false
     t.integer "item", default: 0, null: false
@@ -22,7 +22,7 @@ ActiveRecord::Schema.define(version: 2020_04_19_121758) do
     t.index ["page_id"], name: "index_budgets_on_page_id"
   end
 
-  create_table "identities", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "identities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "provider", null: false
     t.string "uid", null: false
     t.integer "user_id", null: false
@@ -31,7 +31,7 @@ ActiveRecord::Schema.define(version: 2020_04_19_121758) do
     t.index ["provider", "uid"], name: "index_identities_on_provider_and_uid", unique: true
   end
 
-  create_table "page_members", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "page_members", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "page_id", null: false
     t.integer "role", default: 0, null: false
@@ -42,14 +42,14 @@ ActiveRecord::Schema.define(version: 2020_04_19_121758) do
     t.index ["user_id"], name: "index_page_members_on_user_id"
   end
 
-  create_table "pages", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "pages", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name"
     t.string "url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "screenshot_file_name"
     t.string "screenshot_content_type"
-    t.bigint "screenshot_file_size"
+    t.integer "screenshot_file_size"
     t.datetime "screenshot_updated_at"
     t.string "uptime_keyword"
     t.string "uptime_keyword_type"
@@ -57,15 +57,17 @@ ActiveRecord::Schema.define(version: 2020_04_19_121758) do
     t.string "slack_channel"
     t.boolean "mail_notify", default: true
     t.boolean "slack_notify", default: false
-    t.integer "uptime_status", default: 1
+    t.integer "uptime_status", default: 0
     t.boolean "push_notify", default: true
     t.integer "device", default: 0
     t.boolean "locked", default: false
     t.integer "owner_id", null: false
+    t.integer "last_week_lh_score"
+    t.integer "current_week_lh_score"
     t.index ["owner_id"], name: "index_pages_on_owner_id"
   end
 
-  create_table "subscriptions", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "subscriptions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "endpoint", null: false
     t.string "p256dh", null: false
     t.string "auth", null: false
@@ -74,7 +76,7 @@ ActiveRecord::Schema.define(version: 2020_04_19_121758) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "provider", null: false
     t.string "uid", default: "", null: false
     t.boolean "admin", default: false

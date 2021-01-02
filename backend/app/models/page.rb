@@ -4,7 +4,9 @@ require 'chronic_duration'
 # Table name: pages
 #
 #  id                      :bigint           not null, primary key
+#  current_week_lh_score   :integer
 #  device                  :integer          default("mobile")
+#  last_week_lh_score      :integer
 #  locked                  :boolean          default(FALSE)
 #  mail_notify             :boolean          default(TRUE)
 #  name                    :string(255)
@@ -57,7 +59,7 @@ class Page < ActiveRecord::Base
   validates :slack_channel, presence: true, if: Proc.new { |a| a.slack_notify? }
 
   def as_json(options={})
-    h = super({only: [:id, :name, :url, :device, :locked, :uptime_keyword, :uptime_keyword_type, :mail_notify, :slack_notify, :push_notify, :slack_webhook, :slack_channel, :uptime_status, :created_at, :updated_at]}.merge(options || {}))
+    h = super({only: [:id, :name, :url, :device, :locked, :uptime_keyword, :uptime_keyword_type, :mail_notify, :slack_notify, :push_notify, :slack_webhook, :slack_channel, :uptime_status, :current_week_lh_score, :last_week_lh_score, :created_at, :updated_at]}.merge(options || {}))
     h[:owner] = owner.as_json
     h
   end

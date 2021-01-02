@@ -39,6 +39,8 @@ class LighthouseJob < StatisticsJob
         metric = write_metrics(probe, page, res["X-Lighthouse-scores"], res["X-Lighthouse-metrics"])
         metric.write_report(res.body)
 
+        write_scores(page)
+
         Rails.logger.info "Success lighthouse for #{page.id} : #{page.url}"
       else
         Rails.logger.error "Error lighthouse #{res.code} for #{page.id} : #{page.url}"
@@ -72,5 +74,30 @@ class LighthouseJob < StatisticsJob
     metric.speed_index              = values["speedIndex"]
 
     metric.write!
+  end
+
+  def write_scores(page)
+    start_date = Date.today.beginning_of_week
+    end_date = Date.today.end_of_week
+    page.current_week_lh_score = read_mean_value(page, start_date, end_date)
+    start_date = start_date - 7.days;
+    end_date = end_date - 7.days;
+    page.last_week_lh_score = read_mean_value(page, start_date, end_date)
+    page.save!
+  end
+
+  def read_mean_value(page, start_date, end_date)
+    select_value = "mean(pwa) as pwa," \
+    "mean(performance) as performance," \
+    "mean(accessibility) as accessibility," \
+    "mean(best_practices) as best_practices," \
+    "mean(seo) as seo"
+    data = LighthouseMetrics.select(select_value).by_page(page.id).where(time: start_date..end_date)
+    array = data.to_a
+    if array.length > 0
+      mean = (array[0]["pwa"] + array[0]["performance"] + array[0]["accessibility"] + array[0]["best_practices"] + array[0]["seo"]) / 5
+      return mean.round
+    end
+    return nil
   end
 end
