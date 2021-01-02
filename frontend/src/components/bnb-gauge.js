@@ -128,7 +128,7 @@ class BnbGauge extends LitElement {
     if (!this.isValid(this.score)) {
       return 'No lighthouse score to display yet';
     }
-    let result = `This week average lighouse score is ${this.score}. `;
+    let result = `This week mean lighouse score is ${this.score}. `;
 
     if (this.isValid(this.lastScore)) {
       if (this.lastScore < this.score) {
