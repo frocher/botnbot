@@ -35,6 +35,11 @@ You also need to create the InfluxDB database:
 influx -execute 'create database botnbot'
 ```
 
+The backend sends mails. You need to catch them with mailcatcher:
+```sh
+gem install mailcatcher -- --with-cflags="-Wno-error=implicit-function-declaration"
+```
+
 And you are finally ready to start the API server:
 ```sh
 rails s
