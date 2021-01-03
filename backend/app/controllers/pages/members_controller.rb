@@ -86,8 +86,8 @@ class Pages::MembersController < ApplicationController
       return not_found! unless can?(current_user, :delete_page_member, @page)
     end
 
-    # The owner of the page cannot be removed from the team, ownership must me be transfered first
-    return render_api_error!("The owner of the page cannot be removed from the team, ownership must me be transfered first", 422) if @page.owner.id == @member.user.id
+    # The owner of the page cannot be removed from the team, ownership must be transfered first
+    return render_api_error!("The owner of the page cannot be removed from the team, ownership must be transfered first", 422) if @page.owner.id == @member.user.id
 
     # A user can always remove himself as a page member except if he is the last
     # admin member
