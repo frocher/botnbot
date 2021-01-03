@@ -77,8 +77,8 @@ class LighthouseJob < StatisticsJob
   end
 
   def write_scores(page)
-    start_date = Date.today.beginning_of_week
-    end_date = Date.today.end_of_week
+    start_date = DateTime.now.beginning_of_week
+    end_date = DateTime.now.end_of_week
     page.current_week_lh_score = read_mean_value(page, start_date, end_date)
     start_date = start_date - 7.days;
     end_date = end_date - 7.days;
