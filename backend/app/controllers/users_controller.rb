@@ -48,6 +48,22 @@ class UsersController < ApplicationController
     render json: {errors: @user.errors}, status: 422
   end
 
+  def destroy
+    return not_found! unless can?(current_user, :delete_user, @user)
+
+    if (!params[:email] || params[:email] != @user.email)
+      render json: {message: "Account has not been deleted. You must enter a valid email."}, status: 400
+    else
+      @user.destroy
+
+      # zero token values previously set
+      @token.client = nil
+      @resource = nil
+
+      render json: @user
+    end
+  end
+
   def save_subscription
     return not_found! unless can?(current_user, :update_user, @user)
 

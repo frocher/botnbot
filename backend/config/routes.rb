@@ -58,6 +58,7 @@
 #                     user GET      /users/:id(.:format)                     users#show
 #                          PATCH    /users/:id(.:format)                     users#update
 #                          PUT      /users/:id(.:format)                     users#update
+#                          DELETE   /users/:id(.:format)                     users#destroy
 #                          GET      /pages/:id/screenshot(.:format)          pages#screenshot
 #                          POST     /users/:id/save-subscription(.:format)   users#save_subscription
 
@@ -80,7 +81,7 @@ Rails.application.routes.draw do
 
   resources :plans, only: [:index]
 
-  resources :users, only: [:show, :update] do
+  resources :users, only: [:show, :update, :destroy] do
     scope module: :users do
       resource :subscription, except: :create
     end

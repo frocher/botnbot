@@ -28,10 +28,7 @@ class Users::SubscriptionsController < ApplicationController
   def destroy
     return not_found! unless can?(current_user, :delete_subscription, @user)
 
-    Stripe.api_key = Figaro.env.stripe_secret_key
-    subscription = Stripe::Subscription.retrieve(@user.subscription)
-    subscription.delete
-
+    @user.delete_stripe_subscription
     @user.subscription = nil
     @user.save!
 

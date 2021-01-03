@@ -118,6 +118,7 @@ const appReducer = (state = initial, action) => {
       return { ...state, route: '' };
 
     case 'SIGN_OUT':
+    case 'USER_DELETE_SUCCESS':
       return { ...state, route: 'signin' };
 
     case 'SIGN_UP_SUCCESS':

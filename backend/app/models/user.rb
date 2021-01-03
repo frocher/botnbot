@@ -43,10 +43,11 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable, :recoverable, :validatable, :confirmable, :trackable
 
   before_create :record_first_admin
+  after_destroy :destroy_subscription
 
   alias_attribute :nickname, :name
 
-  has_many :owned_pages, foreign_key: :owner_id, class_name: 'Page'
+  has_many :owned_pages, foreign_key: :owner_id, class_name: 'Page', dependent: :destroy
   has_many :page_members, dependent: :destroy
   has_many :pages, through: :page_members
   has_many :identities, dependent: :destroy
@@ -93,11 +94,24 @@ class User < ActiveRecord::Base
     resu
   end
 
+  def delete_stripe_subscription
+    Stripe.api_key = Figaro.env.stripe_secret_key
+    subscription = Stripe::Subscription.retrieve(subscription)
+    subscription.delete
+  end
+
   def update_pages_lock()
     max_pages = Figaro.env.stripe_public_key.blank? ? 99999 : stripe_subscription["pages"]
     owned_pages.each_with_index do |page, index|
       page.locked = index >= max_pages
       page.save
+    end
+  end
+
+  def destroy_subscription
+    unless subscription.nil?
+      delete_stripe_subscription
+      subscription = nil
     end
   end
 

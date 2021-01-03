@@ -5,6 +5,10 @@ class UptimeMetrics < Influxer::Metrics
 
   scope :by_page, -> (id) { where(page_id: id) if id.present? }
 
+  def get_content_path
+    File.join(Rails.root, "reports/uptime", page_id.to_s)
+  end
+
   def write_content(content)
     path = get_content_path
     FileUtils.mkdir_p(path) unless File.exist?(path)
@@ -17,8 +21,7 @@ class UptimeMetrics < Influxer::Metrics
 
   def read_content
     result = nil
-    path = get_content_path
-    File.open(File.join(path, time_key + ".html.gz")) do |f|
+    File.open(File.join(get_content_path, time_key + ".html.gz")) do |f|
       gz = Zlib::GzipReader.new(f)
       result = gz.read
       gz.close
@@ -26,7 +29,7 @@ class UptimeMetrics < Influxer::Metrics
     result
   end
 
-  def get_content_path
-    File.join(Rails.root, "reports/uptime", page_id.to_s)
+  def delete_reports
+    FileUtils.rm_rf(get_content_path, secure: true)
   end
 end
