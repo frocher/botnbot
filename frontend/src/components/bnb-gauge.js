@@ -132,9 +132,19 @@ class BnbGauge extends LitElement {
 
     if (this.isValid(this.lastScore)) {
       if (this.lastScore < this.score) {
-        result += `It has increased by ${this.score - this.lastScore} points since last week.`;
+        const delta = this.score - this.lastScore;
+        if (delta === 1) {
+          result += `It has increased by ${delta} point since last week.`;
+        } else {
+          result += `It has increased by ${delta} points since last week.`;
+        }
       } else if (this.lastScore > this.score) {
-        result += `It has decreased by ${this.lastScore - this.score} points since last week.`;
+        const delta = this.lastScore - this.score;
+        if (delta === 1) {
+          result += `It has decreased by ${delta} point since last week.`;
+        } else {
+          result += `It has decreased by ${delta} points since last week.`;
+        }
       } else {
         result += 'It hasn\'t changed since last week.';
       }
@@ -150,7 +160,6 @@ class BnbGauge extends LitElement {
       } if (this.lastScore > this.score) {
         return '▾';
       }
-      return '=';
     }
     return '';
   }
