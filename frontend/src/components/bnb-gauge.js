@@ -101,7 +101,7 @@ class BnbGauge extends LitElement {
       return { wrapper: true, fail: true };
     }
 
-    if (value < 90) {
+    if (value < 80) {
       return { wrapper: true, average: true };
     }
 
@@ -132,9 +132,9 @@ class BnbGauge extends LitElement {
 
     if (this.isValid(this.lastScore)) {
       if (this.lastScore < this.score) {
-        result += `It as increased by ${this.score - this.lastScore} points since last week.`;
+        result += `It has increased by ${this.score - this.lastScore} points since last week.`;
       } else if (this.lastScore > this.score) {
-        result += `It as decreased by ${this.lastScore - this.score} points since last week.`;
+        result += `It has decreased by ${this.lastScore - this.score} points since last week.`;
       } else {
         result += 'It hasn\'t changed since last week.';
       }
