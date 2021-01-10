@@ -180,10 +180,20 @@ module.exports = {
     port: 8081,
     host: '0.0.0.0',
     disableHostCheck: true,
-    proxy: [{
-      path: ['/api', '/omniauth'],
-      target: 'http://localhost:3000/',
-      pathRewrite: { '^/api': '' },
-    }],
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000/',
+        pathRewrite: { '^/api': '' },
+      },
+      '/auth': {
+        target: 'http://localhost:3000/',
+        pathRewrite: { '^/api': '' },
+      },
+      '/public': {
+        target: 'http://localhost:3000/',
+        pathRewrite: { '^/public': '' },
+      },
+
+    },
   },
 };
