@@ -60,6 +60,8 @@ class UsersController < ApplicationController
       @token.client = nil
       @resource = nil
 
+      UserMailer.account_deleted(@user, "Your account has been deleted").deliver_now
+
       render json: @user
     end
   end

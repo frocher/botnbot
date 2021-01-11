@@ -1,0 +1,18 @@
+<h1 style="font-size:30px;font-weight:bold;color:#212121">Welcome</h1>
+
+<p style="text-align:left">Hello <%= @email %>!</p>
+
+<p style="text-align:left">Thanks for joining. We're very excited to have you on board. You can confirm your account email through the button below:</p>
+
+<p><%= link_to 'Confirm my account', confirmation_url(@resource, confirmation_token: @token), style: 'border-style: solid;
+    border-color: #0d47a1;
+    border-width: 10px 20px 10px 20px;
+    display: inline-block;
+    background: #0d47a1;
+    border-radius: 5px;
+    font-size: 16px;
+    line-height: 120%;
+    color: #ffffff;
+    text-decoration: none;
+    width: auto;
+    text-align: center;' %></p>

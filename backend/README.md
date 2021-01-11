@@ -68,6 +68,12 @@ An application.yml.sample file is included in the config directory.
 | Name    | Default Value | Description  |
 | --------|:---------:| -----|
 | MAILER_SENDER | jeeves.thebot@botnbot.com | Mail sender |
+| HTTP_PROTOCOL | http |  |
+| HTTP_HOST | localhost |  |
+| HTTP_PORT | 80 |  |
+| SMTP_HOST | localhost | SMTP host |
+| SMTP_PORT | 1025 | SMTP port |
+
 
 ### MySQL Configuration
 
