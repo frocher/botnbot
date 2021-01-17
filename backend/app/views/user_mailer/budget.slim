@@ -1,17 +1,18 @@
 h1(style="font-size:30px;font-weight:bold;color:#212121;margin-bottom:10px") Daily botnbot budget report
-ul
-  - @context.budgets.each do |budget|
-    li
-      = "#{budget.page}/#{budget.label} (budget: #{budget.budget}) was "
-      - if budget.news == "bad"
-        span(style="color:green") = budget.before_value
-        = " and is now "
-        span(style="color:red") = budget.value
-      - else
-        span(style="color:red") = budget.before_value
-        = " and is now "
-        span(style="color:green") = budget.value
-      - if budget.delta > 0
-        = " (#{budget.delta}% increase)."
-      - else
-        = " (#{-budget.delta}% decrease)."
+p(style="text-align:left")
+  ul
+    - @context.budgets.each do |budget|
+      li
+        = "#{budget.page}/#{budget.label} (budget: #{budget.budget}) was "
+        - if budget.news == "bad"
+          span(style="color:green") = budget.before_value
+          = " and is now "
+          span(style="color:red") = budget.value
+        - else
+          span(style="color:red") = budget.before_value
+          = " and is now "
+          span(style="color:green") = budget.value
+        - if budget.delta > 0
+          = " (#{budget.delta}% increase)."
+        - else
+          = " (#{-budget.delta}% decrease)."
