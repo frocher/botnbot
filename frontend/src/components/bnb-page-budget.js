@@ -80,14 +80,14 @@ class BnbPageBudget extends connect(store)(LitElement) {
 
   render() {
     return html`
-      <bnb-budget-bar id="budgetBar" can-add="${this.page.can_create_budget}"></bnb-budget-bar>
+      <bnb-budget-bar id="budgetBar" can-add="${this.page?.can_create_budget}"></bnb-budget-bar>
       ${this.cards.map((i) => this.renderCard(i))}
     `;
   }
 
   renderCard(item) {
     return html`
-      <bnb-budget-card .budgetInfo="${item}" ?canDelete="${this.page.can_delete_budget}" @close="${this.budgetCloseTapped}"></bnb-budget-card>
+      <bnb-budget-card .budgetInfo="${item}" ?canDelete="${this.page?.can_delete_budget}" @close="${this.budgetCloseTapped}"></bnb-budget-card>
     `;
   }
 
