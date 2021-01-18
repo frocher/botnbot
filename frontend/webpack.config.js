@@ -76,6 +76,10 @@ module.exports = (env, options) => {
       from: resolve('./src/manifest.json'),
       to: OUTPUT_PATH,
       flatten: true,
+    }, {
+      from: resolve('./src/robots.txt'),
+      to: OUTPUT_PATH,
+      flatten: true,
     }],
   };
 
