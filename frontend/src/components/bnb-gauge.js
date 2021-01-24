@@ -1,5 +1,6 @@
 import { LitElement, css, html } from 'lit-element';
 import { classMap } from 'lit-html/directives/class-map';
+import { createPopper } from '@popperjs/core';
 
 class BnbGauge extends LitElement {
   static get properties() {
@@ -89,6 +90,48 @@ class BnbGauge extends LitElement {
       text-align: center;
       top: calc(var(--score-container-padding) + var(--gauge-circle-size) / 2);
     }
+
+    #tooltip {
+      visibility: hidden;
+      position: absolute;
+      background-color: var(--mdc-theme-on-secondary, #333);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-weight: normal;
+      z-index: 1060;
+      opacity: 0.9;
+    }
+
+    #arrow,
+    #arrow::before {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      z-index: -1;
+    }
+    
+    #arrow::before {
+      content: '';
+      transform: rotate(45deg);
+      background: var(--mdc-theme-on-secondary, #333);
+    }
+
+    #tooltip[data-popper-placement^='top'] > #arrow {
+      bottom: -4px;
+    }
+    
+    #tooltip[data-popper-placement^='bottom'] > #arrow {
+      top: -4px;
+    }
+    
+    #tooltip[data-popper-placement^='left'] > #arrow {
+      right: -4px;
+    }
+    
+    #tooltip[data-popper-placement^='right'] > #arrow {
+      left: -4px;
+    }
     `;
   }
 
@@ -110,7 +153,7 @@ class BnbGauge extends LitElement {
 
   render() {
     return html`
-      <div class=${classMap(this.renderClass(this.score))} title="${this.renderTooltip()}">
+      <div id="gauge" class=${classMap(this.renderClass(this.score))}>
         <div class="svg-wrapper" >
           <svg viewBox="0 0 120 120" class="gauge">
             <circle class="gauge-base" r="56" cx="60" cy="60" stroke-width="8"></circle>
@@ -121,6 +164,11 @@ class BnbGauge extends LitElement {
           <small>${this.renderTendancy()}</small>${this.renderScore()}
         </div>
       </div>
+      <div id="tooltip" role="tooltip">
+        <span>${this.renderTooltip()}</span>
+        <div id="arrow" data-popper-arrow="true"></div>
+      </div>
+
     `;
   }
 
@@ -169,6 +217,26 @@ class BnbGauge extends LitElement {
       return '-';
     }
     return this.score;
+  }
+
+  firstUpdated() {
+    const gauge = this.shadowRoot.getElementById('gauge');
+    const tooltip = this.shadowRoot.getElementById('tooltip');
+
+    gauge.addEventListener('mouseenter', () => { tooltip.style.visibility = 'visible'; });
+    gauge.addEventListener('mouseleave', () => { tooltip.style.visibility = 'hidden'; });
+
+    createPopper(gauge, tooltip, {
+      placement: 'bottom',
+      modifiers: [
+        {
+          name: 'offset',
+          options: {
+            offset: [0, 8],
+          },
+        },
+      ],
+    });
   }
 
   isValid(value) {
