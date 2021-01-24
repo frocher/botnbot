@@ -297,7 +297,7 @@ class BnbMembers extends connect(store)(LitElement) {
   addTapped() {
     if (this.validateInputs()) {
       const email = this.shadowRoot.getElementById('email').value;
-      const role = this.shadowRoot.getElementById('role').selected;
+      const role = this.shadowRoot.getElementById('role').value;
       store.dispatch(createPageMember(this.page.id, { email, role }));
     }
   }
