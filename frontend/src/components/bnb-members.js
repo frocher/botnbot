@@ -99,6 +99,16 @@ class BnbMembers extends connect(store)(LitElement) {
         background-color: var(--mdc-theme-secondary);
         color: var(--mdc-theme-on-secondary);
       }
+
+      #roles {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+
+      #roles div {
+        min-width: 250px;
+      }
       `,
     ];
   }
@@ -117,7 +127,7 @@ class BnbMembers extends connect(store)(LitElement) {
               <bnb-textfield id="email" type="email" label="E-mail" outlined required ?disabled="${!this.page.can_add_member}" validationMessage="You should enter a valid email address"></bnb-textfield>
               <mwc-select id="role" outlined required label="Role" ?disabled="${!this.page.can_update_member}" validationMessage="You should enter a role">
                 <mwc-list-item value="admin">Administrator</mwc-list-item>
-                <mwc-list-item value="master">Master</mwc-list-item>
+                <mwc-list-item value="master">Maintainer</mwc-list-item>
                 <mwc-list-item value="editor">Editor</mwc-list-item>
                 <mwc-list-item value="guest">Guest</mwc-list-item>
               </mwc-select>
@@ -139,8 +149,46 @@ class BnbMembers extends connect(store)(LitElement) {
                 ${this.members.map((i) => this.renderMemberItem(i))}
               </tbody>
             </table>
-
           </bnb-card>
+          <h3>Roles</h3>
+          <bnb-card id="roles">
+            <div>
+              <p><strong>Guests</strong> can:</p>
+              <ul>
+                <li>access page statistics</li>
+                <li>access page budgets</li>
+                <li>access page members</li>
+                <li>leave page members</li>
+              </ul>
+            </div>
+            <div>
+              <p><strong>Editors</strong> can:</p>
+              <ul>
+                <li>do all the things guests are able to</li>
+                <li>update page settings</li>
+                <li>create a new budget</li>
+                <li>delete an existing budget</li>
+              </ul>
+            </div>
+            <div>
+              <p><strong>Maintainers</strong> can:</p>
+              <ul>
+                <li>do all the things editors are able to</li>
+                <li>add a new member</li>
+                <li>change a page member role</li>
+                <li>remove a page member</li>
+              </ul>
+            </div>
+            <div>
+              <p><strong>Administators</strong> can:</p>
+              <ul>
+                <li>do all the things maintainers are able to</li>
+                <li>give administrator privilege</li>
+                <li>delete the page</li>
+              </ul>
+            </div>
+          </bnb-card>
+
         </div>
       </div>
     </mwc-top-app-bar-fixed>
@@ -200,7 +248,7 @@ class BnbMembers extends connect(store)(LitElement) {
     } else if (item.role === 'admin') {
       text = 'Administrator';
     } else if (item.role === 'master') {
-      text = 'Master';
+      text = 'Maintainer';
     } else if (item.role === 'editor') {
       text = 'Editor';
     } else if (item.role === 'guest') {
