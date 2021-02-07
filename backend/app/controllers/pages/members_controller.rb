@@ -105,7 +105,7 @@ class Pages::MembersController < ApplicationController
 
   def can_create_member(page)
     resu = true
-    unless Figaro.env.stripe_public_key.blank?
+    unless ENV["STRIPE_PUBLIC_KEY"].blank?
       max_members = current_user.stripe_subscription["members"]
       resu = max_members > 0 && page.page_members.count < max_members
     end

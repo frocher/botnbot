@@ -116,7 +116,7 @@ class PagesController < ApplicationController
 private
   def can_create_page
     resu = true
-    unless Figaro.env.stripe_public_key.blank?
+    unless ENV["STRIPE_PUBLIC_KEY"].blank?
       max_pages = current_user.stripe_subscription["pages"]
       resu = max_pages > 0 && current_user.owned_pages.count < max_pages
     end

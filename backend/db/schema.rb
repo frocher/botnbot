@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_01_204032) do
+ActiveRecord::Schema.define(version: 2021_01_24_215130) do
 
   create_table "budgets", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "page_id", null: false
@@ -102,6 +102,7 @@ ActiveRecord::Schema.define(version: 2021_01_01_204032) do
     t.string "image"
     t.string "subscription"
     t.boolean "allow_password_change", default: false, null: false
+    t.string "customer"
     t.index ["email"], name: "index_users_on_email"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true

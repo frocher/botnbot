@@ -8,35 +8,6 @@ class Users::SubscriptionsController < ApplicationController
     render json: @user.stripe_subscription
   end
 
-  def update
-    return not_found! unless can?(current_user, :update_subscription, @user)
-
-    Stripe.api_key = Figaro.env.stripe_secret_key
-    subscription = Stripe::Subscription.retrieve(@user.subscription)
-    subscription.cancel_at_period_end = false
-    subscription.items = [{
-        id: subscription.items.data[0].id,
-        plan: params[:stripePlan]
-    }]
-    subscription.save
-
-    @user.update_pages_lock
-
-    render json: @user.stripe_subscription
-  end
-
-  def destroy
-    return not_found! unless can?(current_user, :delete_subscription, @user)
-
-    @user.delete_stripe_subscription
-    @user.subscription = nil
-    @user.save!
-
-    @user.update_pages_lock
-
-    render json: @user.stripe_subscription
-  end
-
 private
 
   def set_user

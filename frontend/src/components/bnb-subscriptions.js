@@ -1,10 +1,10 @@
 import { LitElement, css, html } from 'lit-element';
 import '@material/mwc-button/mwc-button';
-import '@material/mwc-dialog';
+import '@material/mwc-list/mwc-list-item';
+import '@material/mwc-select';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
-import { updateStripeSubscription, deleteStripeSubscription } from '../actions/account';
-import { stripeCheckout } from '../actions/stripe';
+import { stripeCheckout, stripeManageSubscription } from '../actions/stripe';
 import { styles } from './bnb-styles';
 import './bnb-card';
 
@@ -30,6 +30,18 @@ class BnbSubscriptions extends connect(store)(LitElement) {
         margin-right: 8px;
         margin-bottom: 8px;
         padding-bottom: 0;
+      }
+
+      #currentPlan {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        padding-bottom: 8px;
+      }
+
+      #currentPlan span {
+        padding-right: 8px;
+        min-width: 350px;
       }
 
       .dollar {
@@ -70,19 +82,6 @@ class BnbSubscriptions extends connect(store)(LitElement) {
         font-weight: bold;
       }
 
-      .card-current {
-        margin-top: 8px;
-        font-weight: bold;
-        color: var(--mdc-theme-primary);
-      }
-
-      .card-actions {
-        border-top: 1px solid var(--mdc-theme-on-surface);
-        height: 36px;
-        padding-top: 8px;
-        padding-bottom: 8px;
-      }
-
       @media (max-width: 850px) {
         .plans {
           grid-template-columns: 50% 50%;
@@ -100,36 +99,47 @@ class BnbSubscriptions extends connect(store)(LitElement) {
 
   render() {
     return html`
+    <bnb-card>${this.renderCurrentPlan()}</bnb-card>
     <div class="plans">
-      ${this.plans?.map((item, index) => this.renderPlan(item, index))}
+      ${this.plans?.map((item) => this.renderPlan(item))}
     </div>
-    <mwc-dialog id="downgradePlanDlg" heading="Downgrading your plan">
-      <p>You are downgrading your current plan.
-        If you have more pages than the future plan allows, you will not loose your current data
-        but the monitoring for the more recent pages will be stopped.
-        Are you sure to downgrade ?</p>
-      <mwc-button dialogAction="ok" slot="primaryAction">Yes, sure !</mwc-button>
-      <mwc-button dialogAction="cancel" slot="secondaryAction">No</mwc-button>
-    </mwc-dialog>
-    <mwc-dialog id="upgradePlanDlg" heading="Upgrading your plan">
-      <p>Thank you for choosing a better plan. Can you please confirm your choice to upgrade your subscription ?</p>
-      <mwc-button dialogAction="ok" slot="primaryAction">Yes, I confirm</mwc-button>
-      <mwc-button dialogAction="cancel" slot="secondaryAction">No</mwc-button>
-    </mwc-dialog>
-    <mwc-dialog id="freePlanDlg" heading="Free Plan">
-      <p>You have chosen to go back to free plan.
-        If you have more pages than the free plan allows, you will not loose your current data
-        but the monitoring for the more recent pages will be stopped.
-        Are you sure to downgrade to free plan ?
-        If you confirm, your payment informations will be deleted and there will be no more billing.
-      </p>
-      <mwc-button dialogAction="ok" slot="primaryAction">Yes, I confirm !</mwc-button>
-      <mwc-button dialogAction="cancel" slot="secondaryAction">No</mwc-button>
-    </mwc-dialog>
     `;
   }
 
-  renderPlan(item, index) {
+  renderCurrentPlan() {
+    if (!this.currentPlan) {
+      return html``;
+    }
+
+    if (this.currentPlan.planId === -1) {
+      return html`
+        <div id="currentPlan">
+          <span>You are currently on the <strong>Free Plan</strong>. Select one of the following plans to suscribe to :</span>
+          <mwc-select id="plansSelect" outlined>
+            ${this.plans?.map((item, index) => this.renderPlanItem(item, index))}
+          </mwc-select>
+          <mwc-button id="suscribeBtn" @click="${this.subscribeTapped}">Subscribe</mwc-button>
+        </div>
+      `;
+    }
+    const plan = this.findPlanById(this.currentPlan.planId);
+    return html`
+      <div id="currentPlan">
+        <span>Your are currently on the <strong>${plan.name}</strong> plan.
+          You can downgrade or upgrade your subscription by clicking the Manage button.</span>
+        <mwc-button id="manageBtn" @click="${this.manageTapped}">Manage</mwc-button>
+      </div>
+    `;
+  }
+
+  renderPlanItem(item, index) {
+    if (item.id !== -1) {
+      return html`<mwc-list-item data-index="${index}">${item.name}</mwc-list-item>`;
+    }
+    return html``;
+  }
+
+  renderPlan(item) {
     return html`
     <bnb-card>
       <div class="card-content">
@@ -152,23 +162,12 @@ class BnbSubscriptions extends connect(store)(LitElement) {
           </li>
         </ul>
       </div>
-      <div class="card-actions">
-        ${this.renderCardButton(item, index)}
-      </div>
-    </bnb-card>
+     </bnb-card>
     `;
   }
 
-  renderCardButton(item, index) {
-    return this.computeHideSubscribe(item, this.currentPlan)
-      ? html`<div class="card-current">YOUR CURRENT PLAN</div>`
-      : html`<mwc-button @click="${this.subscribeTapped}" data-index="${index}">Subscribe</mwc-button>`;
-  }
-
-  firstUpdated() {
-    this.shadowRoot.getElementById('freePlanDlg').addEventListener('closed', (e) => this.onFreePlanDialogClosed(e.detail.action));
-    this.shadowRoot.getElementById('upgradePlanDlg').addEventListener('closed', (e) => this.onUpgradePlanDialogClosed(e.detail.action));
-    this.shadowRoot.getElementById('downgradePlanDlg').addEventListener('closed', (e) => this.onDowngradePlanDialogClosed(e.detail.action));
+  findPlanById(id) {
+    return this.plans.find((item) => item.id === id);
   }
 
   stateChanged(state) {
@@ -188,38 +187,14 @@ class BnbSubscriptions extends connect(store)(LitElement) {
     return false;
   }
 
-  subscribeTapped(e) {
-    this.selectedPlan = this.plans[e.currentTarget.dataset.index];
-
-    if (this.selectedPlan.id !== -1) {
-      if (this.currentPlan.planId === -1) {
-        store.dispatch(stripeCheckout(this.stripeKey, this.selectedPlan.id));
-      } else if (this.currentPlan.pages > this.selectedPlan.pages) {
-        this.shadowRoot.getElementById('downgradePlanDlg').show();
-      } else {
-        this.shadowRoot.getElementById('upgradePlanDlg').show();
-      }
-    } else {
-      this.shadowRoot.getElementById('freePlanDlg').show();
-    }
+  subscribeTapped() {
+    const selectedItem = this.shadowRoot.getElementById('plansSelect').selected;
+    this.selectedPlan = this.plans[selectedItem.dataset.index];
+    store.dispatch(stripeCheckout(this.stripeKey, this.selectedPlan.id));
   }
 
-  onFreePlanDialogClosed(action) {
-    if (action === 'ok') {
-      store.dispatch(deleteStripeSubscription());
-    }
-  }
-
-  onUpgradePlanDialogClosed(action) {
-    if (action === 'ok') {
-      store.dispatch(updateStripeSubscription(this.selectedPlan.id));
-    }
-  }
-
-  onDowngradePlanDialogClosed(action) {
-    if (action === 'ok') {
-      store.dispatch(updateStripeSubscription(this.selectedPlan.id));
-    }
+  manageTapped() {
+    store.dispatch(stripeManageSubscription());
   }
 }
 

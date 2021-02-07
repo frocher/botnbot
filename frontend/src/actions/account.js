@@ -96,39 +96,3 @@ export const loadStripeSubscription = () => async (dispatch) => {
     },
   });
 };
-
-export const updateStripeSubscriptionSuccess = createAction('STRIPE_SUBSCRIPTION_UPDATE_SUCCESS');
-export const updateStripeSubscriptionError = createAction('STRIPE_SUBSCRIPTION_UPDATE_ERROR');
-
-export const updateStripeSubscription = (stripePlan) => async (dispatch) => {
-  getResource({
-    url: getRequestUrl('/users/-1/subscription', { stripePlan }),
-    method: 'PUT',
-    onLoad(e) {
-      const response = JSON.parse(e.target.responseText);
-      if (e.target.status === 200) {
-        dispatch(updateStripeSubscriptionSuccess(response));
-      } else {
-        dispatch(updateStripeSubscriptionError(response));
-      }
-    },
-  });
-};
-
-export const deleteStripeSubscriptionSuccess = createAction('STRIPE_SUBSCRIPTION_DELETE_SUCCESS');
-export const deleteStripeSubscriptionError = createAction('STRIPE_SUBSCRIPTION_DELETE_ERROR');
-
-export const deleteStripeSubscription = () => async (dispatch) => {
-  getResource({
-    url: getRequestUrl('/users/-1/subscription', {}),
-    method: 'DELETE',
-    onLoad(e) {
-      const response = JSON.parse(e.target.responseText);
-      if (e.target.status === 200) {
-        dispatch(deleteStripeSubscriptionSuccess(response));
-      } else {
-        dispatch(deleteStripeSubscriptionError(response));
-      }
-    },
-  });
-};

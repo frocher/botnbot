@@ -15,7 +15,7 @@ You'll need the following software to make the backend run on your system:
 
 ## Quickstart for development
 
-The backend relies on Figaro for environment variables. You must start to create an *application.yml* file in your *config* directory. You can find an *application.yml.sample* in the *config* directory to copy and adapt.
+The backend relies on [dotenv](https://github.com/bkeepers/dotenv) for environment variables. You must start by creating a *.env* file in your directory. You can find a *.env.sample* in the *root* directory to copy and adapt.
 
 With Ruby installed, run the following lines from the root of your project download:
 

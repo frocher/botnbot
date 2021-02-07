@@ -38,7 +38,7 @@ gem 'omniauth-google-oauth2'
 gem 'six'
 
 # Configuration
-gem 'figaro'
+gem 'dotenv-rails'
 
 # Push notifications
 gem 'webpush'
