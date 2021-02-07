@@ -26,12 +26,12 @@
 #  created_at             :datetime
 #  updated_at             :datetime
 #
-
 class UsersController < ApplicationController
   before_action :set_user
 
   def show
     return not_found! unless can?(current_user, :show_user, @user)
+
     render json: @user
   end
 
@@ -43,16 +43,15 @@ class UsersController < ApplicationController
     @user.save!
 
     render json: @user
-
   rescue ActiveRecord::RecordInvalid
-    render json: {errors: @user.errors}, status: 422
+    render json: { errors: @user.errors }, status: 422
   end
 
   def destroy
     return not_found! unless can?(current_user, :delete_user, @user)
 
-    if (!params[:email] || params[:email] != @user.email)
-      render json: {message: "Account has not been deleted. You must enter a valid email."}, status: 400
+    if !params[:email] || params[:email] != @user.email
+      render json: { message: 'Account has not been deleted. You must enter a valid email.' }, status: 400
     else
       @user.destroy
 
@@ -60,7 +59,7 @@ class UsersController < ApplicationController
       @token.client = nil
       @resource = nil
 
-      UserMailer.account_deleted(@user, "Your account has been deleted").deliver_now
+      UserMailer.account_deleted(@user, 'Your account has been deleted').deliver_now
 
       render json: @user
     end
@@ -69,15 +68,15 @@ class UsersController < ApplicationController
   def save_subscription
     return not_found! unless can?(current_user, :update_user, @user)
 
-    if (!params[:subscription])
-      render json: {message: "Subscription must have an endpoint."}, status: 400
+    if !params[:subscription]
+      render json: { message: 'Subscription must have an endpoint.' }, status: 400
     else
       hash = JSON.parse(params[:subscription])
 
       @subscription = Subscription.new
-      @subscription.endpoint = hash["endpoint"]
-      @subscription.p256dh = hash["keys"]["p256dh"]
-      @subscription.auth = hash["keys"]["auth"]
+      @subscription.endpoint = hash['endpoint']
+      @subscription.p256dh = hash['keys']['p256dh']
+      @subscription.auth = hash['keys']['auth']
       @subscription.user = @user
       @subscription.save!
 
@@ -88,11 +87,10 @@ class UsersController < ApplicationController
   private
 
   def set_user
-    if params[:id].to_i <= 0
-      @user = current_user
-    else
-      @user = User.find(params[:id])
-    end
+    @user = if params[:id].to_i <= 0
+              current_user
+            else
+              User.find(params[:id])
+            end
   end
-
 end

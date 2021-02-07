@@ -1,3 +1,10 @@
 {
-    "eslint.workingDirectories": [ "./frontend", "./probe" ]
+  "eslint.workingDirectories": [ "./frontend", "./probe" ],
+  "ruby.useBundler": true,
+  "ruby.useLanguageServer": true,
+  "ruby.lint": {
+    "rubocop": {
+      "useBundler": true
+    }
+  },
 }

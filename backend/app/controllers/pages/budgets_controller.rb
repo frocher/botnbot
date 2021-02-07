@@ -3,6 +3,7 @@ class Pages::BudgetsController < ApplicationController
   def index
     @page = Page.find(params[:page_id])
     return not_found! unless can?(current_user, :read_budget, @page)
+    
     render json: @page.budgets
   end
 
@@ -21,7 +22,7 @@ class Pages::BudgetsController < ApplicationController
 
       render json: @budget
     rescue ActiveRecord::RecordInvalid
-      render json: {errors: @budget.errors}, status: 422
+      render json: { errors: @budget.errors }, status: 422
     end
   end
 
@@ -34,7 +35,7 @@ class Pages::BudgetsController < ApplicationController
       @budget.destroy!
       render json: @budget
     rescue ActiveRecord::RecordInvalid
-      render json: {errors: @budget.errors}, status: 422
+      render json: { errors: @budget.errors }, status: 422
     end
   end
 end

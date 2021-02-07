@@ -17,8 +17,8 @@ class Pages::UptimeController < ApplicationController
   end
 
   def get_uptime(page, start_date, end_date)
-    select_value = "value, error_code, error_message, time_key"
+    select_value = 'value, error_code, error_message, time_key'
     data = UptimeMetrics.select(select_value).by_page(page.id).where(time: start_date..end_date)
     data.to_a
-  end   
+  end
 end

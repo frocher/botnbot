@@ -46,6 +46,7 @@ class Pages::MembersController < ApplicationController
   def update
     @page = Page.find(params[:page_id])
     return not_found! unless can?(current_user, :update_page_member, @page)
+
     @member = PageMember.find(params[:id])
 
     # A member can't update his own rights
@@ -57,7 +58,7 @@ class Pages::MembersController < ApplicationController
     return render_api_error!("You are not allowed to give the #{params[:role]} role", 422) if is_greater_role(role, user_member.role)
 
     # There must be at least one admin member remaining
-    if @member.role == "admin"
+    if @member.role == 'admin'
       return render_api_error!("There must be at least one admin remaining", 422) unless has_a_remaining_admin(@page, @member)
     end
 
@@ -66,7 +67,7 @@ class Pages::MembersController < ApplicationController
       @member.save!
       render json: @member
     rescue ActiveRecord::RecordInvalid
-      render json: {errors: @member.errors}, status: 422
+      render json: { errors: @member.errors }, status: 422
     end
 
   end
@@ -87,17 +88,17 @@ class Pages::MembersController < ApplicationController
     end
 
     # The owner of the page cannot be removed from the team, ownership must be transfered first
-    return render_api_error!("The owner of the page cannot be removed from the team, ownership must be transfered first", 422) if @page.owner.id == @member.user.id
+    return render_api_error!('The owner of the page cannot be removed from the team, ownership must be transfered first', 422) if @page.owner.id == @member.user.id
 
     # A user can always remove himself as a page member except if he is the last
     # admin member
-    return render_api_error!("There must be at least one admin remaining", 422) unless has_a_remaining_admin(@page, @member)
+    return render_api_error!('There must be at least one admin remaining', 422) unless has_a_remaining_admin(@page, @member)
 
     begin
       @member.destroy!
       render json: @member
     rescue ActiveRecord::RecordInvalid
-      render json: {errors: @member.errors}, status: 422
+      render json: { errors: @member.errors }, status: 422
     end
   end
 
@@ -105,8 +106,8 @@ class Pages::MembersController < ApplicationController
 
   def can_create_member(page)
     resu = true
-    unless ENV["STRIPE_PUBLIC_KEY"].blank?
-      max_members = current_user.stripe_subscription["members"]
+    unless ENV['STRIPE_PUBLIC_KEY'].blank?
+      max_members = current_user.stripe_subscription['members']
       resu = max_members > 0 && page.page_members.count < max_members
     end
     resu
@@ -115,7 +116,7 @@ class Pages::MembersController < ApplicationController
   def has_a_remaining_admin(page, member)
     found_admin = false
     page.page_members.each do |current|
-      if current.id != member.id && current.role == "admin"
+      if current.id != member.id && current.role == 'admin'
         found_admin = true
         break
       end
@@ -125,11 +126,11 @@ class Pages::MembersController < ApplicationController
 
   def convert_role(role_name)
     case role_name
-    when "admin"
+    when 'admin'
       :admin
-    when "master"
+    when 'master'
       :master
-    when "editor"
+    when 'editor'
       :editor
     else
       :guest
@@ -141,10 +142,9 @@ class Pages::MembersController < ApplicationController
   end
 
   def prefix_role(role)
-    return "3" + role if role == "admin"
-    return "2" + role if role == "master"
-    return "1" + role if role == "editor"
-    return "0"
+    return '3' + role if role == 'admin'
+    return '2' + role if role == 'master'
+    return '1' + role if role == 'editor'
+    return '0'
   end
-
 end

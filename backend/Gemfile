@@ -65,4 +65,6 @@ group :development do
   gem 'annotate'
 end
 
+gem 'rubocop', require: false
+
 gem 'tzinfo-data'
