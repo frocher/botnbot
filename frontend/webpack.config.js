@@ -9,7 +9,6 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlWebpackTagsPlugin = require('html-webpack-tags-plugin');
-const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 
 const pkg = require('./package.json');
 
@@ -29,57 +28,42 @@ module.exports = (env, options) => {
   const copyStatics = {
     copyWebcomponents: [{
       from: resolve('./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js'),
-      to: join(OUTPUT_PATH, 'vendor'),
-      flatten: true,
+      to: join(OUTPUT_PATH, 'vendor', '[name].[ext]'),
     }, {
       from: resolve('./node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js'),
-      to: join(OUTPUT_PATH, 'vendor'),
-      flatten: true,
+      to: join(OUTPUT_PATH, 'vendor', '[name].[ext]'),
     }, {
       from: resolve('./node_modules/@webcomponents/webcomponentsjs/bundles/webcomponents-ce.js'),
-      to: join(OUTPUT_PATH, 'vendor', 'bundles'),
-      flatten: true,
+      to: join(OUTPUT_PATH, 'vendor', 'bundles', '[name].[ext]'),
     }, {
       from: resolve('./node_modules/@webcomponents/webcomponentsjs/bundles/webcomponents-sd-ce.js'),
-      to: join(OUTPUT_PATH, 'vendor', 'bundles'),
-      flatten: true,
+      to: join(OUTPUT_PATH, 'vendor', 'bundles', '[name].[ext]'),
     }, {
       from: resolve('./node_modules/@webcomponents/webcomponentsjs/bundles/webcomponents-sd-ce-pf.js'),
-      to: join(OUTPUT_PATH, 'vendor', 'bundles'),
-      flatten: true,
+      to: join(OUTPUT_PATH, 'vendor', 'bundles', '[name].[ext]'),
     }, {
       from: resolve('./node_modules/@webcomponents/webcomponentsjs/bundles/webcomponents-sd.js'),
-      to: join(OUTPUT_PATH, 'vendor', 'bundles'),
-      flatten: true,
+      to: join(OUTPUT_PATH, 'vendor', 'bundles', '[name].[ext]'),
     }, {
       from: resolve('./node_modules/web-animations-js/web-animations-next.min.js'),
-      to: join(OUTPUT_PATH, 'vendor'),
-      flatten: true,
+      to: join(OUTPUT_PATH, 'vendor', '[name].[ext]'),
     }, {
       from: resolve('./node_modules/chart.js/dist/Chart.bundle.min.js'),
-      to: join(OUTPUT_PATH, 'vendor'),
-      flatten: true,
+      to: join(OUTPUT_PATH, 'vendor', '[name].[ext]'),
     }, {
       from: resolve('./node_modules/chartjs-plugin-annotation/chartjs-plugin-annotation.min.js'),
-      to: join(OUTPUT_PATH, 'vendor'),
-      flatten: true,
+      to: join(OUTPUT_PATH, 'vendor', '[name].[ext]'),
     }],
     copyOthers: [{
       from: 'images/**',
       context: resolve('.'),
       to: OUTPUT_PATH,
     }, {
-      from: resolve('./src/index.html'),
-      to: OUTPUT_PATH,
-      flatten: true,
-    }, {
       from: resolve('./src/manifest.json'),
       to: OUTPUT_PATH,
-      flatten: true,
     }, {
       from: resolve('./src/robots.txt'),
       to: OUTPUT_PATH,
-      flatten: true,
     }],
   };
 
@@ -108,9 +92,6 @@ module.exports = (env, options) => {
         './vendor/chartjs-plugin-annotation.min.js',
       ],
       append: true,
-    }),
-    new ScriptExtHtmlWebpackPlugin({
-      defaultAttribute: 'defer',
     }),
   ];
 
