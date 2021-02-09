@@ -14,7 +14,7 @@ import {
   loadPageStats, loadLighthouseDetails, loadAssetsDetails, loadUptimeDetails,
 } from '../actions/stats';
 import { loadStripeSubscription, loadUser } from '../actions/account';
-import { isLogged, storeCredentials, getFullPath } from '../common';
+import { isLogged, storeCredentials } from '../common';
 import './bnb-home';
 import './bnb-signin';
 import { styles } from './bnb-styles';
