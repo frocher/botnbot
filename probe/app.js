@@ -13,7 +13,7 @@ const pdf = require('./routes/pdf');
 const app = express();
 
 app.use(compression());
-app.use(logger('dev'));
+app.use(logger('combined'));
 
 app.use(function (req, res, next) {
   if (process.env.PROBE_TOKEN && process.env.PROBE_TOKEN !== req.query.token) {
