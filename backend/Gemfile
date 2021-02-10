@@ -38,7 +38,7 @@ gem 'omniauth-google-oauth2'
 gem 'six'
 
 # Configuration
-gem 'figaro'
+gem 'dotenv-rails'
 
 # Push notifications
 gem 'webpush'
@@ -64,5 +64,7 @@ group :development do
   gem 'spring-watcher-listen', '~> 2.0.0'
   gem 'annotate'
 end
+
+gem 'rubocop', require: false
 
 gem 'tzinfo-data'

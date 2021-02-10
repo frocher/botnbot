@@ -80,14 +80,14 @@ class BnbPageBudget extends connect(store)(LitElement) {
 
   render() {
     return html`
-      <bnb-budget-bar id="budgetBar" can-add="${this.page.can_create_budget}"></bnb-budget-bar>
+      <bnb-budget-bar id="budgetBar" can-add="${this.page?.can_create_budget}"></bnb-budget-bar>
       ${this.cards.map((i) => this.renderCard(i))}
     `;
   }
 
   renderCard(item) {
     return html`
-      <bnb-budget-card .budgetInfo="${item}" ?canDelete="${this.page.can_delete_budget}" @close="${this.budgetCloseTapped}"></bnb-budget-card>
+      <bnb-budget-card .budgetInfo="${item}" ?canDelete="${this.page?.can_delete_budget}" @close="${this.budgetCloseTapped}"></bnb-budget-card>
     `;
   }
 
@@ -128,7 +128,7 @@ class BnbPageBudget extends connect(store)(LitElement) {
 
   createBudgetName(category, item) {
     const data = [
-      { name: 'Lighthouse', values: ['PWA', 'Performance', 'Accessibility', 'Best practices', 'SEO', 'Average'] },
+      { name: 'Lighthouse', values: ['PWA', 'Performance', 'Accessibility', 'Best practices', 'SEO', 'Mean'] },
       { name: 'Performance', values: ['First byte', 'Largest paint', 'Speed index', 'Total blocking time'] },
       { name: 'Assets count', values: ['HTML', 'CSS', 'Javascript', 'Image', 'Font', 'Other', 'Total'] },
       { name: 'Assets size', values: ['HTML', 'CSS', 'Javascript', 'Image', 'Font', 'Other', 'Total'] },
@@ -163,8 +163,8 @@ class BnbPageBudget extends connect(store)(LitElement) {
     if (src.item >= data.length) {
       switch (src.category) {
         case 0:
-          budgetModel = { label: 'average', color: '#D500F9' };
-          budgetData = { key: 'average', values: this.createAverageData(data) };
+          budgetModel = { label: 'mean', color: '#D500F9' };
+          budgetData = { key: 'mean', values: this.createMeanData(data) };
           break;
         case 2:
           budgetModel = { label: 'total', color: '#00B0FF' };
@@ -205,14 +205,14 @@ class BnbPageBudget extends connect(store)(LitElement) {
     return total;
   }
 
-  createAverageData(data) {
-    const average = this.createTotalData(data);
+  createMeanData(data) {
+    const mean = this.createTotalData(data);
     if (data.length > 0) {
-      for (let i = 0; i < average.length; i += 1) {
-        average[i].value = Math.round(average[i].value / data.length);
+      for (let i = 0; i < mean.length; i += 1) {
+        mean[i].value = Math.round(mean[i].value / data.length);
       }
     }
-    return average;
+    return mean;
   }
 
   budgetCloseTapped(e) {

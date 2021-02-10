@@ -1,9 +1,7 @@
 class PlansController < ApplicationController
   def index
-    resu = Array.new
-    unless Figaro.env.stripe_public_key.blank?
-      resu = Rails.application.config.stripe_plans
-    end
+    resu = []
+    resu = Rails.application.config.stripe_plans unless ENV['STRIPE_PUBLIC_KEY'].blank?
     render json: resu
   end
 end

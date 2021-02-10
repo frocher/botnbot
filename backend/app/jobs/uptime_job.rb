@@ -79,7 +79,7 @@ class UptimeJob < StatisticsJob
     delay = Rails.configuration.x.jobs.uptime_interval
 
     ActiveRecord::Base.connection_pool.with_connection do
-      unless Figaro.env.stripe_public_key.blank?
+      unless ENV["STRIPE_PUBLIC_KEY"].blank?
         if Page.exists?(page_id)
           page = Page.find(page_id)
           subscription = page.owner.stripe_subscription
@@ -172,9 +172,9 @@ class UptimeJob < StatisticsJob
       p256dh: subscription.p256dh,
       auth: subscription.auth,
       vapid: {
-        subject: Figaro.env.push_subject,
-        public_key: Figaro.env.push_public_key,
-        private_key: Figaro.env.push_private_key
+        subject: ENV["PUSH_SUBJECT"],
+        public_key: ENV["PUSH_PUBLIC_KEY"],
+        private_key: ENV["PUSH_PRIVATE_KEY"]
       }
     )
   rescue Webpush::InvalidSubscription => e

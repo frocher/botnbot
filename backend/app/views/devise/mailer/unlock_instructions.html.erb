@@ -1,0 +1,22 @@
+<h1 style="font-size:30px;font-weight:bold;color:#212121">Unlock Account</h1>
+
+<p style="align: left">Hello <%= @resource.email %>!</p>
+
+<p style="align: left">Your account has been locked due to an excessive number of unsuccessful sign in attempts.</p>
+
+<p style="align: left">Click the button below to unlock your account:</p>
+
+<p style="align: left">
+  <%= link_to 'Unlock my account', unlock_url(@resource, unlock_token: @token), style: 'border-style: solid;
+    border-color: #0d47a1;
+    border-width: 10px 20px 10px 20px;
+    display: inline-block;
+    background: #0d47a1;
+    border-radius: 5px;
+    font-size: 16px;
+    line-height: 120%;
+    color: #ffffff;
+    text-decoration: none;
+    width: auto;
+    text-align: center;' %>
+</p>

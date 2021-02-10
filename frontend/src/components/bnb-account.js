@@ -9,7 +9,7 @@ import '@material/mwc-top-app-bar-fixed';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
 import { updateRoute } from '../actions/app';
-import { updateUser, savePushSubscription } from '../actions/account';
+import { deleteUser, updateUser, savePushSubscription } from '../actions/account';
 import { BnbFormElement } from './bnb-form-element';
 import './bnb-card';
 import './bnb-install-button';
@@ -37,6 +37,15 @@ class BnbAccount extends connect(store)(BnbFormElement(LitElement)) {
 
       mwc-textfield {
         width: 100%;
+      }
+
+      h3.danger {
+        color: var(--mdc-theme-error);
+      }
+
+      mwc-button.danger {
+        --mdc-theme-primary: #cf6679;
+        --mdc-theme-on-primary: white;
       }
 
       #content {
@@ -95,6 +104,17 @@ class BnbAccount extends connect(store)(BnbFormElement(LitElement)) {
             </div>
           </bnb-card>
 
+          <h3 class="danger">Danger zone</h3>
+          <bnb-card>
+            <div class="card-content">
+              <div>
+              If you delete your account, all your data will be definitly erased, including your shared monitored pages.
+              You won't be able to retrieve them even if you recreate your account.
+              </div>
+              <mwc-button id="deleteAccountBtn" class="danger" slot="actionItems">Delete your account</mwc-button>
+            </div>
+          </bnb-card>
+
         </div>
       </div>
     </mwc-top-app-bar-fixed>
@@ -102,6 +122,13 @@ class BnbAccount extends connect(store)(BnbFormElement(LitElement)) {
     <mwc-dialog id="discardDlg" modal>
       <p>Discard edit.</p>
       <mwc-button dialogAction="ok" slot="primaryAction">Discard</mwc-button>
+      <mwc-button dialogAction="cancel" slot="secondaryAction">Cancel</mwc-button>
+    </mwc-dialog>
+
+    <mwc-dialog id="deleteAccountDlg" modal>
+      <p>Confim your account deletion by entering your email address.</p>
+      <mwc-textfield id="deleteAccountEmail" label="Email" type="text" outlined></mwc-textfield>
+      <mwc-button class="danger" dialogAction="ok" slot="primaryAction">Delete my account</mwc-button>
       <mwc-button dialogAction="cancel" slot="secondaryAction">Cancel</mwc-button>
     </mwc-dialog>
     `;
@@ -136,6 +163,8 @@ class BnbAccount extends connect(store)(BnbFormElement(LitElement)) {
   firstUpdated() {
     this.shadowRoot.getElementById('closeBtn').addEventListener('click', () => this.closeTapped());
     this.shadowRoot.getElementById('saveBtn').addEventListener('click', () => this.saveTapped());
+    this.shadowRoot.getElementById('deleteAccountBtn').addEventListener('click', () => this.deleteAccountTapped());
+    this.shadowRoot.getElementById('deleteAccountDlg').addEventListener('closed', (e) => this.onDeleteAccountDialogClosed(e.detail.action));
     this.shadowRoot.getElementById('discardDlg').addEventListener('closed', (e) => this.onDiscardDialogClosed(e.detail.action));
 
     if (this.isNotificationsEnabled()) {
@@ -284,6 +313,17 @@ class BnbAccount extends connect(store)(BnbFormElement(LitElement)) {
 
   sendSubscriptionToBackEnd(subscription) {
     store.dispatch(savePushSubscription(subscription));
+  }
+
+  deleteAccountTapped() {
+    this.shadowRoot.getElementById('deleteAccountDlg').show();
+  }
+
+  onDeleteAccountDialogClosed(action) {
+    if (action === 'ok') {
+      const email = this.shadowRoot.getElementById('deleteAccountEmail').value;
+      store.dispatch(deleteUser(this.user.id, email));
+    }
   }
 
   urlB64ToUint8Array(base64String) {

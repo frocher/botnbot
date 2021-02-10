@@ -4,7 +4,9 @@ require 'chronic_duration'
 # Table name: pages
 #
 #  id                      :bigint           not null, primary key
+#  current_week_lh_score   :integer
 #  device                  :integer          default("mobile")
+#  last_week_lh_score      :integer
 #  locked                  :boolean          default(FALSE)
 #  mail_notify             :boolean          default(TRUE)
 #  name                    :string(255)
@@ -31,6 +33,7 @@ require 'chronic_duration'
 
 class Page < ActiveRecord::Base
   after_create :init_jobs
+  after_destroy :destroy_metrics
 
   has_attached_file :screenshot,
     path: ":rails_root/reports/screenshots/:id/:style/:filename",
@@ -57,7 +60,7 @@ class Page < ActiveRecord::Base
   validates :slack_channel, presence: true, if: Proc.new { |a| a.slack_notify? }
 
   def as_json(options={})
-    h = super({only: [:id, :name, :url, :device, :locked, :uptime_keyword, :uptime_keyword_type, :mail_notify, :slack_notify, :push_notify, :slack_webhook, :slack_channel, :uptime_status, :created_at, :updated_at]}.merge(options || {}))
+    h = super({only: [:id, :name, :url, :device, :locked, :uptime_keyword, :uptime_keyword_type, :mail_notify, :slack_notify, :push_notify, :slack_webhook, :slack_channel, :uptime_status, :current_week_lh_score, :last_week_lh_score, :created_at, :updated_at]}.merge(options || {}))
     h[:owner] = owner.as_json
     h
   end
@@ -146,6 +149,23 @@ class Page < ActiveRecord::Base
     HarJob.schedule_next("#{rand(1..max_start)}m", HarJob.new, id)
     max_start = Rails.configuration.x.jobs.lighthouse_start
     LighthouseJob.schedule_next("#{rand(1..max_start)}m", LighthouseJob.new, id)
+  end
+
+  def destroy_metrics
+    # Destroy lighthouse metrics and reports
+    LighthouseMetrics.by_page(id).delete_all
+    metric = LighthouseMetrics.new page_id: id
+    metric.delete_reports
+
+    # Destroy uptime metrics and reports
+    UptimeMetrics.by_page(id).delete_all
+    metric = UptimeMetrics.new page_id: id
+    metric.delete_reports
+
+    # Destroy assets metrics and reports
+    AssetsMetrics.by_page(id).delete_all
+    metric = AssetsMetrics.new page_id: id
+    metric.delete_reports
   end
 
   private

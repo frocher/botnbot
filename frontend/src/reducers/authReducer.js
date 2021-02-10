@@ -13,6 +13,7 @@ const authReducer = (state = initial, action) => {
       return { ...state, credentials: action.payload };
 
     case 'SIGN_OUT':
+    case 'USER_DELETE_SUCCESS':
       sessionStorage.removeItem('credentials');
       return { ...state, credentials: null };
 

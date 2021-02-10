@@ -49,6 +49,7 @@ class Ability
         rules << [
           :show_user,
           :update_user,
+          :delete_user,
           :read_subscription,
           :create_subscription,
           :update_subscription,

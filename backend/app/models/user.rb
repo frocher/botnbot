@@ -4,12 +4,14 @@
 #
 #  id                     :bigint           not null, primary key
 #  admin                  :boolean          default(FALSE)
+#  allow_password_change  :boolean          default(FALSE), not null
 #  bio                    :string(255)
 #  confirmation_sent_at   :datetime
 #  confirmation_token     :string(255)
 #  confirmed_at           :datetime
 #  current_sign_in_at     :datetime
 #  current_sign_in_ip     :string(255)
+#  customer               :string(255)
 #  email                  :string(255)
 #  encrypted_password     :string(255)      default(""), not null
 #  image                  :string(255)
@@ -42,10 +44,11 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable, :recoverable, :validatable, :confirmable, :trackable
 
   before_create :record_first_admin
+  after_destroy :destroy_subscription
 
   alias_attribute :nickname, :name
 
-  has_many :owned_pages, foreign_key: :owner_id, class_name: 'Page'
+  has_many :owned_pages, foreign_key: :owner_id, class_name: 'Page', dependent: :destroy
   has_many :page_members, dependent: :destroy
   has_many :pages, through: :page_members
   has_many :identities, dependent: :destroy
@@ -72,10 +75,12 @@ class User < ActiveRecord::Base
     plan_id = -1
 
     unless subscription.nil?
-      Stripe.api_key = Figaro.env.stripe_secret_key
-      subscription_object = Stripe::Subscription.retrieve(subscription)
-      if subscription_object.status != "canceled" && subscription_object.status != "unpaid"
-        plan_id = subscription_object.plan.id
+      Stripe.api_key = ENV["STRIPE_SECRET_KEY"]
+      unless Stripe.api_key.nil?
+        subscription_object = Stripe::Subscription.retrieve(subscription)
+        if !subscription.nil? && subscription_object.status != "canceled" && subscription_object.status != "unpaid"
+          plan_id = subscription_object.plan.id
+        end
       end
     end
 
@@ -90,11 +95,24 @@ class User < ActiveRecord::Base
     resu
   end
 
+  def delete_stripe_subscription
+    Stripe.api_key = ENV["STRIPE_SECRET_KEY"]
+    stripe_subscription = Stripe::Subscription.retrieve(subscription)
+    stripe_subscription.delete
+  end
+
   def update_pages_lock()
-    max_pages = Figaro.env.stripe_public_key.blank? ? 99999 : stripe_subscription["pages"]
+    max_pages = ENV["STRIPE_PUBLIC_KEY"].blank? ? 99999 : stripe_subscription["pages"]
     owned_pages.each_with_index do |page, index|
       page.locked = index >= max_pages
       page.save
+    end
+  end
+
+  def destroy_subscription
+    unless subscription.nil?
+      delete_stripe_subscription
+      subscription = nil
     end
   end
 

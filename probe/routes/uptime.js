@@ -16,7 +16,7 @@ function doubleCheck() {
   });
 }
 
-router.get('/', function (req, res, next) {
+router.get('/', function (req, res) {
   request.get(req.query.url)
     .set('Cache-Control', 'no-cache,no-store,must-revalidate,max-age=-1,private')
     .timeout({ response: 10000, deadline: 60000 })

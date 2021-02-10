@@ -1,0 +1,9 @@
+<h1 style="font-size:30px;font-weight:bold;color:#212121">Email Changed</h1>
+
+<p style="align: left">Hello <%= @email %>!</p>
+
+<% if @resource.try(:unconfirmed_email?) %>
+  <p style="align: left">We're contacting you to notify you that your email is being changed to <%= @resource.unconfirmed_email %>.</p>
+<% else %>
+  <p style="align: left">We're contacting you to notify you that your email has been changed to <%= @resource.email %>.</p>
+<% end %>

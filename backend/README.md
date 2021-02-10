@@ -15,7 +15,7 @@ You'll need the following software to make the backend run on your system:
 
 ## Quickstart for development
 
-The backend relies on Figaro for environment variables. You must start to create an *application.yml* file in your *config* directory. You can find an *application.yml.sample* in the *config* directory to copy and adapt.
+The backend relies on [dotenv](https://github.com/bkeepers/dotenv) for environment variables. You must start by creating a *.env* file in your directory. You can find a *.env.sample* in the *root* directory to copy and adapt.
 
 With Ruby installed, run the following lines from the root of your project download:
 
@@ -33,6 +33,11 @@ rake db:migrate
 You also need to create the InfluxDB database:
 ```sh
 influx -execute 'create database botnbot'
+```
+
+The backend sends mails. You need to catch them with mailcatcher:
+```sh
+gem install mailcatcher -- --with-cflags="-Wno-error=implicit-function-declaration"
 ```
 
 And you are finally ready to start the API server:
@@ -63,6 +68,12 @@ An application.yml.sample file is included in the config directory.
 | Name    | Default Value | Description  |
 | --------|:---------:| -----|
 | MAILER_SENDER | jeeves.thebot@botnbot.com | Mail sender |
+| HTTP_PROTOCOL | http |  |
+| HTTP_HOST | localhost |  |
+| HTTP_PORT | 80 |  |
+| SMTP_HOST | localhost | SMTP host |
+| SMTP_PORT | 1025 | SMTP port |
+
 
 ### MySQL Configuration
 

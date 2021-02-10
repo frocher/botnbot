@@ -40,10 +40,9 @@ export const styles = css`
     --mdc-text-field-outlined-idle-border-color: var(--mdc-theme-text-primary-on-background);
     --mdc-text-field-outlined-hover-border-color: var(--mdc-theme-secondary);
 
-    --wc-range-datepicker-cell-hover: var(--mdc-theme-primary);
-    --wc-range-datepicker-cell-selected: var(--mdc-theme-primary);
-    --wc-range-datepicker-cell-hovered: #2196F3;
-
+    --wc-datepicker-cell-hover: var(--mdc-theme-primary);
+    --wc-datepicker-cell-hovered: #2196F3;
+    --wc-datepicker-cell-selected: var(--mdc-theme-primary);
     --bnb-divider-color: #B6B6B6;
   }
 

@@ -14,7 +14,7 @@ import {
   loadPageStats, loadLighthouseDetails, loadAssetsDetails, loadUptimeDetails,
 } from '../actions/stats';
 import { loadStripeSubscription, loadUser } from '../actions/account';
-import { isLogged, storeCredentials, getFullPath } from '../common';
+import { isLogged, storeCredentials } from '../common';
 import './bnb-home';
 import './bnb-signin';
 import { styles } from './bnb-styles';
@@ -116,7 +116,7 @@ class BnbApp extends connect(store)(LitElement) {
   }
 
   initRouter() {
-    this.router = new Router(getFullPath(''));
+    this.router = new Router('/');
 
     this.router.on({
       '/add-page': () => {
@@ -126,11 +126,11 @@ class BnbApp extends connect(store)(LitElement) {
         this.updateView('account');
       },
       '/bytes-details/:id': (params) => {
-        this.pageId = params.id;
+        this.pageId = params.data.id;
         this.updateView('bytes-details');
       },
       '/edit-page/:id': (params) => {
-        this.pageId = params.id;
+        this.pageId = params.data.id;
         this.updateView('edit-page');
       },
       '/edit-password': () => {
@@ -143,23 +143,23 @@ class BnbApp extends connect(store)(LitElement) {
         this.updateView('home');
       },
       '/lighthouse-details/:id': (params) => {
-        this.pageId = params.id;
+        this.pageId = params.data.id;
         this.updateView('lighthouse-details');
       },
       '/members/:id': (params) => {
-        this.pageId = params.id;
+        this.pageId = params.data.id;
         this.updateView('members');
       },
       '/page/:id': (params) => {
-        this.pageId = params.id;
+        this.pageId = params.data.id;
         this.updateView('page');
       },
       '/performance-details/:id': (params) => {
-        this.pageId = params.id;
+        this.pageId = params.data.id;
         this.updateView('performance-details');
       },
       '/requests-details/:id': (params) => {
-        this.pageId = params.id;
+        this.pageId = params.data.id;
         this.updateView('requests-details');
       },
       '/signin': () => {
@@ -169,7 +169,7 @@ class BnbApp extends connect(store)(LitElement) {
         this.updateView('signup');
       },
       '/uptime-details/:id': (params) => {
-        this.pageId = params.id;
+        this.pageId = params.data.id;
         this.updateView('uptime-details');
       },
     });

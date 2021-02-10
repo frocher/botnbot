@@ -6,7 +6,7 @@ class ApplicationController < ActionController::API
   respond_to :json
 
   rescue_from ActiveRecord::RecordNotFound do
-    render json: { message: '404 Not found'}, status: 404
+    render json: { message: '404 Not found' }, status: 404
     update_auth_header
   end
 
@@ -15,14 +15,14 @@ class ApplicationController < ActionController::API
 
     message = "\n#{exception.class} (#{exception.message}):\n"
     message << exception.annoted_source_code.to_s if exception.respond_to?(:annoted_source_code)
-    message << "  " << trace.join("\n  ")
+    message << '  ' << trace.join("\n  ")
 
     logger.fatal message
     update_auth_header
-    render json: { message: '500 Internal Server Error'}, status: 500
+    render json: { message: '500 Internal Server Error' }, status: 500
   end
 
- protected
+protected
 
   def configure_permitted_parameters
     devise_parameter_sanitizer.permit(:sign_up, keys: [:name])
@@ -41,9 +41,7 @@ class ApplicationController < ActionController::API
   end
 
   def authorize!(action, subject)
-    unless abilities.allowed?(current_user, action, subject)
-      forbidden!
-    end
+    forbidden! unless abilities.allowed?(current_user, action, subject)
   end
 
   def bad_request!
@@ -59,7 +57,7 @@ class ApplicationController < ActionController::API
   end
 
   def render_api_error!(message, status)
-    render json: { message: message}, status: status
+    render json: { message: message }, status: status
   end
 
   def paginate(relation)
@@ -81,6 +79,4 @@ class ApplicationController < ActionController::API
 
     response.headers['Link'] = links.join(', ')
   end
-
-
 end

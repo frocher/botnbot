@@ -24,3 +24,21 @@ export const stripeCheckout = (stripeKey, priceId) => async (dispatch) => {
     dispatch(stripeCheckoutError(err));
   }
 };
+
+export const stripeManageSubscriptionSuccess = createAction('STRIPE_MANAGE_SUBSCRIPTION_SUCCESS');
+export const stripeManageSubscriptionError = createAction('STRIPE_MANAGE_SUBSCRIPTION_ERROR');
+
+export const stripeManageSubscription = () => async (dispatch) => {
+  try {
+    const options = {
+      method: 'POST',
+      headers: fetchCredentials(),
+    };
+
+    const response = await (await fetch('/api/stripe/customer_portal_session', options)).json();
+    dispatch(stripeManageSubscriptionSuccess());
+    window.location.replace(response.url);
+  } catch (err) {
+    dispatch(stripeManageSubscriptionError(err));
+  }
+};

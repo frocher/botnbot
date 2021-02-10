@@ -7,6 +7,7 @@ import { getRequestUrl } from '../common';
 import { updateRoute } from '../actions/app';
 import { styles } from './bnb-styles';
 import './bnb-card';
+import './bnb-gauge';
 import './bnb-lazy-image';
 
 class BnbPageCard extends connect(store)(LitElement) {
@@ -34,7 +35,14 @@ class BnbPageCard extends connect(store)(LitElement) {
       }
 
       .cardContent {
-        padding: 16px;
+        display: flex;
+        flex-direction: row;
+        padding: 16px 0 16px 16px;
+      }
+
+      .leftContent {
+        max-width: calc(100% - 50px);
+        flex-grow: 1;
       }
 
       h2 {
@@ -91,8 +99,11 @@ class BnbPageCard extends connect(store)(LitElement) {
       @touchcancel="${this.handleRippleDeactivate}">
       <bnb-lazy-image src="${this.getScreenshotUrl(this.page)}"></bnb-lazy-image>
       <div class="cardContent">
-        <h2><mwc-icon>${this.computeIcon(this.page)}</mwc-icon>${this.page.name}</h2>
-        <a href="${this.page.url}" @click="${this.urlTapped}" target="_blank" title="Open url in a new tab" rel="noopener">${this.page.url}</a>
+        <div class="leftContent">
+          <h2><mwc-icon>${this.computeIcon(this.page)}</mwc-icon>${this.page.name}</h2>
+          <a href="${this.page.url}" @click="${this.urlTapped}" target="_blank" title="Open url in a new tab" rel="noopener">${this.page.url}</a>
+        </div>        
+        <bnb-gauge class="rightContent" score="${this.page.current_week_lh_score}" lastScore="${this.page.last_week_lh_score}"></bnb-gauge>
       </div>
       <mwc-ripple id="ripple"></mwc-ripple>
     </bnb-card>

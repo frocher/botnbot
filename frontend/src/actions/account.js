@@ -21,7 +21,7 @@ export const loadUser = () => async (dispatch) => {
   });
 };
 
-export const updateUserStart = createAction('USER_FETCH_START');
+export const updateUserStart = createAction('USER_UPDATE_START');
 export const updateUserSuccess = createAction('USER_UPDATE_SUCCESS');
 export const updateUserError = createAction('USER_UPDATE_ERROR');
 
@@ -36,6 +36,26 @@ export const updateUser = (id, user) => async (dispatch) => {
         dispatch(updateUserSuccess(response));
       } else {
         dispatch(updateUserError(response));
+      }
+    },
+  });
+};
+
+export const deleteUserStart = createAction('USER_DELETE_START');
+export const deleteUserSuccess = createAction('USER_DELETE_SUCCESS');
+export const deleteUserError = createAction('USER_DELETE_ERROR');
+
+export const deleteUser = (id, email) => async (dispatch) => {
+  dispatch(deleteUserStart());
+  getResource({
+    url: getRequestUrl(`/users/${id}`, { email }),
+    method: 'DELETE',
+    onLoad(e) {
+      const response = JSON.parse(e.target.responseText);
+      if (e.target.status === 200) {
+        dispatch(deleteUserSuccess(response));
+      } else {
+        dispatch(deleteUserError(response));
       }
     },
   });
@@ -72,42 +92,6 @@ export const loadStripeSubscription = () => async (dispatch) => {
         dispatch(fetchStripeSubscriptionSuccess(response));
       } else {
         dispatch(fetchStripeSubscriptionError(response));
-      }
-    },
-  });
-};
-
-export const updateStripeSubscriptionSuccess = createAction('STRIPE_SUBSCRIPTION_UPDATE_SUCCESS');
-export const updateStripeSubscriptionError = createAction('STRIPE_SUBSCRIPTION_UPDATE_ERROR');
-
-export const updateStripeSubscription = (stripePlan) => async (dispatch) => {
-  getResource({
-    url: getRequestUrl('/users/-1/subscription', { stripePlan }),
-    method: 'PUT',
-    onLoad(e) {
-      const response = JSON.parse(e.target.responseText);
-      if (e.target.status === 200) {
-        dispatch(updateStripeSubscriptionSuccess(response));
-      } else {
-        dispatch(updateStripeSubscriptionError(response));
-      }
-    },
-  });
-};
-
-export const deleteStripeSubscriptionSuccess = createAction('STRIPE_SUBSCRIPTION_DELETE_SUCCESS');
-export const deleteStripeSubscriptionError = createAction('STRIPE_SUBSCRIPTION_DELETE_ERROR');
-
-export const deleteStripeSubscription = () => async (dispatch) => {
-  getResource({
-    url: getRequestUrl('/users/-1/subscription', {}),
-    method: 'DELETE',
-    onLoad(e) {
-      const response = JSON.parse(e.target.responseText);
-      if (e.target.status === 200) {
-        dispatch(deleteStripeSubscriptionSuccess(response));
-      } else {
-        dispatch(deleteStripeSubscriptionError(response));
       }
     },
   });
