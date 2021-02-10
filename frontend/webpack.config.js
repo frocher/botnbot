@@ -175,6 +175,10 @@ module.exports = (env, options) => {
           target: 'http://localhost:3000/',
           pathRewrite: { '^/api': '' },
         },
+        '/omniauth': {
+          target: 'http://localhost:3000/',
+          pathRewrite: { '^/api': '' },
+        },
         '/public': {
           target: 'http://localhost:3000/',
           pathRewrite: { '^/public': '' },
