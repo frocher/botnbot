@@ -19,7 +19,7 @@ class ScreenshotJob
       return
     end
 
-    if page.uptime_status == 0
+    if page.uptime_status.zero?
       Rails.logger.info "Screenshot job not done because #{page.url} is down"
       return
     end
@@ -27,10 +27,10 @@ class ScreenshotJob
     begin
       res = launch_probe(probe, page)
       if res.is_a?(Net::HTTPSuccess)
-        path = File.join(Rails.root, "reports/screenshots", page.id.to_s, "original")
+        path = File.join(Rails.root, 'reports/screenshots', page.id.to_s, 'original')
         FileUtils.mkdir_p(path) unless File.exist?(path)
-        output_path = File.join(path, page.id.to_s + ".png")
-        file = File.open(output_path, "wb")
+        output_path = File.join(path, "#{page.id}.png")
+        file = File.open(output_path, 'wb')
         file.write(res.body)
         page.screenshot = file
         page.save!

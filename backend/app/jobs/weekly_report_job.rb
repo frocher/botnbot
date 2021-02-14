@@ -16,9 +16,9 @@ class WeeklyReportJob
   end
 
   def process_user(user)
-    Rails.logger.info "Processing user : " + user.email
+    Rails.logger.info "Processing user : #{user.email}"
 
-    pages = user.pages.sort_by { |p| p["name"] }
+    pages = user.pages.sort_by { |p| p['name'] }
     unless pages.empty?
       @context = OpenStruct.new
       @context.pages = []
@@ -34,23 +34,23 @@ class WeeklyReportJob
       send_mail(user, generate_title(@context.period_start, @context.period_end))
     end
   rescue Exception => e
-    Rails.logger.error "Error processing user " + user.email
+    Rails.logger.error "Error processing user #{user.email}"
     Rails.logger.error e.to_s
   end
 
   def generate_title(start_date, end_date)
-    "Botnbot weekly report " + start_date.strftime("%m/%d/%Y") + " to " + end_date.strftime("%m/%d/%Y")
+    "Botnbot weekly report #{start_date.strftime('%m/%d/%Y')} to #{end_date.strftime('%m/%d/%Y')}"
   end
 
   def send_mail(user, title)
     UserMailer.weekly_summary(user, title, @context).deliver_now
   rescue Exception => e
-    Rails.logger.error "Error sending mail to user " + user.email
+    Rails.logger.error "Error sending mail to user #{user.email}"
     Rails.logger.error e.to_s
   end
 
   def construct_page(page, start_date, end_date)
-    Rails.logger.info "Processing page : " + page.name
+    Rails.logger.info "Processing page : #{page.name}"
 
     stats = OpenStruct.new
     stats.name = page.name
@@ -63,13 +63,13 @@ class WeeklyReportJob
     stats.empty = uptime_summary.nil? || lighthouse_summary.nil? || requests_summary.nil? || bytes_summary.nil?
 
     unless stats.empty
-      stats.pwa             = extract_value(lighthouse_summary, "pwa", 0)
-      stats.accessibility   = extract_value(lighthouse_summary, "accessibility", 0)
-      stats.performance     = extract_value(lighthouse_summary, "performance", 0)
-      stats.best_practices  = extract_value(lighthouse_summary, "best_practices", 0)
-      stats.seo             = extract_value(lighthouse_summary, "seo", 0)
-      stats.uptime          = extract_value(uptime_summary, "value", 0, :*, 100)
-      stats.speed_index     = extract_value(lighthouse_summary, "speed_index", 0)
+      stats.pwa             = extract_value(lighthouse_summary, 'pwa', 0)
+      stats.accessibility   = extract_value(lighthouse_summary, 'accessibility', 0)
+      stats.performance     = extract_value(lighthouse_summary, 'performance', 0)
+      stats.best_practices  = extract_value(lighthouse_summary, 'best_practices', 0)
+      stats.seo             = extract_value(lighthouse_summary, 'seo', 0)
+      stats.uptime          = extract_value(uptime_summary, 'value', 0, :*, 100)
+      stats.speed_index     = extract_value(lighthouse_summary, 'speed_index', 0)
       stats.assets_count    = sum_assets(requests_summary)
       stats.assets_size     = sum_assets(bytes_summary) / 1024
 
@@ -85,26 +85,26 @@ class WeeklyReportJob
 
     previous_lighthouse = page.lighthouse_summary(previous_start, previous_end)
 
-    stats.last_pwa = extract_value(previous_lighthouse, "pwa", 0)
+    stats.last_pwa = extract_value(previous_lighthouse, 'pwa', 0)
     stats.pwa_delta = compute_delta(stats.pwa, stats.last_pwa)
 
-    stats.last_accessibility = extract_value(previous_lighthouse, "accessibility", 0)
+    stats.last_accessibility = extract_value(previous_lighthouse, 'accessibility', 0)
     stats.accessibility_delta = compute_delta(stats.accessibility, stats.last_accessibility)
 
-    stats.last_performance = extract_value(previous_lighthouse, "performance", 0)
+    stats.last_performance = extract_value(previous_lighthouse, 'performance', 0)
     stats.performance_delta = compute_delta(stats.performance, stats.last_performance)
 
-    stats.last_best_practices = extract_value(previous_lighthouse, "best_practices", 0)
+    stats.last_best_practices = extract_value(previous_lighthouse, 'best_practices', 0)
     stats.best_practices_delta = compute_delta(stats.best_practices, stats.last_best_practices)
 
-    stats.last_seo = extract_value(previous_lighthouse, "seo", 0)
+    stats.last_seo = extract_value(previous_lighthouse, 'seo', 0)
     stats.seo_delta = compute_delta(stats.seo, stats.last_seo)
 
-    stats.last_speed_index = extract_value(previous_lighthouse, "speed_index", 0)
+    stats.last_speed_index = extract_value(previous_lighthouse, 'speed_index', 0)
     stats.speed_index_delta = compute_delta(stats.speed_index, stats.last_speed_index)
 
     previous_uptime = page.uptime_summary(previous_start, previous_end)
-    stats.last_uptime = extract_value(previous_uptime, "value", 0, :*, 100)
+    stats.last_uptime = extract_value(previous_uptime, 'value', 0, :*, 100)
     stats.uptime_delta = stats.uptime - stats.last_uptime
 
     previous_req = page.requests_summary(previous_start, previous_end)
@@ -117,7 +117,7 @@ class WeeklyReportJob
   end
 
   def sum_assets(assets)
-    extract_value(assets, "html", 0) + extract_value(assets, "js", 0) + extract_value(assets, "css", 0) + extract_value(assets, "image", 0) + extract_value(assets, "font", 0) + extract_value(assets, "other", 0)
+    extract_value(assets, 'html', 0) + extract_value(assets, 'js', 0) + extract_value(assets, 'css', 0) + extract_value(assets, 'image', 0) + extract_value(assets, 'font', 0) + extract_value(assets, 'other', 0)
   end
 
   def compute_delta(new_value, last_value)

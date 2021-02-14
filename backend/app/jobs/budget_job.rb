@@ -1,6 +1,6 @@
 class BudgetJob
 
-  def call(job, time)
+  def call(_job, _time)
     Rails.logger.info "Starting job #{self.class.name}"
     perform
   end
@@ -13,8 +13,8 @@ class BudgetJob
   end
 
   def process_user(user)
-    Rails.logger.info "Processing user : " + user.email
-    pages = user.pages.sort_by { |p| p["name"] }
+    Rails.logger.info "Processing user : #{user.email}"
+    pages = user.pages.sort_by { |p| p['name'] }
     unless pages.empty?
       @context = OpenStruct.new
       @context.budgets = []
@@ -22,12 +22,12 @@ class BudgetJob
       send_mail(user, generate_title) unless @context.budgets.empty?
     end
   rescue Exception => e
-    Rails.logger.error "Error processing user " + user.email
+    Rails.logger.error "Error processing user #{user.email}"
     Rails.logger.error e.to_s
   end
 
   def construct_page(page)
-    Rails.logger.info "Processing page : " + page.name
+    Rails.logger.info "Processing page : #{page.name}"
 
     yesterday_start = (Date.today - 1).beginning_of_day
     yesterday_end = (Date.today - 1).end_of_day
@@ -54,8 +54,8 @@ class BudgetJob
   def check_lighthouse_budget(page, budget, yesterday_start, yesterday_end, day_before_start, day_before_end)
     yesterday_summary = page.lighthouse_summary(yesterday_start, yesterday_end)
     day_before_summary = page.lighthouse_summary(day_before_start, day_before_end)
-    items = ["pwa", "performance", "accessibility", "best_practices", "seo"]
-    labels = ["PWA", "Performance", "Accessibility", "Best practices", "SEO", "Average"]
+    items = ['pwa', 'performance', 'accessibility', 'best_practices', 'seo']
+    labels = ['PWA', 'Performance', 'Accessibility', 'Best practices', 'SEO', 'Average']
 
     if budget.item < items.count
       yesterday_value = extract_value(yesterday_summary, items[budget.item])
@@ -68,9 +68,9 @@ class BudgetJob
     resu = nil
     if !yesterday_value.nil? && !day_before_value.nil?
       if yesterday_value < budget.budget && day_before_value > budget.budget
-        resu = create_budget_result(page, "Lighthouse/" + labels[budget.item], "bad", budget.budget, yesterday_value, day_before_value)
+        resu = create_budget_result(page, "Lighthouse/#{labels[budget.item]}", 'bad', budget.budget, yesterday_value, day_before_value)
       elsif yesterday_value > budget.budget && day_before_value < budget.budget
-        resu = create_budget_result(page, "Lighthouse/" + labels[budget.item], "good", budget.budget, yesterday_value, day_before_value)
+        resu = create_budget_result(page, "Lighthouse/#{labels[budget.item]}", 'good', budget.budget, yesterday_value, day_before_value)
       end
     end
     resu
@@ -79,8 +79,8 @@ class BudgetJob
   def check_performance_budget(page, budget, yesterday_start, yesterday_end, day_before_start, day_before_end)
     yesterday_summary = page.lighthouse_summary(yesterday_start, yesterday_end)
     day_before_summary = page.lighthouse_summary(day_before_start, day_before_end)
-    items = ["ttfb", "first_meaningful_paint", "speed_index", "first_interactive"]
-    labels = ["First byte", "First paint", "Speed index", "Interactive"]
+    items = ['ttfb', 'first_meaningful_paint', 'speed_index', 'first_interactive']
+    labels = ['First byte', 'First paint', 'Speed index', 'Interactive']
 
     yesterday_value = extract_value(yesterday_summary, items[budget.item])
     day_before_value = extract_value(day_before_summary, items[budget.item])
@@ -88,9 +88,9 @@ class BudgetJob
     resu = nil
     if !yesterday_value.nil? && !day_before_value.nil?
       if yesterday_value > budget.budget && day_before_value < budget.budget
-        resu = create_budget_result(page, "Performance/" + labels[budget.item], "bad", budget.budget, yesterday_value, day_before_value)
+        resu = create_budget_result(page, "Performance/#{labels[budget.item]}", 'bad', budget.budget, yesterday_value, day_before_value)
       elsif yesterday_value < budget.budget && day_before_value > budget.budget
-        resu = create_budget_result(page, "Performance/" + labels[budget.item], "good", budget.budget, yesterday_value, day_before_value)
+        resu = create_budget_result(page, "Performance/#{labels[budget.item]}", 'good', budget.budget, yesterday_value, day_before_value)
       end
     end
     resu
@@ -99,8 +99,8 @@ class BudgetJob
   def check_requests_budget(page, budget, yesterday_start, yesterday_end, day_before_start, day_before_end)
     yesterday_summary = page.requests_summary(yesterday_start, yesterday_end)
     day_before_summary = page.requests_summary(day_before_start, day_before_end)
-    items = ["html", "css", "js", "image", "font", "other"]
-    labels = ["HTML", "CSS", "Javascript", "Image", "Font", "Other", "Total"]
+    items = ['html', 'css', 'js', 'image', 'font', 'other']
+    labels = ['HTML', 'CSS', 'Javascript', 'Image', 'Font', 'Other', 'Total']
 
     if budget.item < items.count
       yesterday_value = extract_value(yesterday_summary, items[budget.item])
@@ -113,9 +113,9 @@ class BudgetJob
     resu = nil
     if !yesterday_value.nil? && !day_before_value.nil?
       if yesterday_value > budget.budget && day_before_value < budget.budget
-        resu = create_budget_result(page, "Assets count/" + labels[budget.item], "bad", budget.budget, yesterday_value, day_before_value)
+        resu = create_budget_result(page, "Assets count/#{labels[budget.item]}", 'bad', budget.budget, yesterday_value, day_before_value)
       elsif yesterday_value < budget.budget && day_before_value > budget.budget
-        resu = create_budget_result(page, "Assets count/" + labels[budget.item], "good", budget.budget, yesterday_value, day_before_value)
+        resu = create_budget_result(page, "Assets count/#{labels[budget.item]}", 'good', budget.budget, yesterday_value, day_before_value)
       end
     end
     resu
@@ -124,8 +124,8 @@ class BudgetJob
   def check_bytes_budget(page, budget, yesterday_start, yesterday_end, day_before_start, day_before_end)
     yesterday_summary = page.bytes_summary(yesterday_start, yesterday_end)
     day_before_summary = page.bytes_summary(day_before_start, day_before_end)
-    items = ["html", "css", "js", "image", "font", "other"]
-    labels = ["HTML", "CSS", "Javascript", "Image", "Font", "Other", "Total"]
+    items = ['html', 'css', 'js', 'image', 'font', 'other']
+    labels = ['HTML', 'CSS', 'Javascript', 'Image', 'Font', 'Other', 'Total']
 
     if budget.item < items.count
       yesterday_value = extract_value(yesterday_summary, items[budget.item])
@@ -141,9 +141,9 @@ class BudgetJob
       day_before_value /= 1024
 
       if yesterday_value > budget.budget && day_before_value < budget.budget
-        resu = create_budget_result(page, "Assets size/" + labels[budget.item], "bad", budget.budget, yesterday_value, day_before_value)
+        resu = create_budget_result(page, "Assets size/#{labels[budget.item]}", 'bad', budget.budget, yesterday_value, day_before_value)
       elsif yesterday_value < budget.budget && day_before_value > budget.budget
-        resu = create_budget_result(page, "Assets size/" + labels[budget.item], "good", budget.budget, yesterday_value, day_before_value)
+        resu = create_budget_result(page, "Assets size/#{labels[budget.item]}", 'good', budget.budget, yesterday_value, day_before_value)
       end
     end
     resu
@@ -162,13 +162,13 @@ class BudgetJob
   end
 
   def generate_title
-    "Botnbot budget report for " + Date.today.strftime("%m/%d/%Y")
+    "Botnbot budget report for #{Date.today.strftime('%m/%d/%Y')}"
   end
 
   def send_mail(user, title)
     UserMailer.budget(user, title, @context).deliver_now
   rescue Exception => e
-    Rails.logger.error "Error sending mail to user " + user.email
+    Rails.logger.error "Error sending mail to user #{user.email}" 
     Rails.logger.error e.to_s
   end
 
