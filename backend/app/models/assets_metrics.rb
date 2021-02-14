@@ -7,13 +7,13 @@ class AssetsMetrics < Influxer::Metrics
   scope :by_page, -> (id) { where(page_id: id) if id.present? }
 
   def get_har_path
-    File.join(Rails.root, "reports/har", page_id.to_s)
+    File.join(Rails.root, 'reports/har', page_id.to_s)
   end
 
   def write_har(har)
     path = get_har_path
     FileUtils.mkdir_p(path) unless File.exist?(path)
-    File.open(File.join(path, time_key + ".har.gz"), "wb") do |f|
+    File.open(File.join(path, time_key + '.har.gz'), 'wb') do |f|
       gz = Zlib::GzipWriter.new(f, 9)
       gz.write har
       gz.close
@@ -22,7 +22,7 @@ class AssetsMetrics < Influxer::Metrics
 
   def read_har
     result = nil
-    File.open(File.join(get_har_path, time_key + ".har.gz")) do |f|
+    File.open(File.join(get_har_path, time_key + '.har.gz')) do |f|
       gz = Zlib::GzipReader.new(f)
       result = gz.read
       gz.close

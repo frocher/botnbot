@@ -36,7 +36,7 @@
 #  index_users_on_reset_password_token  (reset_password_token) UNIQUE
 #  index_users_on_uid_and_provider      (uid,provider) UNIQUE
 #
-require "stripe"
+require 'stripe'
 
 class User < ActiveRecord::Base
   include DeviseTokenAuth::Concerns::User
@@ -75,10 +75,10 @@ class User < ActiveRecord::Base
     plan_id = -1
 
     unless subscription.nil?
-      Stripe.api_key = ENV["STRIPE_SECRET_KEY"]
+      Stripe.api_key = ENV['STRIPE_SECRET_KEY']
       unless Stripe.api_key.nil?
         subscription_object = Stripe::Subscription.retrieve(subscription)
-        if !subscription.nil? && subscription_object.status != "canceled" && subscription_object.status != "unpaid"
+        if !subscription.nil? && subscription_object.status != 'canceled' && subscription_object.status != 'unpaid'
           plan_id = subscription_object.plan.id
         end
       end
@@ -86,23 +86,23 @@ class User < ActiveRecord::Base
 
     plan = find_plan(plan_id)
     resu = Hash.new
-    resu["planId"] = plan_id
-    resu["pages"] = plan["pages"]
-    resu["members"] = plan["members"]
-    resu["uptime"] = plan["uptime"]
-    resu["ownedPages"] = owned_pages.count
+    resu['planId'] = plan_id
+    resu['pages'] = plan['pages']
+    resu['members'] = plan['members']
+    resu['uptime'] = plan['uptime']
+    resu['ownedPages'] = owned_pages.count
 
     resu
   end
 
   def delete_stripe_subscription
-    Stripe.api_key = ENV["STRIPE_SECRET_KEY"]
+    Stripe.api_key = ENV['STRIPE_SECRET_KEY']
     stripe_subscription = Stripe::Subscription.retrieve(subscription)
     stripe_subscription.delete
   end
 
   def update_pages_lock()
-    max_pages = ENV["STRIPE_PUBLIC_KEY"].blank? ? 99999 : stripe_subscription["pages"]
+    max_pages = ENV['STRIPE_PUBLIC_KEY'].blank? ? 99999 : stripe_subscription['pages']
     owned_pages.each_with_index do |page, index|
       page.locked = index >= max_pages
       page.save
@@ -134,11 +134,10 @@ class User < ActiveRecord::Base
 
   end
 
-
   private
 
   def find_plan(id)
-    plans = Rails.application.config.stripe_plans.select{ |o| o["id"] == id }
+    plans = Rails.application.config.stripe_plans.select{ |o| o['id'] == id }
     plans.first
   end
 
@@ -148,5 +147,4 @@ class User < ActiveRecord::Base
       self.admin = true
     end
   end
-
 end

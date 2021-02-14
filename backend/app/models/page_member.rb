@@ -24,12 +24,12 @@ class PageMember < ActiveRecord::Base
 
   validates :user, presence: true
   validates :page, presence: true
-  validates :user_id, uniqueness: { scope: [:page_id], message: "already exists in page" }
+  validates :user_id, uniqueness: { scope: [:page_id], message: 'already exists in page' }
 
-  scope :guests,  ->  { where("role = :role", role: 0) }
-  scope :editors, ->  { where("role = :role", role: 1) }
-  scope :masters, ->  { where("role = :role", role: 2) }
-  scope :admins,  ->  { where("role = :role", role: 3) }
+  scope :guests,  ->  { where('role = :role', role: 0) }
+  scope :editors, ->  { where('role = :role', role: 1) }
+  scope :masters, ->  { where('role = :role', role: 2) }
+  scope :admins,  ->  { where('role = :role', role: 3) }
 
   def username
     user.name

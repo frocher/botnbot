@@ -24,13 +24,13 @@ class LighthouseMetrics < Influxer::Metrics
   end
 
   def get_report_path
-    File.join(Rails.root, "reports/lighthouse", page_id.to_s)
+    File.join(Rails.root, 'reports/lighthouse', page_id.to_s)
   end
 
   def write_report(result)
     path = get_report_path
     FileUtils.mkdir_p(path) unless File.exist?(path)
-    File.open(File.join(path, time_key + ".html.gz"), "wb") do |f|
+    File.open(File.join(path, time_key + '.html.gz'), 'wb') do |f|
       gz = Zlib::GzipWriter.new(f, 9)
       gz.write result
       gz.close
@@ -39,7 +39,7 @@ class LighthouseMetrics < Influxer::Metrics
 
   def read_report
     result = nil
-    File.open(File.join(get_report_path, time_key + ".html.gz")) do |f|
+    File.open(File.join(get_report_path, time_key + '.html.gz')) do |f|
       gz = Zlib::GzipReader.new(f)
       result = gz.read
       gz.close

@@ -36,9 +36,9 @@ class Page < ActiveRecord::Base
   after_destroy :destroy_metrics
 
   has_attached_file :screenshot,
-    path: ":rails_root/reports/screenshots/:id/:style/:filename",
-    default_url: "/images/:style/missing.png",
-    styles: { thumb: ["", :jpg] },
+    path: ':rails_root/reports/screenshots/:id/:style/:filename',
+    default_url: '/images/:style/missing.png',
+    styles: { thumb: ['', :jpg] },
     convert_options: {
       thumb: '-resize "360x" +repage -crop "360x270+0+0" -gravity North -quality 80 -interlace Plane'
     }

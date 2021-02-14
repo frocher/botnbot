@@ -4,8 +4,8 @@ class Ability
       return [] unless user.kind_of?(User)
 
       case subject.class.name
-      when "Page" then page_abilities(user, subject)
-      when "User" then user_abilities(user, subject)
+      when 'Page' then page_abilities(user, subject)
+      when 'User' then user_abilities(user, subject)
       else []
       end.concat(global_abilities(user))
     end
