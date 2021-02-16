@@ -1,5 +1,5 @@
 import { Workbox, messageSW } from 'workbox-window';
-import './views/bnb-app';
+import './views/app/bnb-app';
 
 // HACK(keanulee): The Redux package assumes `process` exists - mock it here before
 // the module is loaded.
