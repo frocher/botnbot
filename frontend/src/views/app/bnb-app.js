@@ -72,6 +72,7 @@ class BnbApp extends connect(store)(LitElement) {
     return html`
     <bnb-add-page            class=${classMap(this.renderClass('add-page'))}></bnb-add-page>
     <bnb-account             class=${classMap(this.renderClass('account'))}></bnb-account>
+    <bnb-assets-report       class=${classMap(this.renderClass('assets-report'))}></bnb-assets-report>
     <bnb-bytes-details       class=${classMap(this.renderClass('bytes-details'))}></bnb-bytes-details>
     <bnb-pages               class=${classMap(this.renderClass('home'))}></bnb-pages>
     <bnb-members             class=${classMap(this.renderClass('members'))}></bnb-members>
@@ -124,6 +125,11 @@ class BnbApp extends connect(store)(LitElement) {
       },
       '/account': () => {
         this.updateView('account');
+      },
+      '/assets-report/:id/:assets': (params) => {
+        this.pageId = params.data.id;
+        this.assets = params.data.assets;
+        this.updateView('assets-report');
       },
       '/bytes-details/:id': (params) => {
         this.pageId = params.data.id;
@@ -251,8 +257,14 @@ class BnbApp extends connect(store)(LitElement) {
         const cb = this.viewLoaded.bind(this, Boolean(oldView));
 
         switch (view) {
+          case 'account':
+            import('../account/bnb-account.js').then(cb);
+            break;
           case 'add-page':
             import('../pages/bnb-add-page.js').then(cb);
+            break;
+          case 'assets-report':
+            import('../reports/bnb-assets-report.js').then(cb);
             break;
           case 'bytes-details':
             import('../details/bnb-bytes-details.js').then(cb);
@@ -286,9 +298,6 @@ class BnbApp extends connect(store)(LitElement) {
             break;
           case 'uptime-details':
             import('../details/bnb-uptime-details.js').then(cb);
-            break;
-          case 'account':
-            import('../account/bnb-account.js').then(cb);
             break;
           default:
             this.viewLoaded(Boolean(oldView));
@@ -337,6 +346,9 @@ class BnbApp extends connect(store)(LitElement) {
     } else if (this.view === 'requests-details' || this.view === 'bytes-details') {
       store.dispatch(loadPage(this.pageId));
       store.dispatch(loadAssetsDetails(this.pageId, this.period));
+    } else if (this.view === 'assets-report') {
+      store.dispatch(loadPage(this.pageId));
+      // TODO store.dispatch(loadUptimeDetails(this.pageId, this.period));
     }
   }
 
