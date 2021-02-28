@@ -1,6 +1,7 @@
 import { html, css } from 'lit-element';
 import '@material/mwc-icon-button';
-import { getRequestUrl } from '../../utilities/api';
+import { store } from '../../state/store';
+import { updateRoute } from '../../state/app/actions';
 import { BnbPageDetails } from './bnb-page-details';
 
 class BnbRequestsDetails extends BnbPageDetails {
@@ -72,9 +73,8 @@ class BnbRequestsDetails extends BnbPageDetails {
         <td>${item.font_requests}</td>
         <td>${item.other_requests}</td>
         <td>
-          <a href="${this.computeUrl(item.time_key)}" title="Show HAR" target="_blank">
-            <mwc-icon-button icon="visibility"></mwc-icon-button>
-          </a>
+          <mwc-icon-button @click="${this.assetsClicked}" title="Show HAR" icon="visibility" data-key="${item.time_key}"></mwc-icon-button>
+        </td>
       </tr>
     `;
   }
@@ -88,14 +88,9 @@ class BnbRequestsDetails extends BnbPageDetails {
     }
   }
 
-  computeUrl(key) {
-    if (key) {
-      let result = 'http://www.softwareishard.com/har/viewer/?inputUrl=';
-      result += `${window.location.protocol}//${window.location.host}`;
-      result += getRequestUrl(`pages/${this.page.id}/assets/${key}`);
-      return result;
-    }
-    return '';
+  assetsClicked(event) {
+    const { key } = event.target.dataset;
+    store.dispatch(updateRoute(`assets-count-report/${this.page.id}/${key}/`));
   }
 }
 

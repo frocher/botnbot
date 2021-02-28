@@ -5,6 +5,7 @@ import authReducer from './auth/reducer';
 import budgetsReducer from './budgets/reducer';
 import membersReducer from './members/reducer';
 import pagesReducer from './pages/reducer';
+import reportsReducer from './reports/reducer';
 import statsReducer from './stats/reducer';
 
 const rootReducer = combineReducers({
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   budgets: budgetsReducer,
   members: membersReducer,
   pages: pagesReducer,
+  reports: reportsReducer,
   stats: statsReducer,
 });
 
