@@ -53,6 +53,9 @@ module.exports = (env, options) => {
     }, {
       from: resolve('./node_modules/chartjs-plugin-annotation/chartjs-plugin-annotation.min.js'),
       to: join(OUTPUT_PATH, 'vendor', '[name].[ext]'),
+    }, {
+      from: resolve('./node_modules/chartjs-chart-treemap/dist/chartjs-chart-treemap.min.js'),
+      to: join(OUTPUT_PATH, 'vendor', '[name].[ext]'),
     }],
     copyOthers: [{
       from: 'images/**',
@@ -89,6 +92,7 @@ module.exports = (env, options) => {
         './vendor/webcomponents-loader.js',
         './vendor/web-animations-next.min.js',
         './vendor/Chart.bundle.min.js',
+        './vendor/chartjs-chart-treemap.min.js',
         './vendor/chartjs-plugin-annotation.min.js',
       ],
       append: true,
