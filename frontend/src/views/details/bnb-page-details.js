@@ -157,10 +157,9 @@ export class BnbPageDetails extends connect(store)(LitElement) {
         }
 
         table tbody tr td:nth-child(1n) {
-          text-align: left ! important;
+          text-align: left !important;
           width: calc(100vw - 16px);
         }
-
       }
       `,
     ];
@@ -171,26 +170,30 @@ export class BnbPageDetails extends connect(store)(LitElement) {
     <mwc-top-app-bar-fixed>
       <mwc-icon-button id="backBtn" icon="arrow_back" slot="navigationIcon"></mwc-icon-button>
       <div slot="title">${this.page ? this.page.name : ''}</div>
-
       <div id="content">
-        <div class="table-wrap">
-        <table>
-          <thead>
-            ${this.renderHeader()}
-          </thead>
-          <tbody>
-            ${this.details.map((i) => this.renderItem(i))}
-          </tbody>
-        </table>
-        </div>
+        ${this.renderContent()}
       </div>
     </mwc-top-app-bar-fixed>
     `;
   }
 
-  renderHeader() {
+  renderContent() {
     return html`
+    <div class="table-wrap">
+      <table>
+        <thead>
+          ${this.renderHeader()}
+        </thead>
+        <tbody>
+          ${this.details.map((i) => this.renderItem(i))}
+        </tbody>
+      </table>
+    </div>
     `;
+  }
+
+  renderHeader() {
+    return html``;
   }
 
   renderItem(item) {
