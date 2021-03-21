@@ -76,8 +76,11 @@ class BnbDownAlert extends LitElement {
 
   renderTooltip() {
     const from = this.lastDowntime;
-    const duration = formatDistance(new Date(from), new Date());
-    return html`Site is down since ${this.formatTime(from)} (${duration})`;
+    if (from !== 'null') {
+      const duration = formatDistance(new Date(from), new Date());
+      return html`Site is down since ${this.formatTime(from)} (${duration})`;
+    }
+    return html`Site is down.`;
   }
 
   formatTime(time) {
