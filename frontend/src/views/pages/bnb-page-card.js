@@ -70,11 +70,6 @@ class BnbPageCard extends connect(store)(LitElement) {
         filter: blur(3px);
       }
 
-      .hurt {
-        animation: pulse 5s infinite;
-        filter: grayscale(0);
-      }
-
       @keyframes pulse {
         0% {filter: grayscale(0)}
         50% {filter: grayscale(100%)}
@@ -113,7 +108,7 @@ class BnbPageCard extends connect(store)(LitElement) {
   }
 
   renderDownAlert() {
-    return this.page.uptime_status === 0 ? html`<bnb-down-alert class="hurt rightContent" lastDowntime="${this.page.last_downtime}"></bnb-down-alert>` : html``;
+    return this.page.uptime_status === 0 ? html`<bnb-down-alert class="rightContent" lastDowntime="${this.page.last_downtime}"></bnb-down-alert>` : html``;
   }
 
   renderGauge() {
@@ -141,15 +136,7 @@ class BnbPageCard extends connect(store)(LitElement) {
   }
 
   computeCardClass(item) {
-    if (item.locked) {
-      return 'locked';
-    }
-
-    if (item.uptime_status === 0) {
-      return 'hurt';
-    }
-
-    return '';
+    return item.locked ? 'locked' : '';
   }
 
   get ripple() {
