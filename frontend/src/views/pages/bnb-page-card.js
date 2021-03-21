@@ -8,6 +8,7 @@ import { updateRoute } from '../../state/app/actions';
 import { styles } from '../components/bnb-styles';
 import '../components/bnb-card';
 import '../components/bnb-lazy-image';
+import './bnb-down-alert';
 import './bnb-gauge';
 
 class BnbPageCard extends connect(store)(LitElement) {
@@ -102,12 +103,21 @@ class BnbPageCard extends connect(store)(LitElement) {
         <div class="leftContent">
           <h2><mwc-icon>${this.computeIcon(this.page)}</mwc-icon>${this.page.name}</h2>
           <a href="${this.page.url}" @click="${this.urlTapped}" target="_blank" title="Open url in a new tab" rel="noopener">${this.page.url}</a>
-        </div>        
-        <bnb-gauge class="rightContent" score="${this.page.current_week_lh_score}" lastScore="${this.page.last_week_lh_score}"></bnb-gauge>
+        </div>       
+        ${this.renderDownAlert()}
+        ${this.renderGauge()}
       </div>
       <mwc-ripple id="ripple"></mwc-ripple>
     </bnb-card>
     `;
+  }
+
+  renderDownAlert() {
+    return this.page.uptime_status === 0 ? html`<bnb-down-alert class="hurt rightContent" lastDowntime="${this.page.last_downtime}"></bnb-down-alert>` : html``;
+  }
+
+  renderGauge() {
+    return this.page.uptime_status !== 0 ? html`<bnb-gauge class="rightContent" score="${this.page.current_week_lh_score}" lastScore="${this.page.last_week_lh_score}"></bnb-gauge>` : html``;
   }
 
   stateChanged() {

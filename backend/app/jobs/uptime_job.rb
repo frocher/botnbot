@@ -44,7 +44,8 @@ class UptimeJob < StatisticsJob
             error_content = result['content'] || 'empty'
             if is_second_chance
               write_metrics(probe['name'], page, 0, res.code, result['errorMessage'], error_content)
-              page.uptime_status = 0
+              page.uptime_status = 0 
+              page.last_downtime = DateTime.now if last == 1
               page.save!
               send_down_notification(page, result['errorMessage']) if last == 1
             else

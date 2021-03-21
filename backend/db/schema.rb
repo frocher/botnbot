@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_24_215130) do
+ActiveRecord::Schema.define(version: 2021_03_21_165408) do
 
   create_table "budgets", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "page_id", null: false
@@ -64,6 +64,7 @@ ActiveRecord::Schema.define(version: 2021_01_24_215130) do
     t.integer "owner_id", null: false
     t.integer "last_week_lh_score"
     t.integer "current_week_lh_score"
+    t.datetime "last_downtime"
     t.index ["owner_id"], name: "index_pages_on_owner_id"
   end
 
