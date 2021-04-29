@@ -5,6 +5,7 @@ import '@material/mwc-formfield';
 import '@material/mwc-icon-button';
 import '@material/mwc-radio';
 import '@material/mwc-switch';
+import '@material/mwc-textarea';
 import '@material/mwc-textfield';
 import '@material/mwc-top-app-bar-fixed';
 import { connect } from 'pwa-helpers';
@@ -32,6 +33,11 @@ class BnbEditPage extends connect(store)(BnbFormElement(LitElement)) {
 
       .mdc-label {
         margin-top: -12px !important;
+      }
+
+      mwc-textarea {
+        width: 100%;
+        margin-top: 12px;
       }
 
       mwc-textfield {
@@ -84,6 +90,7 @@ class BnbEditPage extends connect(store)(BnbFormElement(LitElement)) {
           <bnb-card>
             <mwc-textfield id="name" type="text" label="Page name" outlined value="${this.name}"></mwc-textfield>
             <mwc-textfield id="url" type="url" label="URL" outlined value="${this.url}"></mwc-textfield>
+            <mwc-textarea id="description" label="Description" outlined value="${this.description ?? ''}"></mwc-textarea>
             <mwc-formfield label="Mobile">
               <mwc-radio id="mobileBtn" name="device" ?checked="${this.device === 'mobile'}"></mwc-radio>
             </mwc-formfield>
@@ -143,6 +150,7 @@ class BnbEditPage extends connect(store)(BnbFormElement(LitElement)) {
       pageId: { type: Number },
       name: { type: String },
       url: { type: String },
+      description: { type: String },
       device: { type: String },
       uptimeKeyword: { type: String },
       uptimeKeywordType: { type: String },
@@ -165,6 +173,7 @@ class BnbEditPage extends connect(store)(BnbFormElement(LitElement)) {
       this.pageId = page.id;
       this.name = page.name;
       this.url = page.url;
+      this.description = page.description;
       this.device = page.device;
       this.uptimeKeyword = page.uptime_keyword;
       this.uptimeKeywordType = page.uptime_keyword_type;
@@ -221,6 +230,7 @@ class BnbEditPage extends connect(store)(BnbFormElement(LitElement)) {
     const page = {
       name: this.shadowRoot.getElementById('name').value,
       url: this.shadowRoot.getElementById('url').value,
+      description: this.shadowRoot.getElementById('description').value,
       device,
       uptime_keyword: this.shadowRoot.getElementById('uptimeKeyword').value,
       uptime_keyword_type: uptimeKeywordType,

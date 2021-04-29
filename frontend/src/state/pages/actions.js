@@ -42,9 +42,11 @@ export const loadPage = (id) => async (dispatch) => {
 export const createPageSuccess = createAction('PAGE_CREATE_SUCCESS');
 export const createPageError = createAction('PAGE_CREATE_ERROR');
 
-export const createPage = (name, url, device) => async (dispatch) => {
+export const createPage = (name, url, description, device) => async (dispatch) => {
   getResource({
-    url: getRequestUrl('/pages', { name, url, device }),
+    url: getRequestUrl('/pages', {
+      name, url, description, device,
+    }),
     method: 'POST',
     onLoad(e) {
       const response = JSON.parse(e.target.responseText);

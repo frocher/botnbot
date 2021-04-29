@@ -76,6 +76,10 @@ export const styles = css`
     --mdc-theme-primary: #64B5F6;
   }
 
+  mwc-textarea {
+    --mdc-theme-primary: #fff;
+  }
+
   mwc-textfield {
     --mdc-theme-primary: #fff;
   }

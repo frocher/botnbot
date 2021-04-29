@@ -46,6 +46,7 @@ class PagesController < ApplicationController
       @page.owner = current_user
       @page.name = params[:name]
       @page.url = params[:url]
+      @page.description = params[:description]
       @page.device = params[:device]
       @page.uptime_status = 1
       @page.locked = false
@@ -75,6 +76,7 @@ class PagesController < ApplicationController
 
     @page.name = params[:name]
     @page.url = params[:url]
+    @page.description = params[:description]
     @page.device = params[:device]
     @page.uptime_keyword = params[:uptime_keyword]
     @page.uptime_keyword_type = params[:uptime_keyword_type]

@@ -31,6 +31,7 @@
     "@material/mwc-switch": "^0.20.0",
     "@material/mwc-tab": "^0.20.0",
     "@material/mwc-tab-bar": "^0.20.0",
+    "@material/mwc-textarea": "^0.20.0",
     "@material/mwc-textfield": "^0.20.0",
     "@material/mwc-top-app-bar-fixed": "^0.20.0",
     "@popperjs/core": "^2.6.0",

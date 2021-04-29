@@ -1,6 +1,7 @@
 import { LitElement, css, html } from 'lit-element';
 import '@material/mwc-formfield';
 import '@material/mwc-radio';
+import '@material/mwc-textarea';
 import '@material/mwc-textfield';
 import '@material/mwc-button';
 import '@material/mwc-dialog';
@@ -19,6 +20,7 @@ class BnbAddPage extends connect(store)(BnbFormElement(LitElement)) {
     return {
       pageName: { type: String },
       url: { type: String },
+      description: { type: String },
       routePath: { type: String },
       errors: { type: Object },
     };
@@ -31,6 +33,11 @@ class BnbAddPage extends connect(store)(BnbFormElement(LitElement)) {
       :host {
         display: flex;
         flex-direction: column;
+      }
+
+      mwc-textarea {
+        width: 100%;
+        margin-top: 12px;
       }
 
       mwc-textfield {
@@ -73,6 +80,7 @@ class BnbAddPage extends connect(store)(BnbFormElement(LitElement)) {
           <bnb-card>
             <mwc-textfield id="name" label="Page name" type="text" outlined value="${this.pageName}"></mwc-textfield>
             <mwc-textfield id="url" label="URL" type="url" outlined value="${this.url}"></mwc-textfield>
+            <mwc-textarea id="description" label="Description" outlined value="${this.description ?? ''}"></mwc-textarea>
             <mwc-formfield label="Mobile">
               <mwc-radio id="mobileBtn" name="device" group="deviceGroup" checked></mwc-radio>
             </mwc-formfield>
@@ -113,6 +121,7 @@ class BnbAddPage extends connect(store)(BnbFormElement(LitElement)) {
       createPage(
         this.shadowRoot.getElementById('name').value,
         this.shadowRoot.getElementById('url').value,
+        this.shadowRoot.getElementById('description').value,
         this.shadowRoot.getElementById('mobileBtn').checked ? 'mobile' : 'desktop',
       ),
     );
