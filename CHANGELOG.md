@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Directories layout in front component.
 - Uptime details page improved with a more compact view of downtimes and uptimes.
 - New component for HAR view in resources details page.
+- Bump lighthouse version to 7.4.0.
 
 ## [1.1.1] - 2021-02-18
 ### Fixed
