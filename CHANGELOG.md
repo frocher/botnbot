@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Random color for new page instead of grey.
 - Treemap chart for resources details page.
 - Downtime information directly on page card.
+- Description field on pages.
 - CHANGELOG file.
 ### Changed
 - Directories layout in front component.
