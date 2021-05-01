@@ -1,3 +1,4 @@
+require 'stripe'
 # == Schema Information
 #
 # Table name: users
@@ -36,8 +37,6 @@
 #  index_users_on_reset_password_token  (reset_password_token) UNIQUE
 #  index_users_on_uid_and_provider      (uid,provider) UNIQUE
 #
-require 'stripe'
-
 class User < ActiveRecord::Base
   include DeviseTokenAuth::Concerns::User
 
@@ -85,7 +84,7 @@ class User < ActiveRecord::Base
     end
 
     plan = find_plan(plan_id)
-    resu = Hash.new
+    resu = {}
     resu['planId'] = plan_id
     resu['pages'] = plan['pages']
     resu['members'] = plan['members']
@@ -101,8 +100,8 @@ class User < ActiveRecord::Base
     stripe_subscription.delete
   end
 
-  def update_pages_lock()
-    max_pages = ENV['STRIPE_PUBLIC_KEY'].blank? ? 99999 : stripe_subscription['pages']
+  def update_pages_lock
+    max_pages = ENV['STRIPE_PUBLIC_KEY'].blank? ? 99_999 : stripe_subscription['pages']
     owned_pages.each_with_index do |page, index|
       page.locked = index >= max_pages
       page.save
@@ -110,10 +109,9 @@ class User < ActiveRecord::Base
   end
 
   def destroy_subscription
-    unless subscription.nil?
-      delete_stripe_subscription
-      subscription = nil
-    end
+    return if subscription.nil?
+    delete_stripe_subscription
+    subscription = nil
   end
 
   #
@@ -126,25 +124,24 @@ class User < ActiveRecord::Base
       if identity
         user = identity.user
       else
-        user = User.find_by(email: auth.info.email) || User.create!(uid: auth.uid, provider: auth.provider, email: auth.info.email, password: Devise.friendly_token[0,20], name: (auth.info.name || auth.info.full_name).to_s)
+        user = User.find_by(email: auth.info.email) || User.create!(uid: auth.uid, provider: auth.provider, email: auth.info.email, password: Devise.friendly_token[0, 20], name: (auth.info.name || auth.info.full_name).to_s)
         identity = Identity.create(provider: auth.provider, uid: auth.uid, user: user)
       end
       user
     end
-
   end
 
   private
 
   def find_plan(id)
-    plans = Rails.application.config.stripe_plans.select{ |o| o['id'] == id }
+    plans = Rails.application.config.stripe_plans.select { |o| o['id'] == id }
     plans.first
   end
 
   # First user is always super admin
   def record_first_admin
-    if User.count == 0
-      self.admin = true
-    end
+    return unless User.count.zero?
+
+    self.admin = true
   end
 end

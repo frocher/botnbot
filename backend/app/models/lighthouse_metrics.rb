@@ -1,4 +1,4 @@
-require "zlib"
+require 'zlib'
 
 class LighthouseMetrics < Influxer::Metrics
   set_series :lighthouse
@@ -6,8 +6,8 @@ class LighthouseMetrics < Influxer::Metrics
   attributes :pwa, :performance, :accessibility, :best_practices, :seo,
              :ttfb, :largest_contentful_paint, :total_blocking_time, :speed_index
 
-  scope :by_page, -> (id) { where(page_id: id) if id.present? }
-  scope :by_time_key, -> (key) { where(time_key: key) if key.present? }
+  scope :by_page, ->(id) { where(page_id: id) if id.present? }
+  scope :by_time_key, ->(key) { where(time_key: key) if key.present? }
 
   before_write :round_data
 
@@ -23,12 +23,12 @@ class LighthouseMetrics < Influxer::Metrics
     self.speed_index = self.speed_index.round(0)
   end
 
-  def get_report_path
+  def report_path
     File.join(Rails.root, 'reports/lighthouse', page_id.to_s)
   end
 
   def write_report(result)
-    path = get_report_path
+    path = report_path
     FileUtils.mkdir_p(path) unless File.exist?(path)
     File.open(File.join(path, time_key + '.html.gz'), 'wb') do |f|
       gz = Zlib::GzipWriter.new(f, 9)
@@ -39,7 +39,7 @@ class LighthouseMetrics < Influxer::Metrics
 
   def read_report
     result = nil
-    File.open(File.join(get_report_path, time_key + '.html.gz')) do |f|
+    File.open(File.join(report_path, time_key + '.html.gz')) do |f|
       gz = Zlib::GzipReader.new(f)
       result = gz.read
       gz.close
@@ -48,6 +48,6 @@ class LighthouseMetrics < Influxer::Metrics
   end
 
   def delete_reports
-    FileUtils.rm_rf(get_report_path, secure: true)
+    FileUtils.rm_rf(report_path, secure: true)
   end
 end

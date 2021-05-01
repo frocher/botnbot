@@ -4,7 +4,7 @@ class AssetsMetrics < Influxer::Metrics
   attributes :html_requests, :js_requests, :css_requests, :image_requests, :font_requests, :other_requests,
              :html_bytes, :js_bytes, :css_bytes, :image_bytes, :font_bytes, :other_bytes
 
-  scope :by_page, -> (id) { where(page_id: id) if id.present? }
+  scope :by_page, ->(id) { where(page_id: id) if id.present? }
 
   def get_har_path
     File.join(Rails.root, 'reports/har', page_id.to_s)
@@ -33,5 +33,4 @@ class AssetsMetrics < Influxer::Metrics
   def delete_reports
     FileUtils.rm_rf(get_har_path, secure: true)
   end
-
 end

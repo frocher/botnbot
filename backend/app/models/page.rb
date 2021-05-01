@@ -32,7 +32,6 @@ require 'chronic_duration'
 #
 #  index_pages_on_owner_id  (owner_id)
 #
-
 class Page < ActiveRecord::Base
   after_create :init_jobs
   after_destroy :destroy_metrics
@@ -62,13 +61,13 @@ class Page < ActiveRecord::Base
   validates :slack_channel, presence: true, if: Proc.new { |a| a.slack_notify? }
 
   def as_json(options={})
-    h = super({only: [:id, :name, :url, :description, :device, :locked, :uptime_keyword, :uptime_keyword_type, :mail_notify, :slack_notify, :push_notify, :slack_webhook, :slack_channel, :uptime_status, :last_downtime, :current_week_lh_score, :last_week_lh_score, :created_at, :updated_at]}.merge(options || {}))
+    h = super({ only: [:id, :name, :url, :description, :device, :locked, :uptime_keyword, :uptime_keyword_type, :mail_notify, :slack_notify, :push_notify, :slack_webhook, :slack_channel, :uptime_status, :last_downtime, :current_week_lh_score, :last_week_lh_score, :created_at, :updated_at] }.merge(options || {}))
     h[:owner] = owner.as_json
     h
   end
 
   def last_downtime_duration
-    result = UptimeMetrics.select("value").by_page(id)
+    result = UptimeMetrics.select('value').by_page(id)
     records = result.load
     return 0 if records.empty?
 
@@ -77,17 +76,15 @@ class Page < ActiveRecord::Base
     last_down = 0
     last_up = 0
     records.reverse_each do |record|
-      if record["value"] == 1
-        last_up = DateTime.parse(record["time"]).to_time
+      if record['value'] == 1
+        last_up = DateTime.parse(record['time']).to_time
 
         # If we have a up and we previously found a down, we can now compute the duration
         unless found_down.nil?
           # Never had a up, so the page is currently down. We use time now for compute
-          if found_up.nil?
-            found_up = Time.now
-          end
+          found_up = Time.now if found_up.nil?
           interval = found_up.round(0) - last_down.round(0)
-          return ChronicDuration.output(interval, :format => :long)
+          return ChronicDuration.output(interval, format: :long)
         end
       else
         last_down = DateTime.parse(record["time"]).to_time
@@ -143,7 +140,7 @@ class Page < ActiveRecord::Base
   def init_jobs
     scheduler = Rufus::Scheduler.singleton
     max_start = Rails.configuration.x.jobs.screenshot_start
-    scheduler.every(Rails.configuration.x.jobs.screenshot_interval, ScreenshotJob.new, {:page_id => id, :mutex => "screenshot", :first_in => "#{rand(1..max_start)}m"})
+    scheduler.every(Rails.configuration.x.jobs.screenshot_interval, ScreenshotJob.new, { page_id: id, mutex: 'screenshot', first_in: "#{rand(1..max_start)}m" })
 
     max_start = Rails.configuration.x.jobs.uptime_start
     UptimeJob.schedule_next("#{rand(1..max_start)}m", UptimeJob.new, id, false)

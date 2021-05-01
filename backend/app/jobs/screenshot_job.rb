@@ -1,6 +1,5 @@
 class ScreenshotJob
-
-  def call(job, time)
+  def call(job, _time)
     page_id = job.opts[:page_id]
     probes = Rails.application.config.probes
     probe = probes.sample
@@ -39,7 +38,7 @@ class ScreenshotJob
       else
         Rails.logger.error "Error screenshot #{res.code} for #{page.id} : #{page.url}"
       end
-    rescue Exception => e
+    rescue StandardError => e
       Rails.logger.error "Error screenshot for #{page.id} : #{page.url}"
       Rails.logger.error e.to_s
     end

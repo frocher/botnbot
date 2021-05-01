@@ -1,5 +1,4 @@
 class UptimeJob < StatisticsJob
-
   def self.schedule_next(delay, handler, page_id, second_chance)
     probes = Rails.application.config.probes
     probe = probes.sample
@@ -14,6 +13,10 @@ class UptimeJob < StatisticsJob
     probe = job.opts[:probe]
     Rails.logger.info "Starting job #{self.class.name} for page #{page_id} on probe #{probe['name']}"
     second_chance = perform(page_id, job.opts[:is_second_chance] || false, probe)
+    schedule_next(job, page_id, second_chance)
+  end
+
+  def schedule_next(job, page_id, second_chance)
     delay = second_chance ? Rails.configuration.x.jobs.second_chanche_interval : page_delay(page_id)
     UptimeJob.schedule_next(delay, job.handler, page_id, second_chance)
   end
@@ -44,7 +47,7 @@ class UptimeJob < StatisticsJob
             error_content = result['content'] || 'empty'
             if is_second_chance
               write_metrics(probe['name'], page, 0, res.code, result['errorMessage'], error_content)
-              page.uptime_status = 0 
+              page.uptime_status = 0
               page.last_downtime = DateTime.now if last == 1
               page.save!
               send_down_notification(page, result['errorMessage']) if last == 1
@@ -53,7 +56,7 @@ class UptimeJob < StatisticsJob
             end
             Rails.logger.error "Error #{res.code} for url #{page.url}, second chance is #{is_second_chance}"
           end
-        rescue Exception => e
+        rescue StandardError => e
           Rails.logger.error "Bot error for #{page.url}"
           Rails.logger.error e.to_s
         end
@@ -78,7 +81,6 @@ class UptimeJob < StatisticsJob
 
   def page_delay(page_id)
     delay = Rails.configuration.x.jobs.uptime_interval
-
     ActiveRecord::Base.connection_pool.with_connection do
       unless ENV['STRIPE_PUBLIC_KEY'].blank?
         if Page.exists?(page_id)
@@ -88,13 +90,12 @@ class UptimeJob < StatisticsJob
         end
       end
     end
-
     delay
   end
 
   def write_metrics(probe, page, status, code, message, content)
     metric = UptimeMetrics.new page_id: page.id, probe: probe['name']
-    if !content.nil? && content.length < 300000
+    if !content.nil? && content.length < 300_000
       metric.time_key = generate_time_key
       metric.write_content(content)
     end
@@ -122,7 +123,7 @@ class UptimeJob < StatisticsJob
       user = member.user
       UserMailer.down(user, page, error_message).deliver_now
     end
-  rescue Exception => e
+  rescue StandardError => e
     Rails.logger.error e.to_s
     e.backtrace.each { |line| Rails.logger.error line }
   end
@@ -132,7 +133,7 @@ class UptimeJob < StatisticsJob
       user = member.user
       UserMailer.up(user, page, duration).deliver_now
     end
-  rescue Exception => e
+  rescue StandardError => e
     Rails.logger.error e.to_s
     e.backtrace.each { |line| Rails.logger.error line }
   end
@@ -142,7 +143,7 @@ class UptimeJob < StatisticsJob
       user = member.user
       user.subscriptions.each { |subscription| send_webpush(subscription, page.url, message) }
     end
-  rescue Exception => e
+  rescue StandardError => e
     Rails.logger.error e.to_s
   end
 
@@ -169,7 +170,7 @@ class UptimeJob < StatisticsJob
   rescue Webpush::InvalidSubscription => e
     subscription.destroy
     Rails.logger.error e.to_s
-  rescue Exception => e
+  rescue StandardError => e
     Rails.logger.error e.to_s
   end
 
@@ -178,7 +179,7 @@ class UptimeJob < StatisticsJob
       notifier = Slack::Notifier.new page.slack_webhook, channel: page.slack_channel, username: 'jeeves.thebot'
       notifier.ping message
     end
-  rescue Exception => e
+  rescue StandardError => e
     Rails.logger.error e.to_s
   end
 end

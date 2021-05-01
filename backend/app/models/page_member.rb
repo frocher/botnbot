@@ -15,9 +15,8 @@
 #  index_page_members_on_user_id              (user_id)
 #  index_page_members_on_user_id_and_page_id  (user_id,page_id) UNIQUE
 #
-
 class PageMember < ActiveRecord::Base
-  enum role: {guest: 0, editor: 1, master: 2, admin: 3}
+  enum role: { guest: 0, editor: 1, master: 2, admin: 3 }
 
   belongs_to :user
   belongs_to :page
@@ -40,7 +39,7 @@ class PageMember < ActiveRecord::Base
   end
 
   def as_json(options={})
-    h = super({only: [:id, :user_id, :role, :created_at, :updated_at]}.merge(options || {}))
+    h = super({ only: [:id, :user_id, :role, :created_at, :updated_at] }.merge(options || {}))
     h[:isOwner] = is_owner?
     h[:email] = user.email
     h[:username] = user.name

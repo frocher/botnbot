@@ -1,3 +1,4 @@
+# Main controller for the Application.
 class ApplicationController < ActionController::API
   include DeviseTokenAuth::Concerns::SetUserByToken
 
@@ -22,7 +23,7 @@ class ApplicationController < ActionController::API
     render json: { message: '500 Internal Server Error' }, status: 500
   end
 
-protected
+  protected
 
   def configure_permitted_parameters
     devise_parameter_sanitizer.permit(:sign_up, keys: [:name])
@@ -70,10 +71,13 @@ protected
 
   def add_pagination_headers(paginated, per_page)
     request_url = request.url.split('?').first
-
     links = []
-    links << %(<#{request_url}?page=#{paginated.current_page - 1}&per_page=#{per_page}>; rel="prev") unless paginated.first_page?
-    links << %(<#{request_url}?page=#{paginated.current_page + 1}&per_page=#{per_page}>; rel="next") unless paginated.last_page?
+    unless paginated.first_page?
+      links << %(<#{request_url}?page=#{paginated.current_page - 1}&per_page=#{per_page}>; rel="prev")
+    end
+    unless paginated.last_page?
+      links << %(<#{request_url}?page=#{paginated.current_page + 1}&per_page=#{per_page}>; rel="next")
+    end
     links << %(<#{request_url}?page=1&per_page=#{per_page}>; rel="first")
     links << %(<#{request_url}?page=#{paginated.total_pages}&per_page=#{per_page}>; rel="last")
 

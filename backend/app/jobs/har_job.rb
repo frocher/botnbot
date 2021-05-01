@@ -1,12 +1,11 @@
 class HarJob < StatisticsJob
-
   def self.schedule_next(delay, handler, page_id)
     probes = Rails.application.config.probes
     probe = probes.sample
     mutex_name = "har_#{probe['name']}"
 
     scheduler = Rufus::Scheduler.singleton
-    scheduler.in(delay, handler, {page_id: page_id, probe: probe, mutex: mutex_name})
+    scheduler.in(delay, handler, { page_id: page_id, probe: probe, mutex: mutex_name })
   end
 
   def call(job, _time)
@@ -43,7 +42,7 @@ class HarJob < StatisticsJob
       else
         Rails.logger.error "Error har #{res.code} for #{page.id} : #{page.url}"
       end
-    rescue Exception => e
+    rescue StandardError => e
       Rails.logger.error "Error for #{page.id} : #{page.url}"
       Rails.logger.error e.to_s
     end
@@ -111,5 +110,4 @@ class HarJob < StatisticsJob
     Rails.logger.debug "Other mime type : #{mime_type} for url #{url}"
     return 'other'
   end
-
 end

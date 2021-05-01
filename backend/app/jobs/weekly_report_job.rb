@@ -3,7 +3,7 @@ require 'ostruct'
 class WeeklyReportJob
   include ActionView::Helpers::NumberHelper
 
-  def call(job, time)
+  def call(_job, _time)
     Rails.logger.info "Starting job #{self.class.name}"
     perform
   end
@@ -33,7 +33,7 @@ class WeeklyReportJob
 
       send_mail(user, generate_title(@context.period_start, @context.period_end))
     end
-  rescue Exception => e
+  rescue StandardError => e
     Rails.logger.error "Error processing user #{user.email}"
     Rails.logger.error e.to_s
   end
@@ -44,7 +44,7 @@ class WeeklyReportJob
 
   def send_mail(user, title)
     UserMailer.weekly_summary(user, title, @context).deliver_now
-  rescue Exception => e
+  rescue StandardError => e
     Rails.logger.error "Error sending mail to user #{user.email}"
     Rails.logger.error e.to_s
   end

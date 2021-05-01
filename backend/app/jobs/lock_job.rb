@@ -1,5 +1,5 @@
 class LockJob
-  def call(job, _time)
+  def call(_job, _time)
     Rails.logger.info "Starting job #{self.class.name}"
     perform
   end
@@ -14,7 +14,7 @@ class LockJob
   def process_user(user)
     Rails.logger.info "Processing user : #{user.email}"
     user.lock_pages
-  rescue Exception => e
+  rescue StandardError => e
     Rails.logger.error "Error processing user #{user.email}"
     Rails.logger.error e.to_s
   end

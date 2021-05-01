@@ -1,5 +1,4 @@
 class BudgetJob
-
   def call(_job, _time)
     Rails.logger.info "Starting job #{self.class.name}"
     perform
@@ -21,7 +20,7 @@ class BudgetJob
       pages.each { |page| @context.budgets += construct_page(page) }
       send_mail(user, generate_title) unless @context.budgets.empty?
     end
-  rescue Exception => e
+  rescue StandardError => e
     Rails.logger.error "Error processing user #{user.email}"
     Rails.logger.error e.to_s
   end
@@ -167,8 +166,8 @@ class BudgetJob
 
   def send_mail(user, title)
     UserMailer.budget(user, title, @context).deliver_now
-  rescue Exception => e
-    Rails.logger.error "Error sending mail to user #{user.email}" 
+  rescue StandardError => e
+    Rails.logger.error "Error sending mail to user #{user.email}"
     Rails.logger.error e.to_s
   end
 

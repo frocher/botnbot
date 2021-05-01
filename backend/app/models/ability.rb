@@ -10,7 +10,7 @@ class Ability
       end.concat(global_abilities(user))
     end
 
-    def global_abilities(user)
+    def global_abilities(_user)
       rules = []
       rules
     end
@@ -60,7 +60,6 @@ class Ability
       rules.flatten
     end
 
-
     def page_guest_rules
       [
         :read_page,
@@ -75,7 +74,7 @@ class Ability
       page_guest_rules + [
         :update_page,
         :create_budget,
-        :delete_budget,
+        :delete_budget
       ]
     end
 
