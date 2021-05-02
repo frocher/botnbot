@@ -1,5 +1,4 @@
 import { LitElement, css, html } from 'lit-element';
-import '@material/mwc-icon';
 import '@material/mwc-ripple';
 import { connect } from 'pwa-helpers';
 import { store } from '../../state/store';
@@ -10,6 +9,7 @@ import '../components/bnb-card';
 import '../components/bnb-lazy-image';
 import './bnb-down-alert';
 import './bnb-gauge';
+import './bnb-page-card-title';
 
 class BnbPageCard extends connect(store)(LitElement) {
   static get properties() {
@@ -29,12 +29,6 @@ class BnbPageCard extends connect(store)(LitElement) {
         width: 100%;
       }
 
-      mwc-icon {
-        display: inline-block;
-        padding-right: 4px;
-        vertical-align: sub;
-      }
-
       .cardContent {
         display: flex;
         flex-direction: row;
@@ -44,26 +38,6 @@ class BnbPageCard extends connect(store)(LitElement) {
       .leftContent {
         max-width: calc(100% - 50px);
         flex-grow: 1;
-      }
-
-      h2 {
-        margin: 0;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-
-      a {
-        display: block;
-        color: #9e9e9e;
-        text-decoration: none;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-
-      a:hover {
-        text-decoration: underline;
       }
 
       .locked {
@@ -95,10 +69,8 @@ class BnbPageCard extends connect(store)(LitElement) {
       @touchcancel="${this.handleRippleDeactivate}">
       <bnb-lazy-image src="${this.getScreenshotUrl(this.page)}"></bnb-lazy-image>
       <div class="cardContent">
-        <div class="leftContent">
-          <h2><mwc-icon>${this.computeIcon(this.page)}</mwc-icon>${this.page.name}</h2>
-          <a href="${this.page.url}" @click="${this.urlTapped}" target="_blank" title="Open url in a new tab" rel="noopener">${this.page.url}</a>
-        </div>       
+        <bnb-page-card-title class="leftContent" icon="${this.computeIcon(this.page)}" text="${this.page.name}" url="${this.page.url}" description="${this.page.description}">
+        </bnb-page-card-title>
         ${this.renderDownAlert()}
         ${this.renderGauge()}
       </div>
@@ -121,10 +93,6 @@ class BnbPageCard extends connect(store)(LitElement) {
 
   cardTapped() {
     store.dispatch(updateRoute(`page/${this.page.id}`));
-  }
-
-  urlTapped(e) {
-    e.stopPropagation();
   }
 
   getScreenshotUrl(item) {

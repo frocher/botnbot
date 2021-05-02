@@ -1,6 +1,7 @@
 import { LitElement, css, html } from 'lit-element';
 import { classMap } from 'lit-html/directives/class-map';
 import { createPopper } from '@popperjs/core';
+import { tooltipStyles } from '../components/bnb-tooltip-styles';
 
 class BnbGauge extends LitElement {
   static get properties() {
@@ -11,128 +12,89 @@ class BnbGauge extends LitElement {
   }
 
   static get styles() {
-    return css`
-    :host {
-      --score-container-padding: 2px;
-      --color-fail: #ff4e42;
-      --color-pass: #0cce6b;
-      --color-average: #ffa400;
-      --color-not-applicable: #9e9e9e;
-      --gauge-circle-size: 36px;
-      font-weight: bold;
-    }
+    return [
+      tooltipStyles,
+      css`
+      :host {
+        --score-container-padding: 2px;
+        --color-fail: #ff4e42;
+        --color-pass: #0cce6b;
+        --color-average: #ffa400;
+        --color-not-applicable: #9e9e9e;
+        --gauge-circle-size: 36px;
+        font-weight: bold;
+      }
 
-    .wrapper {
-      position: relative;
-      display: flex;
-      align-items: center;
-      flex-direction: column;
-      text-decoration: none;
-      padding: var(--score-container-padding);
-      --transition-length: 1s;
-      contain: content;
-      will-change: opacity;
-    }
+      .wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        text-decoration: none;
+        padding: var(--score-container-padding);
+        --transition-length: 1s;
+        contain: content;
+        will-change: opacity;
+      }
 
-    .pass {
-      color: var(--color-pass);
-      fill: var(--color-pass);
-      stroke: var(--color-pass);
-    }
-    
-    .average {
-      color: var(--color-average);
-      fill: var(--color-average);
-      stroke: var(--color-average);
-    }
-    
-    .fail {
-      color: var(--color-fail);
-      fill: var(--color-fail);
-      stroke: var(--color-fail);
-    }
-    
-    .not-applicable {
-      color: var(--color-not-applicable);
-      fill: var(--color-not-applicable);
-      stroke: var(--color-not-applicable);
-    }
-    
-    .svg-wrapper {
-      position: relative;
-      height: var(--gauge-circle-size);
-    }
+      .pass {
+        color: var(--color-pass);
+        fill: var(--color-pass);
+        stroke: var(--color-pass);
+      }
 
-    .gauge {
-        stroke-linecap: round;
-        width: var(--gauge-circle-size);
+      .average {
+        color: var(--color-average);
+        fill: var(--color-average);
+        stroke: var(--color-average);
+      }
+
+      .fail {
+        color: var(--color-fail);
+        fill: var(--color-fail);
+        stroke: var(--color-fail);
+      }
+
+      .not-applicable {
+        color: var(--color-not-applicable);
+        fill: var(--color-not-applicable);
+        stroke: var(--color-not-applicable);
+      }
+
+      .svg-wrapper {
+        position: relative;
         height: var(--gauge-circle-size);
-    }
-    
-    .gauge-base {
-      opacity: 0.1;
-    }
+      }
 
-    .gauge-arc {
-      fill: none;
-      transform-origin: 50% 50%;
-      animation: load-gauge var(--transition-length) ease forwards;
-      animation-delay: 250ms;
-    }
+      .gauge {
+          stroke-linecap: round;
+          width: var(--gauge-circle-size);
+          height: var(--gauge-circle-size);
+      }
 
-    .percentage {
-      width: 100%;
-      height: var(--gauge-circle-size);
-      position: absolute;
-      font-size: calc(var(--gauge-circle-size) * 0.34 + 1.3px);
-      font-weight: bold;
-      line-height: 0;
-      text-align: center;
-      top: calc(var(--score-container-padding) + var(--gauge-circle-size) / 2);
-    }
+      .gauge-base {
+        opacity: 0.1;
+      }
 
-    #tooltip {
-      visibility: hidden;
-      position: absolute;
-      background-color: var(--mdc-theme-on-secondary, #333);
-      color: white;
-      padding: 5px 10px;
-      border-radius: 4px;
-      font-weight: normal;
-      z-index: 1060;
-      opacity: 0.9;
-    }
+      .gauge-arc {
+        fill: none;
+        transform-origin: 50% 50%;
+        animation: load-gauge var(--transition-length) ease forwards;
+        animation-delay: 250ms;
+      }
 
-    #arrow,
-    #arrow::before {
-      position: absolute;
-      width: 8px;
-      height: 8px;
-      z-index: -1;
-    }
-    
-    #arrow::before {
-      content: '';
-      transform: rotate(45deg);
-      background: var(--mdc-theme-on-secondary, #333);
-    }
-
-    #tooltip[data-popper-placement^='top'] > #arrow {
-      bottom: -4px;
-    }
-    
-    #tooltip[data-popper-placement^='bottom'] > #arrow {
-      top: -4px;
-    }
-    
-    #tooltip[data-popper-placement^='left'] > #arrow {
-      right: -4px;
-    }
-    
-    #tooltip[data-popper-placement^='right'] > #arrow {
-      left: -4px;
-    }
-    `;
+      .percentage {
+        width: 100%;
+        height: var(--gauge-circle-size);
+        position: absolute;
+        font-size: calc(var(--gauge-circle-size) * 0.34 + 1.3px);
+        font-weight: bold;
+        line-height: 0;
+        text-align: center;
+        top: calc(var(--score-container-padding) + var(--gauge-circle-size) / 2);
+      }
+      `,
+    ];
   }
 
   renderClass(value) {
@@ -168,7 +130,6 @@ class BnbGauge extends LitElement {
         <span>${this.renderTooltip()}</span>
         <div id="arrow" data-popper-arrow="true"></div>
       </div>
-
     `;
   }
 
