@@ -3,6 +3,9 @@ import '@material/mwc-formfield';
 import '@material/mwc-icon-button';
 import '@material/mwc-radio';
 import '@material/mwc-top-app-bar-fixed';
+import { Chart, LinearScale, Tooltip } from 'chart.js';
+import { TreemapController, TreemapElement } from 'chartjs-chart-treemap';
+import Color from '@kurkle/color';
 import { connect } from 'pwa-helpers';
 import { fromHar } from 'perf-cascade';
 import { styles } from '../components/bnb-styles';
@@ -11,6 +14,11 @@ import { store } from '../../state/store';
 import { updateRoute } from '../../state/app/actions';
 import '../components/bnb-card';
 
+Chart.register(LinearScale, Tooltip);
+Chart.register(
+  TreemapController,
+  TreemapElement,
+);
 export class BnbAssetsReport extends connect(store)(LitElement) {
   static get styles() {
     return [
@@ -111,7 +119,7 @@ export class BnbAssetsReport extends connect(store)(LitElement) {
     let color = '#03a9f4';
 
     if (url) {
-      color = Chart.helpers.color('white').alpha(0.3).rgbString();
+      color = Color('white').alpha(0.3).rgbString();
     } else if (type === 'html') {
       color = '#4caf50';
     } else if (type === 'css') {
@@ -146,33 +154,32 @@ export class BnbAssetsReport extends connect(store)(LitElement) {
         this.chart.data.datasets[0].tree = this.entries;
         this.chart.update();
       } else {
-        const _this = this;
-
         const options = {
           maintainAspectRatio: false,
-          title: {
-            display: false,
-          },
-          legend: {
-            display: false,
-          },
-          tooltips: {
-            callbacks: {
-              title(item, data) {
-                return data.datasets[item[0].datasetIndex].key;
-              },
-              label(item, data) {
-                const dataset = data.datasets[item.datasetIndex];
-                const dataItem = dataset.data[item.index];
-                const obj = dataItem._data;
-                const label = obj.url || obj.type;
-                let value = '';
-                if (data.datasets[0].key === 'size') {
-                  value = `${Math.round(dataItem.v / 1024)}Kb`;
-                } else {
-                  value = `${Math.round(dataItem.v)}ms`;
-                }
-                return `${_this.truncate(label, 100, true)}: ${value}`;
+          responsive: true,
+          plugins: {
+            title: {
+              display: false,
+            },
+            legend: {
+              display: false,
+            },
+            tooltip: {
+              callbacks: {
+                title: (item) => item[0].dataset.data[item[0].dataIndex].g,
+                label: (item) => {
+                  const { dataset } = item;
+                  const dataItem = dataset.data[item.dataIndex];
+                  const obj = dataItem._data;
+                  const label = obj.url || obj.type;
+                  let value = '';
+                  if (dataset.key === 'size') {
+                    value = `${Math.round(dataItem.v / 1024)}Kb`;
+                  } else {
+                    value = `${Math.round(dataItem.v)}ms`;
+                  }
+                  return `${this.truncate(label, 100, true)}: ${value}`;
+                },
               },
             },
           },
@@ -187,15 +194,15 @@ export class BnbAssetsReport extends connect(store)(LitElement) {
                 key: 'size',
                 groups: ['type', 'url'],
                 borderWidth: 0.5,
-                fontColor: 'black',
-                backgroundColor(context) {
+                color: 'black',
+                backgroundColor: (context) => {
                   const item = context.dataset.data[context.dataIndex];
                   if (!item) {
                     return;
                   }
                   const obj = item._data;
                   // eslint-disable-next-line consistent-return
-                  return _this.colorFromItem(obj.type, obj.url);
+                  return this.colorFromItem(obj.type, obj.url);
                 },
                 borderColor: 'rgba(255,255,255,1)',
               },
@@ -231,8 +238,8 @@ export class BnbAssetsReport extends connect(store)(LitElement) {
     const content = entry?.response?.content;
     const url = entry?.request?.url;
     const mimeType = content?.mimeType;
-    const size = entry?.response?._transferSize || content?.size;
-    const time = entry?.time;
+    const size = Math.round(entry?.response?._transferSize || content?.size);
+    const time = Math.round(entry?.time);
 
     if (!mimeType && !url) {
       return {

@@ -1,6 +1,23 @@
 import { LitElement, css, html } from 'lit-element';
 import 'wc-spinners/dist/fulfilling-bouncing-circle-spinner';
+import {
+  Chart, LineController, TimeScale, PointElement, LineElement, LinearScale, Filler, Tooltip,
+} from 'chart.js';
+import 'chartjs-adapter-date-fns';
+import annotationPlugin from 'chartjs-plugin-annotation';
+import Color from '@kurkle/color';
 import { styles } from '../components/bnb-styles';
+
+Chart.register(
+  annotationPlugin,
+  LineController,
+  TimeScale,
+  PointElement,
+  LineElement,
+  LinearScale,
+  Filler,
+  Tooltip,
+);
 
 class BnbBudget extends LitElement {
   static get properties() {
@@ -122,51 +139,73 @@ class BnbBudget extends LitElement {
 
       const options = {
         maintainAspectRatio: false,
-        legend: {
-          position: 'bottom',
-          labels: {
-            fontColor: '#fff',
+        responsive: true,
+        interaction: {
+          mode: 'index',
+        },
+        elements: {
+          line: {
+            tension: 0.2,
           },
         },
-        tooltips: {
-          position: 'nearest',
-          mode: 'index',
-          intersect: false,
-          callbacks: {},
-        },
         scales: {
-          xAxes: [{
+          x: {
             type: 'time',
             time: {
-              unit: this.computeTickFormat(chartData),
               displayFormats: {
-                hour: 'MMM D hA',
+                hour: 'hh:mm',
               },
             },
             ticks: {
-              fontColor: '#fff',
+              major: {
+                enabled: true,
+              },
+              maxRotation: 0,
+              color: () => '#fff',
+              font: (context) => {
+                if (context.tick && context.tick.major) {
+                  return {
+                    weight: 'bold',
+                  };
+                }
+                return {};
+              },
             },
-          }],
-          yAxes: [{
+          },
+          y: {
             ticks: {
-              fontColor: '#fff',
-              beginAtZero: true,
+              color: () => '#fff',
             },
-          }],
+            min: 0,
+          },
         },
-        annotation: {
-          annotations: [{
-            type: 'line',
-            mode: 'horizontal',
-            scaleID: 'y-axis-0',
-            value: this.budget,
-            borderColor: 'white',
-            borderWidth: 2,
-            label: {
-              content: this.budget,
-              enabled: true,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              color: '#fff',
             },
-          }],
+          },
+          tooltip: {
+            position: 'nearest',
+            mode: 'index',
+            intersect: false,
+          },
+          annotation: {
+            annotations: {
+              line1: {
+                type: 'line',
+                yMin: this.budget,
+                yMax: this.budget,
+                borderColor: 'white',
+                borderWidth: 2,
+                label: {
+                  content: this.budget,
+                  enabled: true,
+                },
+              },
+            },
+          },
         },
       };
 
@@ -198,6 +237,7 @@ class BnbBudget extends LitElement {
     dataset.label = this.model.label;
     dataset.backgroundColor = this.transparentize(this.model.color);
     dataset.borderColor = this.model.color;
+    dataset.fill = true;
     dataset.data = this.createValues(this.model.name);
     resu.datasets.push(dataset);
 
@@ -208,21 +248,6 @@ class BnbBudget extends LitElement {
     const resu = [];
     for (let i = 0; i < this.data.values.length; i += 1) {
       resu.push({ x: new Date(this.data.values[i].time), y: this.data.values[i].value });
-    }
-    return resu;
-  }
-
-  computeTickFormat(chartData) {
-    let resu = 'day';
-    if (chartData.datasets.length > 0) {
-      const dataset = chartData.datasets[0];
-      if (dataset.data.length > 0) {
-        const first = dataset.data[0].x;
-        const last = dataset.data[dataset.data.length - 1].x;
-        if ((last - first) < (7 * 24 * 60 * 60 * 1000)) {
-          resu = 'hour';
-        }
-      }
     }
     return resu;
   }

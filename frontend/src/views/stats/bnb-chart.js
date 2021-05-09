@@ -1,7 +1,14 @@
 import { LitElement, css, html } from 'lit-element';
 import 'wc-spinners/dist/fulfilling-bouncing-circle-spinner';
+import {
+  Chart, LineController, TimeScale, PointElement, LineElement, LinearScale, Filler, Tooltip,
+} from 'chart.js';
+import 'chartjs-adapter-date-fns';
+import Color from '@kurkle/color';
 import { isEqual } from 'lodash-es';
 import { styles } from '../components/bnb-styles';
+
+Chart.register(LineController, TimeScale, PointElement, LineElement, LinearScale, Filler, Tooltip);
 
 class BnbChart extends LitElement {
   static get properties() {
@@ -122,70 +129,83 @@ class BnbChart extends LitElement {
       if (this.chart) {
         if (!isEqual(this.oldData, this.data)) {
           this.chart.data.datasets = chartData.datasets;
-          this.chart.options.scales.xAxes[0].time.unit = this.computeTickFormat(chartData);
           this.chart.update();
 
           this.oldData = this.data;
         }
       } else {
-        let chartType = 'line';
-        switch (this.type) {
-          case 'area':
-          case 'line':
-            chartType = 'line';
-            break;
-        }
-
         const options = {
           maintainAspectRatio: false,
-          legend: {
-            position: 'bottom',
-            labels: {
-              fontColor: '#fff',
+          responsive: true,
+          interaction: {
+            mode: 'index',
+          },
+          elements: {
+            line: {
+              tension: 0.2,
             },
           },
-          tooltips: {
-            position: 'nearest',
-            mode: 'index',
-            intersect: false,
-            callbacks: {},
-          },
           scales: {
-            xAxes: [{
+            x: {
               type: 'time',
               time: {
-                unit: this.computeTickFormat(chartData),
                 displayFormats: {
-                  hour: 'MMM D hA',
+                  hour: 'hh:mm',
                 },
               },
               ticks: {
-                fontColor: '#fff',
+                major: {
+                  enabled: true,
+                },
+                maxRotation: 0,
+                color: () => '#fff',
+                font: (context) => {
+                  if (context.tick && context.tick.major) {
+                    return {
+                      weight: 'bold',
+                    };
+                  }
+                  return {};
+                },
               },
-            }],
-            yAxes: [{
+            },
+            y: {
               stacked: this.type === 'area',
               ticks: {
-                fontColor: '#fff',
-                beginAtZero: true,
+                color: () => '#fff',
               },
-            }],
+              min: 0,
+            },
+          },
+          plugins: {
+            tooltip: {
+              position: 'nearest',
+              mode: 'index',
+              intersect: false,
+              callbacks: {},
+            },
+            legend: {
+              position: 'bottom',
+              labels: {
+                color: '#fff',
+              },
+            },
           },
         };
 
         if (this.footer === 'sum') {
-          options.tooltips.callbacks.footer = (tooltipItems, data) => {
+          options.plugins.tooltip.callbacks.footer = (tooltipItems) => {
             let sum = 0;
             tooltipItems.forEach((tooltipItem) => {
-              sum += data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].y;
+              sum += tooltipItem.dataset.data[tooltipItem.dataIndex].y;
             });
             return `Total: ${Math.round(sum)}`;
           };
         } else if (this.footer === 'mean') {
-          options.tooltips.callbacks.footer = (tooltipItems, data) => {
+          options.plugins.tooltip.callbacks.footer = (tooltipItems) => {
             let sum = 0;
             tooltipItems.forEach((tooltipItem) => {
-              sum += data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].y;
+              sum += tooltipItem.dataset.data[tooltipItem.dataIndex].y;
             });
             return `Mean: ${Math.round(sum / tooltipItems.length)}`;
           };
@@ -194,7 +214,7 @@ class BnbChart extends LitElement {
         const ctx = this.shadowRoot.getElementById('chart');
         if (ctx) {
           this.chart = new Chart(ctx, {
-            type: chartType,
+            type: 'line',
             data: chartData,
             options,
           });
@@ -238,19 +258,6 @@ class BnbChart extends LitElement {
     if (item) {
       for (let i = 0; i < item.values.length; i += 1) {
         resu.push({ x: new Date(item.values[i].time), y: item.values[i].value });
-      }
-    }
-    return resu;
-  }
-
-  computeTickFormat(chartData) {
-    let resu = 'day';
-    if (chartData.datasets.length > 0) {
-      const dataset = chartData.datasets[0];
-      const first = dataset.data[0].x;
-      const last = dataset.data[dataset.data.length - 1].x;
-      if ((last - first) < (7 * 24 * 60 * 60 * 1000)) {
-        resu = 'hour';
       }
     }
     return resu;
