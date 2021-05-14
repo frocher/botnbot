@@ -4,3 +4,9 @@ Metrics/ClassLength:
   Enabled: false
 Metrics/MethodLength:
   Enabled: false
+Style/ClassAndModuleChildren:
+  EnforcedStyle: compact
+Style/SymbolArray:
+  EnforcedStyle: brackets
+Style/WordArray:
+  EnforcedStyle: brackets

@@ -11,6 +11,9 @@ const initial = {
 
   // Assets details of current page
   assets_details: undefined,
+
+  // Carbon details of current page
+  carbon_details: undefined,
 };
 
 const statsReducer = (state = initial, action) => {
@@ -38,6 +41,12 @@ const statsReducer = (state = initial, action) => {
 
     case 'ASSETS_DETAILS_FETCH_SUCCESS':
       return { ...state, assets_details: action.payload };
+
+    case 'CARBON_DETAILS_START':
+      return { ...state, carbon_details: null };
+
+    case 'CARBON_DETAILS_FETCH_SUCCESS':
+      return { ...state, carbon_details: action.payload };
 
     default:
       return state;

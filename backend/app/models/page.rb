@@ -137,6 +137,27 @@ class Page < ActiveRecord::Base
     convert_influx_result(data)
   end
 
+  def carbon_summary(start_date, end_date)
+    select_value = "mean(co2_first) as co2_first," \
+                   "mean(co2_second) as co2_second," \
+                   "mean(co2_adjusted) as co2_adjusted," \
+                   "mean(ecoindex_first) as ecoindex_first," \
+                   "mean(ecoindex_second) as ecoindex_second," \
+                   "mean(ecoindex_adjusted) as ecoindex_adjusted," \
+                   "mean(bytes_first) as bytes_first," \
+                   "mean(bytes_second) as bytes_second," \
+                   "mean(bytes_adjusted) as bytes_adjusted," \
+                   "mean(elements_first) as elements_first," \
+                   "mean(elements_second) as elements_second," \
+                   "mean(elements_adjusted) as elements_adjusted," \
+                   "mean(requests_first) as requests_first," \
+                   "mean(requests_second) as requests_second," \
+                   "mean(requests_adjusted) as requests_adjusted," \
+                   "mean(green_host) as green_host"
+    data = CarbonMetrics.select(select_value).by_page(id).where(time: start_date..end_date)
+    convert_influx_result(data)
+  end
+
   def init_jobs
     scheduler = Rufus::Scheduler.singleton
     max_start = Rails.configuration.x.jobs.screenshot_start
@@ -148,6 +169,8 @@ class Page < ActiveRecord::Base
     HarJob.schedule_next("#{rand(1..max_start)}m", HarJob.new, id)
     max_start = Rails.configuration.x.jobs.lighthouse_start
     LighthouseJob.schedule_next("#{rand(1..max_start)}m", LighthouseJob.new, id)
+    max_start = Rails.configuration.x.jobs.carbon_start
+    CarbonJob.schedule_next("#{rand(1..max_start)}m", CarbonJob.new, id)
   end
 
   def destroy_metrics
@@ -164,6 +187,11 @@ class Page < ActiveRecord::Base
     # Destroy assets metrics and reports
     AssetsMetrics.by_page(id).delete_all
     metric = AssetsMetrics.new page_id: id
+    metric.delete_reports
+
+    # Destroy carbon metrics and reports
+    CarbonMetrics.by_page(id).delete_all
+    metric = CarbonMetrics.new page_id: id
     metric.delete_reports
   end
 

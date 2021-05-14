@@ -12,7 +12,7 @@ import { loadPageMembers } from '../../state/members/actions';
 import { loadPages, loadPage } from '../../state/pages/actions';
 import { loadAssets } from '../../state/reports/actions';
 import {
-  loadPageStats, loadLighthouseDetails, loadAssetsDetails, loadUptimeDetails,
+  loadPageStats, loadLighthouseDetails, loadAssetsDetails, loadUptimeDetails, loadCarbonDetails,
 } from '../../state/stats/actions';
 import { loadStripeSubscription, loadUser } from '../../state/account/actions';
 import { isLogged, storeCredentials } from '../../utilities/credentials';
@@ -76,6 +76,7 @@ class BnbApp extends connect(store)(LitElement) {
     <bnb-assets-count-report class=${classMap(this.renderClass('assets-count-report'))}></bnb-assets-count-report>
     <bnb-assets-size-report  class=${classMap(this.renderClass('assets-size-report'))}></bnb-assets-size-report>
     <bnb-bytes-details       class=${classMap(this.renderClass('bytes-details'))}></bnb-bytes-details>
+    <bnb-carbon-details      class=${classMap(this.renderClass('carbon-details'))}></bnb-carbon-details>
     <bnb-pages               class=${classMap(this.renderClass('home'))}></bnb-pages>
     <bnb-members             class=${classMap(this.renderClass('members'))}></bnb-members>
     <bnb-edit-page           class=${classMap(this.renderClass('edit-page'))}></bnb-edit-page>
@@ -141,6 +142,10 @@ class BnbApp extends connect(store)(LitElement) {
       '/bytes-details/:id': (params) => {
         this.pageId = params.data.id;
         this.updateView('bytes-details');
+      },
+      '/carbon-details/:id': (params) => {
+        this.pageId = params.data.id;
+        this.updateView('carbon-details');
       },
       '/edit-page/:id': (params) => {
         this.pageId = params.data.id;
@@ -279,6 +284,9 @@ class BnbApp extends connect(store)(LitElement) {
           case 'bytes-details':
             import('../details/bnb-bytes-details.js').then(cb);
             break;
+          case 'carbon-details':
+            import('../details/bnb-carbon-details.js').then(cb);
+            break;
           case 'edit-page':
             import('../pages/bnb-edit-page.js').then(cb);
             break;
@@ -356,6 +364,9 @@ class BnbApp extends connect(store)(LitElement) {
     } else if (this.view === 'requests-details' || this.view === 'bytes-details') {
       store.dispatch(loadPage(this.pageId));
       store.dispatch(loadAssetsDetails(this.pageId, this.period));
+    } else if (this.view === 'carbon-details') {
+      store.dispatch(loadPage(this.pageId));
+      store.dispatch(loadCarbonDetails(this.pageId, this.period));
     } else if (this.view === 'assets-size-report' || this.view === 'assets-count-report') {
       store.dispatch(loadPage(this.pageId));
       store.dispatch(loadAssets(this.pageId, this.assetsId));

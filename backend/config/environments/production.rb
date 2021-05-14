@@ -42,7 +42,7 @@ Rails.application.configure do
   config.log_level = ENV['LOG_LEVEL'] || :debug
 
   # Prepend all log lines with the following tags.
-  config.log_tags = [ :request_id ]
+  config.log_tags = [:request_id]
 
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
@@ -79,11 +79,13 @@ Rails.application.configure do
   config.x.jobs.lighthouse_start = 120
   config.x.jobs.uptime_start = 60
   config.x.jobs.screenshot_start = 60
+  config.x.jobs.carbon_start = 120
 
   # Jobs intervals
-  config.x.jobs.har_interval = "7h"
-  config.x.jobs.lighthouse_interval = "7h"
-  config.x.jobs.uptime_interval = "10m"
-  config.x.jobs.second_chanche_interval = "30s"
-  config.x.jobs.screenshot_interval = "5h"
+  config.x.jobs.har_interval = '7h'
+  config.x.jobs.lighthouse_interval = '7h'
+  config.x.jobs.uptime_interval = '10m'
+  config.x.jobs.second_chanche_interval = '30s'
+  config.x.jobs.screenshot_interval = '5h'
+  config.x.jobs.carbon_interval = '7h'
 end

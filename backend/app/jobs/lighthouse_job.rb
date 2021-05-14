@@ -86,17 +86,12 @@ class LighthouseJob < StatisticsJob
   end
 
   def read_mean_value(page, start_date, end_date)
-    select_value = "mean(pwa) as pwa," \
-    "mean(performance) as performance," \
-    "mean(accessibility) as accessibility," \
-    "mean(best_practices) as best_practices," \
-    "mean(seo) as seo"
+    select_value = LighthouseMetrics.mean_score_query
     data = LighthouseMetrics.select(select_value).by_page(page.id).where(time: start_date..end_date)
     array = data.to_a
-    unless array.empty?
-      mean = (array[0]['pwa'] + array[0]['performance'] + array[0]['accessibility'] + array[0]['best_practices'] + array[0]['seo']) / 5
-      return mean.round
-    end
-    return nil
+    return nil if array.empty?
+
+    mean = (array[0]['pwa'] + array[0]['performance'] + array[0]['accessibility'] + array[0]['best_practices'] + array[0]['seo']) / 5
+    mean.round
   end
 end

@@ -84,6 +84,12 @@ class BnbPageStats extends connect(store)(LitElement) {
         name: 'other', color: '#F8BBD0', label: 'other', suffix: 'KiB',
       },
     ];
+
+    this.carbonModel = [
+      {
+        name: 'ecoindex_adjusted', color: '#00C853', label: 'ecoIndex',
+      },
+    ];
   }
 
   render() {
@@ -94,6 +100,7 @@ class BnbPageStats extends connect(store)(LitElement) {
     <bnb-chart-card id="uptimeChart" name="Uptime" type="line" .data="${this.stats?.uptime}" .model="${this.uptimeModel}" hasDetails></bnb-chart-card>
     <bnb-chart-card id="requestsChart" name="Assets count" type="area" footer="sum" .data="${this.stats?.requests}" .model="${this.requestsModel}" hasDetails></bnb-chart-card>
     <bnb-chart-card id="bytesChart" name="Assets size" type="area" footer="sum" .data="${this.stats?.bytes}" .model="${this.bytesModel}" hasDetails></bnb-chart-card>
+    <bnb-chart-card id="carbonChart" name="Carbon" type="line" .data="${this.stats?.carbon}" .model="${this.carbonModel}" hasDetails></bnb-chart-card>
     `;
   }
 
@@ -108,6 +115,7 @@ class BnbPageStats extends connect(store)(LitElement) {
     this.shadowRoot.getElementById('uptimeChart').addEventListener('details', this.uptimeChartDetailsTapped.bind(this));
     this.shadowRoot.getElementById('requestsChart').addEventListener('details', this.requestsChartDetailsTapped.bind(this));
     this.shadowRoot.getElementById('bytesChart').addEventListener('details', this.bytesChartDetailsTapped.bind(this));
+    this.shadowRoot.getElementById('carbonChart').addEventListener('details', this.carbonChartDetailsTapped.bind(this));
   }
 
   lightHouseChartDetailsTapped() {
@@ -128,6 +136,10 @@ class BnbPageStats extends connect(store)(LitElement) {
 
   bytesChartDetailsTapped() {
     store.dispatch(updateRoute(`bytes-details/${this.page.id}`));
+  }
+
+  carbonChartDetailsTapped() {
+    store.dispatch(updateRoute(`carbon-details/${this.page.id}`));
   }
 }
 

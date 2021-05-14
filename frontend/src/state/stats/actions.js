@@ -118,3 +118,23 @@ export const loadAssetsDetails = (pageId, period) => async (dispatch) => {
     },
   });
 };
+
+export const fetchCarbonDetailsStart = createAction('CARBON_DETAILS_START');
+export const fetchCarbonDetailsSuccess = createAction('CARBON_DETAILS_FETCH_SUCCESS');
+export const fetchCarbonDetailsError = createAction('CARBON_DETAILS_FETCH_ERROR');
+
+export const loadCarbonDetails = (pageId, period) => async (dispatch) => {
+  dispatch(fetchCarbonDetailsStart());
+  getResource({
+    url: getRequestUrl(`/pages/${pageId}/carbon`, { start: new Date(period.start), end: new Date(period.end) }),
+    method: 'GET',
+    onLoad(e) {
+      const response = JSON.parse(e.target.responseText);
+      if (e.target.status === 200) {
+        dispatch(fetchCarbonDetailsSuccess(response));
+      } else {
+        dispatch(fetchCarbonDetailsError(response));
+      }
+    },
+  });
+};

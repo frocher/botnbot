@@ -76,10 +76,14 @@ class BnbChartCard extends LitElement {
   }
 
   renderChip(item) {
-    return html`
-      <bnb-value-chip text="${this.computeLabel(item)}" value="${item.summary}" suffix="${this.computeSuffix(item)}">
-      </bnb-value-chip>
-    `;
+    const label = this.computeLabel(item);
+    if (label) {
+      return html`
+        <bnb-value-chip text="${label}" value="${item.summary}" suffix="${this.computeSuffix(item)}">
+        </bnb-value-chip>
+      `;
+    }
+    return html``;
   }
 
   renderDetails() {

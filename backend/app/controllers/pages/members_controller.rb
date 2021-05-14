@@ -149,6 +149,7 @@ class Pages::MembersController < ApplicationController
     return '3' + role if role == 'admin'
     return '2' + role if role == 'master'
     return '1' + role if role == 'editor'
-    return '0'
+
+    '0'
   end
 end

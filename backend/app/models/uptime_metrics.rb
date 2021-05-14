@@ -5,6 +5,10 @@ class UptimeMetrics < Influxer::Metrics
 
   scope :by_page, ->(id) { where(page_id: id) if id.present? }
 
+  def self.mean_query
+    'mean(value) as value'
+  end
+
   def content_path
     File.join(Rails.root, 'reports/uptime', page_id.to_s)
   end
