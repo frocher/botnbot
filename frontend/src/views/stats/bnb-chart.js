@@ -1,14 +1,16 @@
 import { LitElement, css, html } from 'lit-element';
 import 'wc-spinners/dist/fulfilling-bouncing-circle-spinner';
 import {
-  Chart, LineController, TimeScale, PointElement, LineElement, LinearScale, Filler, Tooltip,
+  Chart, LineController, TimeScale, PointElement, LineElement, LinearScale, Filler, Tooltip, Legend,
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import Color from '@kurkle/color';
 import { isEqual } from 'lodash-es';
 import { styles } from '../components/bnb-styles';
 
-Chart.register(LineController, TimeScale, PointElement, LineElement, LinearScale, Filler, Tooltip);
+Chart.register(
+  LineController, TimeScale, PointElement, LineElement, LinearScale, Filler, Tooltip, Legend,
+);
 
 class BnbChart extends LitElement {
   static get properties() {
