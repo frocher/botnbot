@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+- Ecoindex monitoring
 - Random color for new page instead of grey.
 - Treemap chart for resources details page.
 - Downtime information directly on page card.
