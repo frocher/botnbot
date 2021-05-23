@@ -2,6 +2,9 @@ import { LitElement, html } from 'lit-element';
 import { connect } from 'pwa-helpers';
 import { store } from '../../state/store';
 import { createBudget, deleteBudget } from '../../state/budgets/actions';
+import {
+  categoryKeys, getBudgetName, getCategory, getEntry,
+} from './budget-model';
 import './bnb-budget-bar';
 import './bnb-budget-card';
 
@@ -15,67 +18,7 @@ class BnbPageBudget extends connect(store)(LitElement) {
 
   constructor() {
     super();
-
     this.cards = [];
-
-    this.lighthouseModel = [
-      { name: 'pwa', color: '#4A148C', label: 'pwa' },
-      { name: 'performance', color: '#7B1FA2', label: 'performance' },
-      { name: 'accessibility', color: '#9C27B0', label: 'accessibility' },
-      { name: 'best_practices', color: '#BA68C8', label: 'best practices' },
-      { name: 'seo', color: '#E1BEE7', label: 'seo' },
-    ];
-
-    this.performanceModel = [
-      {
-        name: 'first_byte', color: '#E65100', label: 'first byte', suffix: 'ms',
-      },
-      {
-        name: 'first_paint', color: '#F57C00', label: 'first paint', suffix: 'ms',
-      },
-      {
-        name: 'speed_index', color: '#FF9800', label: 'speed index',
-      },
-      {
-        name: 'interactive', color: '#FFB74D', label: 'interactive', suffix: 'ms',
-      },
-    ];
-
-    this.uptimeModel = [
-      {
-        name: 'uptime', color: '#00C853', label: 'uptime', suffix: '%',
-      },
-    ];
-
-    this.requestsModel = [
-      { name: 'html', color: '#01579B', label: 'html' },
-      { name: 'css', color: '#0288D1', label: 'css' },
-      { name: 'js', color: '#03A9F4', label: 'javascript' },
-      { name: 'image', color: '#4FC3F7', label: 'image' },
-      { name: 'font', color: '#81D4FA', label: 'font' },
-      { name: 'other', color: '#B3E5FC', label: 'other' },
-    ];
-
-    this.bytesModel = [
-      {
-        name: 'html', color: '#880E4F', label: 'html', suffix: 'KiB',
-      },
-      {
-        name: 'css', color: '#C2185B', label: 'css', suffix: 'KiB',
-      },
-      {
-        name: 'js', color: '#D81B60', label: 'javascript', suffix: 'KiB',
-      },
-      {
-        name: 'image', color: '#EC407A', label: 'image', suffix: 'KiB',
-      },
-      {
-        name: 'font', color: '#F48FB1', label: 'font', suffix: 'KiB',
-      },
-      {
-        name: 'other', color: '#F8BBD0', label: 'other', suffix: 'KiB',
-      },
-    ];
   }
 
   render() {
@@ -126,65 +69,49 @@ class BnbPageBudget extends connect(store)(LitElement) {
     store.dispatch(createBudget(this.page.id, e.detail.category, e.detail.item, e.detail.budget));
   }
 
-  createBudgetName(category, item) {
-    const data = [
-      { name: 'Lighthouse', values: ['PWA', 'Performance', 'Accessibility', 'Best practices', 'SEO', 'Mean'] },
-      { name: 'Performance', values: ['First byte', 'Largest paint', 'Speed index', 'Total blocking time'] },
-      { name: 'Assets count', values: ['HTML', 'CSS', 'Javascript', 'Image', 'Font', 'Other', 'Total'] },
-      { name: 'Assets size', values: ['HTML', 'CSS', 'Javascript', 'Image', 'Font', 'Other', 'Total'] },
-    ];
-    return `${data[category].name}/${data[category].values[item]}`;
-  }
-
   createBudgetObject(src) {
-    let model;
     let data;
     switch (src.category) {
-      case 0:
-        model = this.lighthouseModel;
+      case categoryKeys.lightouse:
         data = this.stats.lighthouse;
         break;
-      case 1:
-        model = this.performanceModel;
+      case categoryKeys.performance:
         data = this.stats.performance;
         break;
-      case 2:
-        model = this.requestsModel;
+      case categoryKeys.requests:
         data = this.stats.requests;
         break;
-      case 3:
-        model = this.bytesModel;
+      case categoryKeys.bytes:
         data = this.stats.bytes;
+        break;
+      case categoryKeys.carbon:
+        data = this.stats.carbon;
         break;
     }
 
-    let budgetModel;
     let budgetData;
+    const category = getCategory(src.category);
+    const budgetModel = getEntry(category, src.item);
+
     if (src.item >= data.length) {
       switch (src.category) {
-        case 0:
-          budgetModel = { label: 'mean', color: '#D500F9' };
+        case categoryKeys.lightouse:
           budgetData = { key: 'mean', values: this.createMeanData(data) };
           break;
-        case 2:
-          budgetModel = { label: 'total', color: '#00B0FF' };
-          budgetData = { key: 'total', values: this.createTotalData(data) };
-          break;
-        case 3:
-          budgetModel = { label: 'total', color: '#FF80AB' };
+        case categoryKeys.requests:
+        case categoryKeys.bytes:
           budgetData = { key: 'total', values: this.createTotalData(data) };
           break;
       }
     } else {
-      budgetModel = model[src.item];
-      budgetData = data[src.item];
+      budgetData = data[budgetModel.index];
     }
 
     return {
       id: src.id,
       category: src.category,
       item: src.item,
-      name: this.createBudgetName(src.category, src.item),
+      name: getBudgetName(src.category, src.item),
       model: budgetModel,
       data: budgetData,
       budget: src.budget,

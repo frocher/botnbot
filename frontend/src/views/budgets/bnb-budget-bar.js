@@ -6,6 +6,7 @@ import '@material/mwc-textfield';
 import '../components/bnb-card';
 import '../components/bnb-period-dropdown';
 import { styles } from '../components/bnb-styles';
+import { categories, getCategory } from './budget-model';
 
 class BnbBudgetBar extends LitElement {
   static get properties() {
@@ -99,10 +100,7 @@ class BnbBudgetBar extends LitElement {
     return html`
       <div id="budgetTools">
         <mwc-select id="categoryField" outlined label="Category">
-          <mwc-list-item value="Lighthouse">Lighthouse</mwc-list-item>
-          <mwc-list-item value="Performance">Performance</mwc-list-item>
-          <mwc-list-item value="Assets count">Assets count</mwc-list-item>
-          <mwc-list-item value="Assets size">Assets size</mwc-list-item>
+          ${categories.map((i) => this.renderCategoryItem(i))}
         </mwc-select>
 
         <mwc-select id="itemField" outlined required validationMessage="This field is required" label="Item">
@@ -117,8 +115,12 @@ class BnbBudgetBar extends LitElement {
       `;
   }
 
+  renderCategoryItem(item) {
+    return html`<mwc-list-item value="${item.key}">${item.label}</mwc-list-item>`;
+  }
+
   renderFieldItem(item) {
-    return html`<mwc-list-item value="${item}">${item}</mwc-list-item>`;
+    return html`<mwc-list-item value="${item.key}">${item.label}</mwc-list-item>`;
   }
 
   firstUpdated() {
@@ -127,14 +129,9 @@ class BnbBudgetBar extends LitElement {
   }
 
   selectedItemChanged() {
-    const data = [
-      ['PWA', 'Performance', 'Accessibility', 'Best practices', 'SEO', 'Mean'],
-      ['First byte', 'Largest paint', 'Speed index', 'Total blocking time'],
-      ['HTML', 'CSS', 'Javascript', 'Image', 'Font', 'Other', 'Total'],
-      ['HTML', 'CSS', 'Javascript', 'Image', 'Font', 'Other', 'Total'],
-    ];
-    const selectedCategory = this.shadowRoot.getElementById('categoryField').index;
-    this.items = data[selectedCategory];
+    const categoryKey = parseInt(this.shadowRoot.getElementById('categoryField').value, 10);
+    const category = getCategory(categoryKey);
+    this.items = category.entries;
     this.shadowRoot.getElementById('itemField').value = '';
   }
 
@@ -147,9 +144,8 @@ class BnbBudgetBar extends LitElement {
     const isBudgetValid = budgetField.reportValidity();
 
     if (isItemValid && isBudgetValid) {
-      const name = `${categoryField.value}/${itemField.value}`;
       const detail = {
-        name, category: categoryField.index, item: itemField.index, budget: budgetField.value,
+        category: categoryField.value, item: itemField.value, budget: budgetField.value,
       };
       this.dispatchEvent(new CustomEvent('add', { detail }));
     }
