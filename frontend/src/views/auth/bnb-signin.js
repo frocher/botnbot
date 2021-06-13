@@ -36,8 +36,6 @@ class BnbSignIn extends connect(store)(LitElement) {
         <mwc-button id="signinBtn">Log in</mwc-button>
       </div>
 
-
-
     </bnb-auth-form>
     `;
   }
@@ -60,6 +58,8 @@ class BnbSignIn extends connect(store)(LitElement) {
 
   firstUpdated() {
     this.shadowRoot.getElementById('signinBtn').addEventListener('click', () => this.signinSubmitTapped());
+    this.shadowRoot.getElementById('email').addEventListener('keypress', (event) => this.keyPressed(event));
+    this.shadowRoot.getElementById('password').addEventListener('keypress', (event) => this.keyPressed(event));
   }
 
   stateChanged(state) {
@@ -69,6 +69,12 @@ class BnbSignIn extends connect(store)(LitElement) {
     }
 
     this.credentials = state.auth.credentials;
+  }
+
+  keyPressed(event) {
+    if (event.keyCode === 13) {
+      this.signinSubmitTapped();
+    }
   }
 
   signinSubmitTapped() {

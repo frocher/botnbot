@@ -48,6 +48,13 @@ class BnbForgotPassword extends connect(store)(LitElement) {
 
   firstUpdated() {
     this.shadowRoot.getElementById('forgotBtn').addEventListener('click', () => this.submitTapped());
+    this.shadowRoot.getElementById('email').addEventListener('keypress', (event) => this.keyPressed(event));
+  }
+
+  keyPressed(event) {
+    if (event.keyCode === 13) {
+      this.submitTapped();
+    }
   }
 
   submitTapped() {

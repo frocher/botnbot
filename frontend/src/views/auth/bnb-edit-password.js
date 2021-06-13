@@ -63,6 +63,14 @@ class BnbEditPassword extends connect(store)(BnbFormElement(LitElement)) {
 
   firstUpdated() {
     this.shadowRoot.getElementById('submitBtn').addEventListener('click', () => this.submitTapped());
+    this.shadowRoot.getElementById('password').addEventListener('keypress', (event) => this.keyPressed(event));
+    this.shadowRoot.getElementById('password_confirmation').addEventListener('keypress', (event) => this.keyPressed(event));
+  }
+
+  keyPressed(event) {
+    if (event.keyCode === 13) {
+      this.submitTapped();
+    }
   }
 
   submitTapped() {

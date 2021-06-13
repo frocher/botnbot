@@ -73,6 +73,16 @@ class BnbSignUp extends connect(store)(BnbFormElement(LitElement)) {
 
   firstUpdated() {
     this.shadowRoot.getElementById('signupBtn').addEventListener('click', () => this.signupSubmitTapped());
+    this.shadowRoot.getElementById('name').addEventListener('keypress', (event) => this.keyPressed(event));
+    this.shadowRoot.getElementById('email').addEventListener('keypress', (event) => this.keyPressed(event));
+    this.shadowRoot.getElementById('password').addEventListener('keypress', (event) => this.keyPressed(event));
+    this.shadowRoot.getElementById('password_confirmation').addEventListener('keypress', (event) => this.keyPressed(event));
+  }
+
+  keyPressed(event) {
+    if (event.keyCode === 13) {
+      this.signupSubmitTapped();
+    }
   }
 
   signupSubmitTapped() {
