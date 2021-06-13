@@ -40,15 +40,15 @@ module BnbNexus
     http_port = ENV.fetch("HTTP_PORT") { "8081" }
     smtp_host = ENV.fetch("SMTP_HOST") { "localhost" }
     smtp_port = ENV.fetch("SMTP_PORT") { "1025" }
-  
+
     # Assets
     config.asset_host = ENV.fetch("ASSET_HOST") { "#{protocol}://#{http_host}:#{http_port}" }
-  
+
     # Mailer
     config.action_mailer.default_url_options = { host: http_host, protocol: protocol, port: http_port }
     config.action_mailer.delivery_method = :smtp
     config.action_mailer.smtp_settings = { address: smtp_host, port: smtp_port, enable_starttls_auto: false }
-  
+
     # Omniauth middleware
     config.session_store :cookie_store, key: '_interslice_session'
     config.middleware.use ActionDispatch::Cookies # Required for all session management

@@ -10,7 +10,6 @@
 #  updated_at :datetime         not null
 #  user_id    :integer          not null
 #
-
 class Subscription < ApplicationRecord
   belongs_to :user
 

@@ -8,7 +8,7 @@ You'll need the following software to make the backend run on your system:
 
 * Node.js
 * Ruby >= 2.3
-* [InfluxDB](https://influxdata.com/time-series-platform/influxdb/)
+* [InfluxDB 1.x](https://influxdata.com/time-series-platform/influxdb/)
 * [MySQL](https://www.mysql.com)
 * a SMTP server
 * [one or more BotnBot probes](../probe/README.md)

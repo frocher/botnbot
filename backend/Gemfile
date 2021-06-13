@@ -31,8 +31,9 @@ gem 'slim'
 gem 'chronic_duration'
 
 # Auth
-gem 'omniauth', '=1.9.1'
-gem 'devise_token_auth', '>= 0.1.42'
+gem 'omniauth'
+gem 'omniauth-rails_csrf_protection'
+gem 'devise_token_auth'
 gem 'omniauth-github'
 gem 'omniauth-facebook'
 gem 'omniauth-google-oauth2'
@@ -59,7 +60,7 @@ group :development, :test do
 end
 
 group :development do
-  gem 'listen', '>= 3.0.5', '< 3.3'
+  gem 'listen'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'

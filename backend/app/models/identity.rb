@@ -13,7 +13,6 @@
 #
 #  index_identities_on_provider_and_uid  (provider,uid) UNIQUE
 #
-
 class Identity < ActiveRecord::Base
   belongs_to :user
 end

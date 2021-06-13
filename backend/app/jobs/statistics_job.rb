@@ -1,7 +1,7 @@
 # Base class for all statistics jobs
 class StatisticsJob
   def generate_time_key
-    Time.now.strftime("%Y%m%d%H%M%S")
+    Time.now.strftime('%Y%m%d%H%M%S')
   end
 
   def send_request(uri)

@@ -3,7 +3,7 @@ class Pages::BudgetsController < ApplicationController
   def index
     @page = Page.find(params[:page_id])
     return not_found! unless can?(current_user, :read_budget, @page)
-    
+
     render json: @page.budgets
   end
 

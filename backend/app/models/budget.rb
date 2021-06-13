@@ -14,7 +14,6 @@
 #
 #  index_budgets_on_page_id  (page_id)
 #
-
 class Budget < ActiveRecord::Base
   belongs_to :page
 
@@ -27,6 +26,6 @@ class Budget < ActiveRecord::Base
   validates :page, presence: true
 
   def as_json(options={})
-    super({only: [:id, :category, :item, :budget, :created_at, :updated_at]}.merge(options || {}))
+    super({ only: [:id, :category, :item, :budget, :created_at, :updated_at] }.merge(options || {}))
   end
 end

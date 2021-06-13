@@ -13,8 +13,7 @@ class Pages::AssetsController < ApplicationController
   def show
     @page = Page.find(params[:page_id])
     metric = AssetsMetrics.new page_id: @page.id, time_key: params[:id]
-    result = "onInputData (#{metric.read_har});"
-    render json: result
+    render json: metric.read_har.to_s
   end
 
   def get_assets(page, start_date, end_date)

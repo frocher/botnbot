@@ -5,7 +5,9 @@ require 'chronic_duration'
 #
 #  id                      :bigint           not null, primary key
 #  current_week_lh_score   :integer
+#  description             :string(255)      default("")
 #  device                  :integer          default("mobile")
+#  last_downtime           :datetime
 #  last_week_lh_score      :integer
 #  locked                  :boolean          default(FALSE)
 #  mail_notify             :boolean          default(TRUE)
@@ -30,15 +32,14 @@ require 'chronic_duration'
 #
 #  index_pages_on_owner_id  (owner_id)
 #
-
 class Page < ActiveRecord::Base
   after_create :init_jobs
   after_destroy :destroy_metrics
 
   has_attached_file :screenshot,
-    path: ":rails_root/reports/screenshots/:id/:style/:filename",
-    default_url: "/images/:style/missing.png",
-    styles: { thumb: ["", :jpg] },
+    path: ':rails_root/reports/screenshots/:id/:style/:filename',
+    default_url: '/images/:style/missing.png',
+    styles: { thumb: ['', :jpg] },
     convert_options: {
       thumb: '-resize "360x" +repage -crop "360x270+0+0" -gravity North -quality 80 -interlace Plane'
     }
@@ -48,7 +49,7 @@ class Page < ActiveRecord::Base
   has_many :budgets, dependent: :destroy
   has_many :page_members, dependent: :destroy
 
-  enum device: [ :mobile, :desktop ]
+  enum device: [:mobile, :desktop]
 
   #
   # Validations
@@ -60,13 +61,13 @@ class Page < ActiveRecord::Base
   validates :slack_channel, presence: true, if: Proc.new { |a| a.slack_notify? }
 
   def as_json(options={})
-    h = super({only: [:id, :name, :url, :device, :locked, :uptime_keyword, :uptime_keyword_type, :mail_notify, :slack_notify, :push_notify, :slack_webhook, :slack_channel, :uptime_status, :current_week_lh_score, :last_week_lh_score, :created_at, :updated_at]}.merge(options || {}))
+    h = super({ only: [:id, :name, :url, :description, :device, :locked, :uptime_keyword, :uptime_keyword_type, :mail_notify, :slack_notify, :push_notify, :slack_webhook, :slack_channel, :uptime_status, :last_downtime, :current_week_lh_score, :last_week_lh_score, :created_at, :updated_at] }.merge(options || {}))
     h[:owner] = owner.as_json
     h
   end
 
   def last_downtime_duration
-    result = UptimeMetrics.select("value").by_page(id)
+    result = UptimeMetrics.select('value').by_page(id)
     records = result.load
     return 0 if records.empty?
 
@@ -75,17 +76,15 @@ class Page < ActiveRecord::Base
     last_down = 0
     last_up = 0
     records.reverse_each do |record|
-      if record["value"] == 1
-        last_up = DateTime.parse(record["time"]).to_time
+      if record['value'] == 1
+        last_up = DateTime.parse(record['time']).to_time
 
         # If we have a up and we previously found a down, we can now compute the duration
         unless found_down.nil?
           # Never had a up, so the page is currently down. We use time now for compute
-          if found_up.nil?
-            found_up = Time.now
-          end
+          found_up = Time.now if found_up.nil?
           interval = found_up.round(0) - last_down.round(0)
-          return ChronicDuration.output(interval, :format => :long)
+          return ChronicDuration.output(interval, format: :long)
         end
       else
         last_down = DateTime.parse(record["time"]).to_time
@@ -138,10 +137,31 @@ class Page < ActiveRecord::Base
     convert_influx_result(data)
   end
 
+  def carbon_summary(start_date, end_date)
+    select_value = "mean(co2_first) as co2_first," \
+                   "mean(co2_second) as co2_second," \
+                   "mean(co2_adjusted) as co2_adjusted," \
+                   "mean(ecoindex_first) as ecoindex_first," \
+                   "mean(ecoindex_second) as ecoindex_second," \
+                   "mean(ecoindex_adjusted) as ecoindex_adjusted," \
+                   "mean(bytes_first) as bytes_first," \
+                   "mean(bytes_second) as bytes_second," \
+                   "mean(bytes_adjusted) as bytes_adjusted," \
+                   "mean(elements_first) as elements_first," \
+                   "mean(elements_second) as elements_second," \
+                   "mean(elements_adjusted) as elements_adjusted," \
+                   "mean(requests_first) as requests_first," \
+                   "mean(requests_second) as requests_second," \
+                   "mean(requests_adjusted) as requests_adjusted," \
+                   "mean(green_host) as green_host"
+    data = CarbonMetrics.select(select_value).by_page(id).where(time: start_date..end_date)
+    convert_influx_result(data)
+  end
+
   def init_jobs
     scheduler = Rufus::Scheduler.singleton
     max_start = Rails.configuration.x.jobs.screenshot_start
-    scheduler.every(Rails.configuration.x.jobs.screenshot_interval, ScreenshotJob.new, {:page_id => id, :mutex => "screenshot", :first_in => "#{rand(1..max_start)}m"})
+    scheduler.every(Rails.configuration.x.jobs.screenshot_interval, ScreenshotJob.new, { page_id: id, mutex: 'screenshot', first_in: "#{rand(1..max_start)}m" })
 
     max_start = Rails.configuration.x.jobs.uptime_start
     UptimeJob.schedule_next("#{rand(1..max_start)}m", UptimeJob.new, id, false)
@@ -149,6 +169,8 @@ class Page < ActiveRecord::Base
     HarJob.schedule_next("#{rand(1..max_start)}m", HarJob.new, id)
     max_start = Rails.configuration.x.jobs.lighthouse_start
     LighthouseJob.schedule_next("#{rand(1..max_start)}m", LighthouseJob.new, id)
+    max_start = Rails.configuration.x.jobs.carbon_start
+    CarbonJob.schedule_next("#{rand(1..max_start)}m", CarbonJob.new, id)
   end
 
   def destroy_metrics
@@ -165,6 +187,11 @@ class Page < ActiveRecord::Base
     # Destroy assets metrics and reports
     AssetsMetrics.by_page(id).delete_all
     metric = AssetsMetrics.new page_id: id
+    metric.delete_reports
+
+    # Destroy carbon metrics and reports
+    CarbonMetrics.by_page(id).delete_all
+    metric = CarbonMetrics.new page_id: id
     metric.delete_reports
   end
 

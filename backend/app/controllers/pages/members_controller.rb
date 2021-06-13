@@ -4,6 +4,7 @@ class Pages::MembersController < ApplicationController
   def index
     @page = Page.find(params[:page_id])
     return not_found! unless can?(current_user, :read_page_member, @page)
+
     render json: @page.page_members
   end
 
@@ -14,9 +15,11 @@ class Pages::MembersController < ApplicationController
     return not_found! unless can?(current_user, :create_page_member, @page)
 
     # Check subscription rights
-    return render_api_error!("Your current subscription doesn't allow you to create more members", 403) unless can_create_member(@page)
+    unless can_create_member(@page)
+      return render_api_error!("Your current subscription doesn't allow you to create more members", 403)
+    end
 
-    if params[:role] == "admin"
+    if params[:role] == 'admin'
       return not_found! unless can?(current_user, :create_page_member_admin, @page)
     end
 
@@ -38,9 +41,8 @@ class Pages::MembersController < ApplicationController
 
       render json: @member
     rescue ActiveRecord::RecordInvalid
-      render json: {errors: @member.errors}, status: 422
+      render json: { errors: @member.errors }, status: 422
     end
-
   end
 
   def update
@@ -55,11 +57,13 @@ class Pages::MembersController < ApplicationController
     # A member can't allow upper level rights to another member
     user_member = @page.page_members.find_by_user_id(current_user.id)
     role = convert_role(params[:role])
-    return render_api_error!("You are not allowed to give the #{params[:role]} role", 422) if is_greater_role(role, user_member.role)
+    if is_greater_role(role, user_member.role)
+      return render_api_error!("You are not allowed to give the #{params[:role]} role", 422)
+    end
 
     # There must be at least one admin member remaining
     if @member.role == 'admin'
-      return render_api_error!("There must be at least one admin remaining", 422) unless has_a_remaining_admin(@page, @member)
+      return render_api_error!('There must be at least one admin remaining', 422) unless has_a_remaining_admin(@page, @member)
     end
 
     begin
@@ -145,6 +149,7 @@ class Pages::MembersController < ApplicationController
     return '3' + role if role == 'admin'
     return '2' + role if role == 'master'
     return '1' + role if role == 'editor'
-    return '0'
+
+    '0'
   end
 end

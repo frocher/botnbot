@@ -39,13 +39,16 @@ class PagesController < ApplicationController
 
   def create
     # Check subscription rights
-    return render_api_error!("Your current subscription doesn't allow you to create more pages", 403) unless can_create_page
+    unless can_create_page
+      return render_api_error!("Your current subscription doesn't allow you to create more pages", 403)
+    end
 
     Page.transaction do
       @page = Page.new
       @page.owner = current_user
       @page.name = params[:name]
       @page.url = params[:url]
+      @page.description = params[:description]
       @page.device = params[:device]
       @page.uptime_status = 1
       @page.locked = false
@@ -75,6 +78,7 @@ class PagesController < ApplicationController
 
     @page.name = params[:name]
     @page.url = params[:url]
+    @page.description = params[:description]
     @page.device = params[:device]
     @page.uptime_keyword = params[:uptime_keyword]
     @page.uptime_keyword_type = params[:uptime_keyword_type]
@@ -86,7 +90,6 @@ class PagesController < ApplicationController
     @page.save!
 
     render_page
-
   rescue ActiveRecord::RecordInvalid
     render json: { errors: @page.errors }, status: 422
   end
@@ -106,18 +109,19 @@ class PagesController < ApplicationController
             else
               'original'
             end
-    path = File.join(Rails.root, 'public', 'screenshot.png')
+    path = File.join(Rails.root, 'public', "screenshot_#{rand(6)}.jpg")
     path = @page.screenshot.path(style) if @page.screenshot.exists?
     data = File.read(path)
     send_data data, type: 'image/jpeg', disposition: 'inline'
   end
 
-private
+  private
+
   def can_create_page
     resu = true
     unless ENV['STRIPE_PUBLIC_KEY'].blank?
-      max_pages = current_user.stripe_subscription["pages"]
-      resu = max_pages > 0 && current_user.owned_pages.count < max_pages
+      max_pages = current_user.stripe_subscription['pages']
+      resu = max_pages.positive? && current_user.owned_pages.count < max_pages
     end
     resu
   end
@@ -132,14 +136,14 @@ private
     can_delete_budget = can?(current_user, :delete_budget, @page)
 
     render json: @page.as_json.merge({
-        can_edit: can_edit,
-        can_delete: can_delete,
-        can_add_member: can_add_member,
-        can_update_member: can_update_member,
-        can_remove_member: can_remove_member,
-        can_create_budget: can_create_budget,
-        can_delete_budget: can_delete_budget
-      })
+      can_edit: can_edit,
+      can_delete: can_delete,
+      can_add_member: can_add_member,
+      can_update_member: can_update_member,
+      can_remove_member: can_remove_member,
+      can_create_budget: can_create_budget,
+      can_delete_budget: can_delete_budget
+    })
   end
 
   def set_page

@@ -36,6 +36,8 @@
 #                                DELETE   /pages/:page_id/members/:id(.:format)     pages/members#destroy
 #                    page_assets GET      /pages/:page_id/assets(.:format)          pages/assets#index
 #                     page_asset GET      /pages/:page_id/assets/:id(.:format)      pages/assets#show
+#              page_carbon_index GET      /pages/:page_id/carbon(.:format)          pages/carbon#index
+#                    page_carbon GET      /pages/:page_id/carbon/:id(.:format)      pages/carbon#show
 #          page_lighthouse_index GET      /pages/:page_id/lighthouse(.:format)      pages/lighthouse#index
 #                page_lighthouse GET      /pages/:page_id/lighthouse/:id(.:format)  pages/lighthouse#show
 #                   page_budgets GET      /pages/:page_id/budgets(.:format)         pages/budgets#index
@@ -63,7 +65,7 @@
 #      stripe_checkout_completed POST     /stripe/checkout_completed(.:format)      stripe#hooks
 
 Rails.application.routes.draw do
-  mount_devise_token_auth_for 'User', at: 'auth', controllers: { omniauth_callbacks: "users/omniauth_callbacks" }
+  mount_devise_token_auth_for 'User', at: 'auth', controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
 
   resources :environment, only: [:index]
 
@@ -72,6 +74,7 @@ Rails.application.routes.draw do
       resource :owner, only: [:show, :update]
       resources :members, except: :show
       resources :assets, only: [:index, :show]
+      resources :carbon, only: [:index, :show]
       resources :lighthouse, only: [:index, :show]
       resources :budgets, only: [:index, :create, :destroy]
       resources :stats, only: [:index]
@@ -87,14 +90,14 @@ Rails.application.routes.draw do
     end
   end
 
-  get "/pages/:id/screenshot" => "pages#screenshot"
-  post "/users/:id/save-subscription" => "users#save_subscription"
+  get '/pages/:id/screenshot' => 'pages#screenshot'
+  post '/users/:id/save-subscription' => 'users#save_subscription'
 
-  unless ENV["STRIPE_SECRET_KEY"].blank?
-    post "/stripe/session" => "stripe#create_session"
-    post "/stripe/customer_portal_session" => "stripe#create_customer_portal_session"
+  unless ENV['STRIPE_SECRET_KEY'].blank?
+    post '/stripe/session' => 'stripe#create_session'
+    post '/stripe/customer_portal_session' => 'stripe#create_customer_portal_session'
 
-    path = ENV.fetch("STRIPE_WH_PATH") { "/stripe/checkout_completed" }
-    post path => "stripe#hooks"
+    path = ENV.fetch('STRIPE_WH_PATH') { '/stripe/checkout_completed' }
+    post path => 'stripe#hooks'
   end
 end

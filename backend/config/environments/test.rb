@@ -45,11 +45,13 @@ Rails.application.configure do
   config.x.jobs.lighthouse_start = 3
   config.x.jobs.uptime_start = 3
   config.x.jobs.screenshot_start = 3
+  config.x.jobs.carbon_start = 3
 
   # Jobs intervals
-  config.x.jobs.har_interval = "15m"
-  config.x.jobs.lighthouse_interval = "15m"
-  config.x.jobs.uptime_interval = "2m"
-  config.x.jobs.second_chanche_interval = "15s"
-  config.x.jobs.screenshot_interval = "30m"
+  config.x.jobs.har_interval = '15m'
+  config.x.jobs.lighthouse_interval = '15m'
+  config.x.jobs.uptime_interval = '2m'
+  config.x.jobs.second_chanche_interval = '15s'
+  config.x.jobs.screenshot_interval = '30m'
+  config.x.jobs.carbon_interval = '15m'
 end

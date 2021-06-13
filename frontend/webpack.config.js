@@ -47,12 +47,6 @@ module.exports = (env, options) => {
     }, {
       from: resolve('./node_modules/web-animations-js/web-animations-next.min.js'),
       to: join(OUTPUT_PATH, 'vendor', '[name].[ext]'),
-    }, {
-      from: resolve('./node_modules/chart.js/dist/Chart.bundle.min.js'),
-      to: join(OUTPUT_PATH, 'vendor', '[name].[ext]'),
-    }, {
-      from: resolve('./node_modules/chartjs-plugin-annotation/chartjs-plugin-annotation.min.js'),
-      to: join(OUTPUT_PATH, 'vendor', '[name].[ext]'),
     }],
     copyOthers: [{
       from: 'images/**',
@@ -88,8 +82,6 @@ module.exports = (env, options) => {
       tags: [
         './vendor/webcomponents-loader.js',
         './vendor/web-animations-next.min.js',
-        './vendor/Chart.bundle.min.js',
-        './vendor/chartjs-plugin-annotation.min.js',
       ],
       append: true,
     }),

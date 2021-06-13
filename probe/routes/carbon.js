@@ -11,19 +11,32 @@ const CARBON_PER_KWG_RENEWABLE = 33.4;
 const PERCENTAGE_OF_ENERGY_IN_DATACENTER = 0.1008;
 const PERCENTAGE_OF_ENERGY_IN_TRANSMISSION_AND_END_USER = 0.8992;
 
+const quantiles_dom = [0, 47, 75, 159, 233, 298, 358, 417, 476, 537, 603, 674, 753, 843, 949, 1076, 1237, 1459, 1801, 2479, 594601];
+const quantiles_req = [0, 2, 15, 25, 34, 42, 49, 56, 63, 70, 78, 86, 95, 105, 117, 130, 147, 170, 205, 281, 3920];
+const quantiles_size = [0, 1.37, 144.7, 319.53, 479.46, 631.97, 783.38, 937.91, 1098.62, 1265.47, 1448.32, 1648.27, 1876.08, 2142.06, 2465.37, 2866.31, 3401.59, 4155.73, 5400.08, 8037.54, 223212.26];
+
+
 async function getPageInformations(page, url) {
   let encodedDataLength = 0;
+  let requestsCount = 0;
 
   page._client.on('Network.loadingFinished', data => {
     if (typeof data.encodedDataLength !== 'undefined') encodedDataLength += parseInt(data.encodedDataLength);
   });
 
+  page.on('request', () => {
+    requestsCount++;
+  });
+
   await page.goto(url, {waitUntil: 'networkidle2', timeout: 60000});
-  return encodedDataLength;
+
+  const elements = await page.$$('*');
+
+  return {bytes: encodedDataLength, elements: elements.length, requests: requestsCount};
 }
 
-function adjustDataTransfer(firstBytes, secondBytes) {
-  return (firstBytes * FIRST_TIME_VIEWING_PERCENTAGE) + (secondBytes * RETURNING_VISITOR_PERCENTAGE);
+function adjustData(first, second) {
+  return (first * FIRST_TIME_VIEWING_PERCENTAGE) + (second * RETURNING_VISITOR_PERCENTAGE);
 }
 
 function energyConsumption(bytes) {
@@ -39,17 +52,35 @@ function getCo2Renewable(energy) {
     (energy * PERCENTAGE_OF_ENERGY_IN_TRANSMISSION_AND_END_USER * CARBON_PER_KWG_GRID);
 }
 
+function computeQuantile(quantiles, value) {
+  for (let i = 1; i < quantiles.length; i++) {
+    if (value < quantiles[i]) {
+      return i + (value - quantiles[i-1]) / (quantiles[i] - quantiles[i-1]);
+    }
+  }
+  return quantiles.length;
+}
+
+function ecoIndex(bytes, requests, elements) {
+  const q_dom = computeQuantile(quantiles_dom, elements);
+  const q_size = computeQuantile(quantiles_size, bytes / 1024);
+  const q_req = computeQuantile(quantiles_req, requests);
+
+  return 100 - (5 * (3 * q_dom + q_size + 2 * q_req)) / 6;
+}
+
 /**
  * Return the url without the protocol.
- * @param {*} url 
+ * @param {*} url
  */
 function removeHttp(url) {
-  return url.replace(/(^\w+:|^)\/\//, '');
+  const uri = new URL(url);
+  return uri.hostname;
 }
 
 /**
  * Call the green web foundation to check hostings
- * @param {*} url 
+ * @param {*} url
  */
 async function checkGreenAPI(url) {
   const domain = removeHttp(url);
@@ -64,24 +95,41 @@ router.get('/', function (req, res) {
     setPageViewport(page, req);
 
     await page.setCacheEnabled(false);
-    let firstBytes = await getPageInformations(page, req.query.url);
+    let first = await getPageInformations(page, req.query.url);
     await page.setCacheEnabled(true);
-    let secondBytes = await getPageInformations(page, req.query.url);
+    let second = await getPageInformations(page, req.query.url);
     await browser.close();
 
     const greenCheck = await checkGreenAPI(req.query.url);
 
-    const bytesAdjusted = adjustDataTransfer(firstBytes, secondBytes);
-    const energyFirst = energyConsumption(firstBytes);
-    const energySecond = energyConsumption(secondBytes);
+    const bytesAdjusted = adjustData(first.bytes, second.bytes);
+    const elementsAdjusted = adjustData(first.elements, second.elements);
+    const requestsAdjusted = adjustData(first.requests, second.requests);
+
+    const energyFirst = energyConsumption(first.bytes);
+    const energySecond = energyConsumption(second.bytes);
     const energyAdjusted = energyConsumption(bytesAdjusted);
-    
+
+    const ecoIndexFirst = ecoIndex(first.bytes, first.requests, first.elements);
+    const ecoIndexSecond = ecoIndex(second.bytes, second.requests, second.elements);
+    const ecoIndexAdjusted = ecoIndex(bytesAdjusted, requestsAdjusted, elementsAdjusted);
+
     let response = {
       host: greenCheck,
       bytes: {
-        first: firstBytes,
-        second: secondBytes,
+        first: first.bytes,
+        second: second.bytes,
         adjusted: bytesAdjusted,
+      },
+      requests: {
+        first: first.requests,
+        second: second.requests,
+        adjusted: requestsAdjusted,
+      },
+      elements: {
+        first: first.elements,
+        second: second.elements,
+        adjusted: elementsAdjusted,
       },
       co2: {
         grid: {
@@ -94,7 +142,12 @@ router.get('/', function (req, res) {
           second: getCo2Renewable(energySecond),
           adjusted: getCo2Renewable(energyAdjusted),
         },
-      }
+      },
+      ecoIndex: {
+        first: ecoIndexFirst,
+        second: ecoIndexSecond,
+        adjusted: ecoIndexAdjusted,
+      },
     };
 
     res.setHeader('Content-Type', 'application/json');
