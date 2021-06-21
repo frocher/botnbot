@@ -23,7 +23,7 @@ function getScores(results) {
     accessibility,
     bestPractices,
     seo,
-  };  
+  };
   return JSON.stringify(scores);
 }
 
@@ -44,8 +44,10 @@ function getMetrics(results) {
   return JSON.stringify(metrics);
 }
 
-router.get('/', function (req, res) {
-  launchBrowser().then(async browser => {
+router.get('/', async (req, res) => {
+  let browser = null;
+  try {
+    browser = await launchBrowser();
     const flags = {};
     flags.formFactor = req.query.emulation || 'mobile';
     flags.port = (new URL(browser.wsEndpoint())).port;
@@ -58,7 +60,6 @@ router.get('/', function (req, res) {
     const config = flags.formFactor === 'desktop' ? LR_PRESETS.desktop : LR_PRESETS.mobile;
 
     let results = await lighthouse(req.query.url, flags, config);
-    await browser.close();
 
     res.setHeader('X-Lighthouse-scores', getScores(results));
     res.setHeader('X-Lighthouse-metrics', getMetrics(results));
@@ -69,12 +70,17 @@ router.get('/', function (req, res) {
     if (type === 'html') {
       results = ReportGenerator.generateReportHtml(results.lhr);
     }
-
     res.send(results);
-  }).catch(e => {
+  }
+  catch (e) {
     console.error(e);
     res.status(500).send({error: 'Could not execute lighthouse'});
-  });
+  }
+  finally {
+    if (browser) {
+      await browser.close();
+    }
+  }
 });
 
 module.exports = router;

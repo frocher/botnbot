@@ -88,8 +88,10 @@ async function checkGreenAPI(url) {
   return await res.json();
 }
 
-router.get('/', function (req, res) {
-  launchBrowser().then(async browser => {
+router.get('/', async (req, res) => {
+  let browser = null;
+  try {
+    browser = await launchBrowser();
     const page = await browser.newPage();
     await page.setBypassCSP(true);
     setPageViewport(page, req);
@@ -98,7 +100,6 @@ router.get('/', function (req, res) {
     let first = await getPageInformations(page, req.query.url);
     await page.setCacheEnabled(true);
     let second = await getPageInformations(page, req.query.url);
-    await browser.close();
 
     const greenCheck = await checkGreenAPI(req.query.url);
 
@@ -152,10 +153,16 @@ router.get('/', function (req, res) {
 
     res.setHeader('Content-Type', 'application/json');
     res.status(200).send(response);
-  }).catch(e => {
+  }
+  catch (e) {
     console.error(e);
     res.status(500).send({error: 'Could not check co2'});
-  });
+  }
+  finally {
+    if (browser) {
+      await browser.close();
+    }
+  }
 });
 
 module.exports = router;

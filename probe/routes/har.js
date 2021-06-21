@@ -3,8 +3,10 @@ const router = express.Router();
 const {launchBrowser, setPageViewport} = require('./util');
 const { harFromMessages } = require('chrome-har');
 
-router.get('/', function (req, res) {
-  launchBrowser().then(async browser => {
+router.get('/', async (req, res) => {
+  let browser = null;
+  try {
+    browser = await launchBrowser();
     const page = await browser.newPage();
     setPageViewport(page, req);
 
@@ -25,7 +27,7 @@ router.get('/', function (req, res) {
       'Network.loadingFinished',
       'Network.loadingFailed',
     ];
-    
+
     // register events listeners
     const client = await page.target().createCDPSession();
     await client.send('Page.enable');
@@ -36,17 +38,22 @@ router.get('/', function (req, res) {
       });
     });
 
-    await page.goto(req.query.url, {timeout: 60000});  
+    await page.goto(req.query.url, {timeout: 60000});
     const har = harFromMessages(events);
     const json = JSON.stringify(har, null, 4);
-    await browser.close();
 
     res.setHeader('Content-Type', 'application/json');
     res.status(200).send(json);
-  }).catch(e => {
+  }
+  catch (e) {
     console.error(e);
     res.status(500).send({error: 'Could not generate har'});
-  });
+  }
+  finally {
+    if (browser) {
+      await browser.close();
+    }
+  }
 });
 
 module.exports = router;
