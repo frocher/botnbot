@@ -6,7 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
-- Bump packages versions
+- Bump packages versions.
+### Fixed
+- Chrome is not killed by probe when an exception is raised.
 ## [1.2.0]
 ### Added
 - Ecoindex monitoring
