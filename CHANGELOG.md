@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+### Changed
+- Bump packages versions.
+### Fixed
+- Chrome is not killed by probe when an exception is raised.
 ## [1.2.0]
 ### Added
 - Ecoindex monitoring
@@ -18,7 +23,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New component for HAR view in resources details page.
 - Bump lighthouse version to 8.0.0.
 - Bump Chartjs version to 3.x.
-
 ### Fixed
 - Enter key not working on signin and signup forms.
 
