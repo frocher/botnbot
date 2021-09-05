@@ -104,8 +104,6 @@ services:
     cap_add:
       - ALL
     shm_size: 1G
-    volumes:
-      - ./probe:/home/chrome/bnb_probe
     ports:
       - "3333:3000"
 
