@@ -44,7 +44,7 @@ class BnbOAuth extends LitElement {
       #google {
         background-color: transparent;
         --mdc-theme-primary: #fff;
-        --mdc-theme-on-primary: var(--paper-grey-600);
+        --mdc-theme-on-primary: #757575;
       }
 
       @media (max-width: 500px) {

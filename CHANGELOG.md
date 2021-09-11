@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bump packages versions.
 ### Fixed
 - Chrome is not killed by probe when an exception is raised.
+- Text color on Google oauth button.
 ## [1.2.0]
 ### Added
 - Ecoindex monitoring
