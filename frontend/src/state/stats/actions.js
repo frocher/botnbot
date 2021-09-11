@@ -9,11 +9,26 @@ export const fetchPageStatsSuccess = createAction('PAGE_STATS_FETCH_SUCCESS');
 export const fetchPageStatsError = createAction('PAGE_STATS_FETCH_ERROR');
 
 /* eslint no-param-reassign: ["error", { "props": false }] */
-const _updateUptime = (data) => {
+const _updateNumber = (data) => {
+  data.summary = Math.round(data.summary * 100) / 100;
+  for (let i = 0; i < data.values.length; i += 1) {
+    data.values[i].value = Math.round(data.values[i].value * 100) / 100;
+  }
+};
+
+const _updateNumbers = (items) => {
+  items.forEach((item) => _updateNumber(item));
+};
+
+const _updatePercent = (data) => {
   data.summary = Math.round(data.summary * 10000) / 100;
   for (let i = 0; i < data.values.length; i += 1) {
     data.values[i].value = Math.round(data.values[i].value * 10000) / 100;
   }
+};
+
+const _updatePercents = (items) => {
+  items.forEach((item) => _updatePercent(item));
 };
 
 const _updateCount = (data) => {
@@ -45,11 +60,12 @@ export const loadPageStats = (pageId, period) => async (dispatch) => {
     onLoad(e) {
       const response = JSON.parse(e.target.responseText);
       if (e.target.status === 200) {
-        _updateUptime(response.uptime[0]);
+        _updatePercents(response.uptime);
         _updateCount(response.lighthouse);
         _updateCount(response.performance);
         _updateBytes(response.bytes);
         _updateCount(response.requests);
+        _updateNumbers(response.carbon);
 
         dispatch(fetchPageStatsSuccess(response));
       } else {
