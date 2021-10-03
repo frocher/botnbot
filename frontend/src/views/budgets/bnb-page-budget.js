@@ -1,4 +1,4 @@
-import { LitElement, html } from 'lit-element';
+import { LitElement, html } from 'lit';
 import { connect } from 'pwa-helpers';
 import { store } from '../../state/store';
 import { createBudget, deleteBudget } from '../../state/budgets/actions';

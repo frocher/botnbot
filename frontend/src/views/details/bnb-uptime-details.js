@@ -1,4 +1,4 @@
-import { html, css } from 'lit-element';
+import { html, css } from 'lit';
 import formatDistance from 'date-fns/formatDistance';
 import '@material/mwc-icon-button';
 import { getRequestUrl } from '../../utilities/api';
@@ -77,7 +77,7 @@ class BnbUptimeDetails extends BnbPageDetails {
         table tbody tr td:nth-child(3):before {
           content: "duration";
         }
-        
+
         table tbody tr td:nth-child(4):before {
           content: "status";
         }

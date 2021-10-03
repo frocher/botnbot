@@ -1,4 +1,4 @@
-import { LitElement, html } from 'lit-element';
+import { LitElement, html } from 'lit';
 import '../components/bnb-card';
 import '../components/bnb-period-dropdown';
 

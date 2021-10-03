@@ -1,4 +1,4 @@
-import { LitElement, html } from 'lit-element';
+import { LitElement, html } from 'lit';
 import { connect } from 'pwa-helpers';
 import '@material/mwc-button';
 import { store } from '../../state/store';

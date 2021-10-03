@@ -1,4 +1,4 @@
-import { css } from 'lit-element';
+import { css } from 'lit';
 
 // eslint-disable-next-line import/prefer-default-export
 export const styles = css`
@@ -68,8 +68,19 @@ export const styles = css`
   }
 
   mwc-switch {
-    --mdc-theme-surface: var(--mdc-theme-text-primary-on-background);
-    --mdc-theme-on-surface: var(--mdc-theme-text-primary-on-background);
+    --mdc-theme-primary: #64B5F6;
+    --mdc-theme-on-primary: #212121;
+    --mdc-switch-selected-handle-color: #64B5F6;
+    --mdc-switch-selected-track-color: #ACD8FA;
+    --mdc-switch-selected-focus-handle-color: #1C92F2;
+    --mdc-switch-selected-focus-track-color: #64B5F6;
+    --mdc-switch-selected-hover-handle-color: #1C92F2;
+    --mdc-switch-selected-hover-track-color: #64B5F6;
+    --mdc-switch-selected-pressed-handle-color: #1C92F2;
+    --mdc-switch-selected-pressed-track-color: #64B5F6;
+    --mdc-switch-unselected-focus-handle-color: #484848;
+    --mdc-switch-unselected-hover-handle-color: #484848;
+    --mdc-switch-unselected-hover-track-color: #797979;
   }
 
   mwc-tab-bar {

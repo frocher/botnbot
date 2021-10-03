@@ -1,4 +1,4 @@
-import { html, css } from 'lit-element';
+import { html, css } from 'lit';
 import '@material/mwc-icon-button';
 import { getRequestUrl } from '../../utilities/api';
 import { BnbPageDetails } from './bnb-page-details';

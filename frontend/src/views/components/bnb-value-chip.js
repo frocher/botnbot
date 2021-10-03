@@ -1,4 +1,4 @@
-import { LitElement, css, html } from 'lit-element';
+import { LitElement, css, html } from 'lit';
 import './bnb-divider';
 
 class BnbValueChip extends LitElement {

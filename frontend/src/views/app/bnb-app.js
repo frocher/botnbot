@@ -1,5 +1,5 @@
-import { LitElement, css, html } from 'lit-element';
-import { classMap } from 'lit-html/directives/class-map';
+import { LitElement, css, html } from 'lit';
+import { classMap } from 'lit/directives/class-map.js';
 import '@material/mwc-snackbar';
 import { connect } from 'pwa-helpers';
 import Router from 'navigo';

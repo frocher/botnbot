@@ -1,4 +1,4 @@
-import { LitElement, css, html } from 'lit-element';
+import { LitElement, css, html } from 'lit';
 import '@material/mwc-button/mwc-button';
 import '@material/mwc-textfield';
 import { connect } from 'pwa-helpers';

@@ -1,4 +1,4 @@
-import { LitElement, html, css } from 'lit-element';
+import { LitElement, html, css } from 'lit';
 import '@material/mwc-button';
 import '../components/bnb-card';
 import '../components/bnb-value-chip';

@@ -1,9 +1,9 @@
-import { LitElement, css, html } from 'lit-element';
+import { LitElement, css, html } from 'lit';
 import '@material/mwc-icon-button';
 import '@material/mwc-list/mwc-list-item';
 import '@material/mwc-menu';
 import '@material/mwc-textfield';
-import 'wc-range-datepicker/dist/wc-range-datepicker';
+import 'wc-range-datepicker/wc-range-datepicker.js';
 import {
   addDays, addMonths, addWeeks, format, endOfDay, endOfMonth, endOfWeek,
   startOfDay, startOfMonth, startOfWeek,
