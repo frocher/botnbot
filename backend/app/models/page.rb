@@ -191,8 +191,6 @@ class Page < ActiveRecord::Base
 
     # Destroy carbon metrics and reports
     CarbonMetrics.by_page(id).delete_all
-    metric = CarbonMetrics.new page_id: id
-    metric.delete_reports
   end
 
   private
