@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const lighthouse = require('lighthouse');
-const ReportGenerator = require('lighthouse/report/report-generator.js');
+const ReportGenerator = require('lighthouse/report/generator/report-generator.js');
 const {launchBrowser} = require('./util');
 const {URL} = require('url');
 
