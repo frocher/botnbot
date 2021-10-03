@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - Bump packages and bundles versions.
+- Page metrics deletion is now asynchronous
 ### Fixed
 - Chrome is not killed by probe when an exception is raised.
 - Incorrect text color on Google oauth button.
