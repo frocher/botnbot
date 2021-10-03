@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Chrome is not killed by probe when an exception is raised.
 - Incorrect text color on Google oauth button.
 - No rounding for carbon summary
+- Page deletion
 ## [1.2.0]
 ### Added
 - Ecoindex monitoring
