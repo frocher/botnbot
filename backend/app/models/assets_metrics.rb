@@ -49,6 +49,6 @@ class AssetsMetrics < Influxer::Metrics
   end
 
   def delete_reports
-    FileUtils.rm_rf(get_har_path, secure: true)
+    FileUtils.rm_rf(har_path, secure: true)
   end
 end
