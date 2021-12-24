@@ -111,7 +111,7 @@ class BnbAccount extends connect(store)(BnbFormElement(LitElement)) {
               If you delete your account, all your data will be definitly erased, including your shared monitored pages.
               You won't be able to retrieve them even if you recreate your account.
               </div>
-              <mwc-button id="deleteAccountBtn" class="danger" slot="actionItems">Delete your account</mwc-button>
+              <mwc-button id="deleteAccountBtn" class="danger" slot="actionItems">Delete my account</mwc-button>
             </div>
           </bnb-card>
 
