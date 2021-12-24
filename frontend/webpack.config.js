@@ -149,15 +149,15 @@ module.exports = (env, options) => {
     },
     plugins,
     devServer: {
-      contentBase: [OUTPUT_PATH, resolve('images'), resolve('dist')],
+      static: [
+        { directory: OUTPUT_PATH },
+        { directory: resolve('images') },
+        { directory: resolve('dist') },
+      ],
       historyApiFallback: true,
       compress: true,
-      overlay: {
-        errors: true,
-      },
       port: 8081,
       host: '0.0.0.0',
-      disableHostCheck: true,
       proxy: {
         '/api': {
           target: 'http://localhost:3000/',
