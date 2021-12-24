@@ -168,10 +168,10 @@ class BnbAccount extends connect(store)(BnbFormElement(LitElement)) {
     this.shadowRoot.getElementById('discardDlg').addEventListener('closed', (e) => this.onDiscardDialogClosed(e.detail.action));
 
     if (this.isNotificationsEnabled()) {
-      this.shadowRoot.getElementById('pushButton').addEventListener('change', () => this.notificationsChanged());
+      this.shadowRoot.getElementById('pushButton').addEventListener('click', () => this.notificationsChanged());
 
       this.getNotificationPermissionState().then((state) => {
-        this.shadowRoot.getElementById('pushButton').checked = state === 'granted';
+        this.shadowRoot.getElementById('pushButton').selected = state === 'granted';
       });
     }
   }
@@ -180,7 +180,7 @@ class BnbAccount extends connect(store)(BnbFormElement(LitElement)) {
     const pushButton = this.shadowRoot.getElementById('pushButton');
     pushButton.disabled = true;
 
-    if (pushButton.checked) {
+    if (pushButton.selected) {
       this.askPermission()
         .then(() => this.subscribeUserToPush())
         .then((subscription) => {
@@ -191,13 +191,13 @@ class BnbAccount extends connect(store)(BnbFormElement(LitElement)) {
         })
         .then((subscription) => {
           pushButton.disabled = false;
-          pushButton.checked = subscription !== null;
+          pushButton.selected = subscription !== null;
         })
         .catch(() => {
           this.getNotificationPermissionState().then((state) => {
             pushButton.disabled = state === 'denied';
           });
-          pushButton.checked = false;
+          pushButton.selected = false;
         });
     } else {
       this.unsubscribeUserFromPush();
@@ -207,10 +207,10 @@ class BnbAccount extends connect(store)(BnbFormElement(LitElement)) {
   pushKeyChanged() {
     const pushButton = this.shadowRoot.getElementById('pushButton');
     if (pushButton && this.isNotificationsEnabled()) {
-      pushButton.addEventListener('checked-changed', this.notificationsChanged.bind(this));
+      pushButton.addEventListener('selected-changed', this.notificationsChanged.bind(this));
       pushButton.disabled = !this.isNotificationsEnabled();
       this.getNotificationPermissionState().then((state) => {
-        pushButton.checked = state === 'granted';
+        pushButton.selected = state === 'granted';
       });
     }
   }
@@ -298,7 +298,7 @@ class BnbAccount extends connect(store)(BnbFormElement(LitElement)) {
       .then(() => {
         const pushButton = this.shadowRoot.getElementById('pushButton');
         pushButton.disabled = false;
-        pushButton.checked = false;
+        pushButton.selected = false;
       })
       .catch((err) => {
         // eslint-disable-next-line no-console
@@ -306,7 +306,7 @@ class BnbAccount extends connect(store)(BnbFormElement(LitElement)) {
         this.getNotificationPermissionState().then((permissionState) => {
           const pushButton = this.shadowRoot.getElementById('pushButton');
           pushButton.disabled = permissionState === 'denied';
-          pushButton.checked = false;
+          pushButton.selected = false;
         });
       });
   }
