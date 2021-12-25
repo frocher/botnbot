@@ -14,7 +14,7 @@ const pkg = require('./package.json');
 
 module.exports = (env, options) => {
   const ENV = options.mode;
-  const IS_DEV_SERVER = process.argv.find((arg) => arg.includes('webpack-dev-server'));
+  const IS_DEV_SERVER = process.env.WEBPACK_DEV_SERVER;
   const OUTPUT_PATH = IS_DEV_SERVER ? resolve('src') : resolve('dist');
 
   const processEnv = {
@@ -92,7 +92,9 @@ module.exports = (env, options) => {
     ...renderHtmlPlugins(),
   ];
 
-  const devPlugins = [new CopyWebpackPlugin({ patterns: copyStatics.copyWebcomponents })];
+  const devPlugins = [
+    new CopyWebpackPlugin({ patterns: copyStatics.copyWebcomponents }),
+  ];
 
   const buildPlugins = [
     new CopyWebpackPlugin({
@@ -154,6 +156,12 @@ module.exports = (env, options) => {
         { directory: resolve('images') },
         { directory: resolve('dist') },
       ],
+      client: {
+        overlay: {
+          errors: true,
+          warnings: false,
+        },
+      },
       historyApiFallback: true,
       compress: true,
       port: 8081,
