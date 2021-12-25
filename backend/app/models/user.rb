@@ -28,6 +28,7 @@ require 'stripe'
 #  tokens                 :text(65535)
 #  uid                    :string(255)      default(""), not null
 #  unconfirmed_email      :string(255)
+#  weekly_report          :boolean          default(TRUE)
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #

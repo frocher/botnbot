@@ -89,6 +89,9 @@ class BnbAccount extends connect(store)(BnbFormElement(LitElement)) {
             <mwc-formfield label="Send me notifications on this device">
               <mwc-switch id="pushButton" ?disabled="${!this.isNotificationsEnabled()}"></mwc-switch>
             </mwc-formfield>
+            <mwc-formfield label="Send me weekly email report">
+              <mwc-switch id="weeklyReportButton" ?selected="${this.user?.weekly_report}"></mwc-switch>
+            </mwc-formfield>
           </bnb-card>
 
           ${this.renderSubscription()}
@@ -237,7 +240,10 @@ class BnbAccount extends connect(store)(BnbFormElement(LitElement)) {
 
   saveTapped() {
     this.validateFields(['name']);
-    const user = { name: this.shadowRoot.getElementById('name').value };
+    const user = {
+      name: this.shadowRoot.getElementById('name').value,
+      weekly_report: this.shadowRoot.getElementById('weeklyReportButton').selected,
+    };
     store.dispatch(updateUser(this.user.id, user));
   }
 

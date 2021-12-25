@@ -10,9 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_28_193224) do
+ActiveRecord::Schema.define(version: 2021_12_25_095322) do
 
-  create_table "budgets", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "budgets", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.integer "page_id", null: false
     t.integer "category", default: 0, null: false
     t.integer "item", default: 0, null: false
@@ -22,7 +22,7 @@ ActiveRecord::Schema.define(version: 2021_04_28_193224) do
     t.index ["page_id"], name: "index_budgets_on_page_id"
   end
 
-  create_table "identities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "identities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.string "provider", null: false
     t.string "uid", null: false
     t.integer "user_id", null: false
@@ -31,7 +31,7 @@ ActiveRecord::Schema.define(version: 2021_04_28_193224) do
     t.index ["provider", "uid"], name: "index_identities_on_provider_and_uid", unique: true
   end
 
-  create_table "page_members", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "page_members", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "page_id", null: false
     t.integer "role", default: 0, null: false
@@ -42,7 +42,7 @@ ActiveRecord::Schema.define(version: 2021_04_28_193224) do
     t.index ["user_id"], name: "index_page_members_on_user_id"
   end
 
-  create_table "pages", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "pages", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.string "name"
     t.string "url"
     t.datetime "created_at", null: false
@@ -69,7 +69,7 @@ ActiveRecord::Schema.define(version: 2021_04_28_193224) do
     t.index ["owner_id"], name: "index_pages_on_owner_id"
   end
 
-  create_table "subscriptions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "subscriptions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.string "endpoint", null: false
     t.string "p256dh", null: false
     t.string "auth", null: false
@@ -78,7 +78,7 @@ ActiveRecord::Schema.define(version: 2021_04_28_193224) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.string "provider", null: false
     t.string "uid", default: "", null: false
     t.boolean "admin", default: false
@@ -105,6 +105,7 @@ ActiveRecord::Schema.define(version: 2021_04_28_193224) do
     t.string "subscription"
     t.boolean "allow_password_change", default: false, null: false
     t.string "customer"
+    t.boolean "weekly_report", default: true
     t.index ["email"], name: "index_users_on_email"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
