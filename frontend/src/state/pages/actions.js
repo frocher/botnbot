@@ -21,10 +21,12 @@ export const loadPages = () => async (dispatch) => {
   });
 };
 
+export const fetchPageStart = createAction('PAGE_FETCH_START');
 export const fetchPageSuccess = createAction('PAGE_FETCH_SUCCESS');
 export const fetchPageError = createAction('PAGE_FETCH_ERROR');
 
 export const loadPage = (id) => async (dispatch) => {
+  dispatch(fetchPageStart());
   getResource({
     url: getRequestUrl(`/pages/${id}`, {}),
     method: 'GET',

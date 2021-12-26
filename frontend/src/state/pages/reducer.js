@@ -12,6 +12,9 @@ const pagesReducer = (state = initial, action) => {
     case 'PAGES_FETCH_SUCCESS':
       return { ...state, all: action.payload };
 
+    case 'PAGE_FETCH_START':
+      return { ...state, current: {} };
+
     case 'PAGE_FETCH_SUCCESS':
     case 'PAGE_UPDATE_SUCCESS':
     case 'PAGE_DELETE_SUCCESS':
