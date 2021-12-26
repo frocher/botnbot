@@ -40,6 +40,7 @@ class UsersController < ApplicationController
 
     @user.name = params[:name]
     @user.bio  = params[:bio]
+    @user.weekly_report = params[:weekly_report]
     @user.save!
 
     render json: @user

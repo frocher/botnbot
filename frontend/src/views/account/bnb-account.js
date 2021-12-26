@@ -70,6 +70,11 @@ class BnbAccount extends connect(store)(BnbFormElement(LitElement)) {
         display: block;
         margin-top: 12px;
       }
+
+      #saveBtn {
+        display: block;
+        margin-top: 12px;
+      }
       `,
     ];
   }
@@ -77,21 +82,23 @@ class BnbAccount extends connect(store)(BnbFormElement(LitElement)) {
   render() {
     return html`
     <mwc-top-app-bar-fixed>
-      <mwc-icon-button id="closeBtn" icon="close" slot="navigationIcon"></mwc-icon-button>
+      <mwc-icon-button icon="arrow_back" slot="navigationIcon" @click="${this.backTapped}"></mwc-icon-button>
       <div slot="title">My account</div>
-      <mwc-button id="saveBtn" slot="actionItems">Save</mwc-button>
 
       <div id="content">
         <div id="container">
           <h3>General</h3>
           <bnb-card>
-            <mwc-textfield id="name" label="Name" type="text" outlined value="${this.user?.name}"></mwc-textfield>
-            <mwc-formfield label="Send me notifications on this device">
-              <mwc-switch id="pushButton" ?disabled="${!this.isNotificationsEnabled()}"></mwc-switch>
-            </mwc-formfield>
-            <mwc-formfield label="Send me weekly email report">
-              <mwc-switch id="weeklyReportButton" ?selected="${this.user?.weekly_report}"></mwc-switch>
-            </mwc-formfield>
+            <div class="card-content">
+              <mwc-textfield id="name" label="Name" type="text" outlined value="${this.user?.name}"></mwc-textfield>
+              <mwc-formfield label="Send me notifications on this device">
+                <mwc-switch id="pushButton" ?disabled="${!this.isNotificationsEnabled()}"></mwc-switch>
+              </mwc-formfield>
+              <mwc-formfield label="Send me weekly email report">
+                <mwc-switch id="weeklyReportButton" ?selected="${this.user?.weekly_report}"></mwc-switch>
+              </mwc-formfield>
+            </div>
+            <mwc-button id="saveBtn">Save</mwc-button>
           </bnb-card>
 
           ${this.renderSubscription()}
@@ -121,12 +128,6 @@ class BnbAccount extends connect(store)(BnbFormElement(LitElement)) {
         </div>
       </div>
     </mwc-top-app-bar-fixed>
-
-    <mwc-dialog id="discardDlg" modal>
-      <p>Discard edit.</p>
-      <mwc-button dialogAction="ok" slot="primaryAction">Discard</mwc-button>
-      <mwc-button dialogAction="cancel" slot="secondaryAction">Cancel</mwc-button>
-    </mwc-dialog>
 
     <mwc-dialog id="deleteAccountDlg" modal>
       <p>Confim your account deletion by entering your email address.</p>
@@ -164,11 +165,9 @@ class BnbAccount extends connect(store)(BnbFormElement(LitElement)) {
   }
 
   firstUpdated() {
-    this.shadowRoot.getElementById('closeBtn').addEventListener('click', () => this.closeTapped());
     this.shadowRoot.getElementById('saveBtn').addEventListener('click', () => this.saveTapped());
     this.shadowRoot.getElementById('deleteAccountBtn').addEventListener('click', () => this.deleteAccountTapped());
     this.shadowRoot.getElementById('deleteAccountDlg').addEventListener('closed', (e) => this.onDeleteAccountDialogClosed(e.detail.action));
-    this.shadowRoot.getElementById('discardDlg').addEventListener('closed', (e) => this.onDiscardDialogClosed(e.detail.action));
 
     if (this.isNotificationsEnabled()) {
       this.shadowRoot.getElementById('pushButton').addEventListener('click', () => this.notificationsChanged());
@@ -218,19 +217,8 @@ class BnbAccount extends connect(store)(BnbFormElement(LitElement)) {
     }
   }
 
-  closeTapped() {
-    const nameValue = this.shadowRoot.getElementById('name').value;
-    if (nameValue !== this.user.name) {
-      this.shadowRoot.getElementById('discardDlg').show();
-    } else {
-      this.closePage();
-    }
-  }
-
-  onDiscardDialogClosed(action) {
-    if (action === 'ok') {
-      this.closePage();
-    }
+  backTapped() {
+    this.closePage();
   }
 
   closePage() {
