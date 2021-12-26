@@ -56,11 +56,7 @@ class BnbBudgetCard extends LitElement {
   }
 
   renderCloseBtn() {
-    return this.canDelete ? html`<mwc-icon-button id="closeBtn" icon="close"></mwc-icon-button>` : html``;
-  }
-
-  firstUpdated() {
-    this.shadowRoot.getElementById('closeBtn').addEventListener('click', () => this.closeTapped());
+    return this.canDelete ? html`<mwc-icon-button id="closeBtn" icon="close" @click="${this.closeTapped}"></mwc-icon-button>` : html``;
   }
 
   closeTapped() {
