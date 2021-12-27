@@ -23,6 +23,7 @@ class BnbAccount extends connect(store)(BnbFormElement(LitElement)) {
       canSubscribe: { type: Boolean },
       pushKey: { type: String },
       errors: { type: Object },
+      pushState: { type: Boolean },
     };
   }
 
@@ -92,7 +93,7 @@ class BnbAccount extends connect(store)(BnbFormElement(LitElement)) {
             <div class="card-content">
               <mwc-textfield id="name" label="Name" type="text" outlined value="${this.user?.name}"></mwc-textfield>
               <mwc-formfield label="Send me notifications on this device">
-                <mwc-switch id="pushButton" ?disabled="${!this.isNotificationsEnabled()}"></mwc-switch>
+                <mwc-switch id="pushButton"></mwc-switch>
               </mwc-formfield>
               <mwc-formfield label="Send me weekly email report">
                 <mwc-switch id="weeklyReportButton" ?selected="${this.user?.weekly_report}"></mwc-switch>
@@ -169,51 +170,62 @@ class BnbAccount extends connect(store)(BnbFormElement(LitElement)) {
     this.shadowRoot.getElementById('deleteAccountBtn').addEventListener('click', () => this.deleteAccountTapped());
     this.shadowRoot.getElementById('deleteAccountDlg').addEventListener('closed', (e) => this.onDeleteAccountDialogClosed(e.detail.action));
 
-    if (this.isNotificationsEnabled()) {
-      this.shadowRoot.getElementById('pushButton').addEventListener('click', () => this.notificationsChanged());
+    this.updatePushState();
+  }
 
-      this.getNotificationPermissionState().then((state) => {
-        this.shadowRoot.getElementById('pushButton').selected = state === 'granted';
-      });
+  updatePushState() {
+    const pushButton = this.shadowRoot.getElementById('pushButton');
+    if (this.isNotificationsEnabled()) {
+      pushButton.disabled = false;
+      this.getSWRegistration()
+        .then((registration) => registration.pushManager.getSubscription()).then((subscription) => {
+          if (subscription) {
+            this.getNotificationPermissionState().then((state) => {
+              this.pushState = state === 'granted';
+              pushButton.selected = this.pushState;
+            });
+          } else {
+            this.pushState = false;
+            pushButton.selected = this.pushState;
+          }
+        });
+    } else {
+      this.pushState = false;
+      pushButton.disabled = true;
+      pushButton.selected = this.pushState;
     }
   }
 
-  notificationsChanged() {
+  updateSubscription() {
     const pushButton = this.shadowRoot.getElementById('pushButton');
-    pushButton.disabled = true;
 
-    if (pushButton.selected) {
-      this.askPermission()
-        .then(() => this.subscribeUserToPush())
-        .then((subscription) => {
-          if (subscription) {
-            this.sendSubscriptionToBackEnd(subscription);
-          }
-          return subscription;
-        })
-        .then((subscription) => {
-          pushButton.disabled = false;
-          pushButton.selected = subscription !== null;
-        })
-        .catch(() => {
-          this.getNotificationPermissionState().then((state) => {
-            pushButton.disabled = state === 'denied';
+    if (!pushButton.disabled && pushButton.selected !== this.pushState) {
+      if (pushButton.selected) {
+        this.askPermission()
+          .then(() => this.subscribeUserToPush())
+          .then((subscription) => {
+            if (subscription) {
+              this.sendSubscriptionToBackEnd(subscription);
+            }
+            return subscription;
+          })
+          .then(() => {
+            this.updatePushState();
+          })
+          .catch(() => {
+            this.updatePushState();
           });
-          pushButton.selected = false;
-        });
-    } else {
-      this.unsubscribeUserFromPush();
+      } else {
+        this.unsubscribeUserFromPush();
+        this.updatePushState();
+      }
     }
   }
 
   pushKeyChanged() {
     const pushButton = this.shadowRoot.getElementById('pushButton');
-    if (pushButton && this.isNotificationsEnabled()) {
-      pushButton.addEventListener('selected-changed', this.notificationsChanged.bind(this));
-      pushButton.disabled = !this.isNotificationsEnabled();
-      this.getNotificationPermissionState().then((state) => {
-        pushButton.selected = state === 'granted';
-      });
+    if (pushButton) {
+      this.updatePushState();
     }
   }
 
@@ -233,6 +245,7 @@ class BnbAccount extends connect(store)(BnbFormElement(LitElement)) {
       weekly_report: this.shadowRoot.getElementById('weeklyReportButton').selected,
     };
     store.dispatch(updateUser(this.user.id, user));
+    this.updateSubscription();
   }
 
   askPermission() {
@@ -287,21 +300,15 @@ class BnbAccount extends connect(store)(BnbFormElement(LitElement)) {
         if (subscription) {
           return subscription.unsubscribe();
         }
-        return undefined;
+        return subscription;
       })
       .then(() => {
-        const pushButton = this.shadowRoot.getElementById('pushButton');
-        pushButton.disabled = false;
-        pushButton.selected = false;
+        this.updatePushState();
       })
       .catch((err) => {
         // eslint-disable-next-line no-console
         console.error('Failed to subscribe the user.', err);
-        this.getNotificationPermissionState().then((permissionState) => {
-          const pushButton = this.shadowRoot.getElementById('pushButton');
-          pushButton.disabled = permissionState === 'denied';
-          pushButton.selected = false;
-        });
+        this.updatePushState();
       });
   }
 
