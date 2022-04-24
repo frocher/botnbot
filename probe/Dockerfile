@@ -1,4 +1,4 @@
-FROM debian:buster-slim
+FROM debian:bullseye-slim
 
 ### Install utilites
 RUN apt-get update --fix-missing && apt-get -y upgrade &&\
@@ -6,7 +6,7 @@ apt-get install -y sudo curl wget gnupg\
 && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 ### Install node
-RUN curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash - &&\
+RUN curl -sL https://deb.nodesource.com/setup_18.x | sudo -E bash - &&\
 sudo apt-get install -y nodejs
 
 # chrome
