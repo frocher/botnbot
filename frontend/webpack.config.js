@@ -164,6 +164,7 @@ module.exports = (env, options) => {
       },
       historyApiFallback: true,
       compress: true,
+      allowedHosts: 'all',
       port: 8081,
       host: '0.0.0.0',
       proxy: {
