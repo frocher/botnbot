@@ -15,7 +15,7 @@ RUN set -ex; \
     build-essential \
     libssl-dev \
     libreadline-dev \
-    libmariadbclient-dev \
+    libmariadb-dev \
     mariadb-client \
     libyaml-dev \
     libxml2-dev \
