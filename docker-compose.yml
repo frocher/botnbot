@@ -68,8 +68,6 @@ services:
       - STRIPE_ERROR_URL=${STRIPE_ERROR_URL}
       - STRIPE_WH_SECRET=${STRIPE_WH_SECRET}
       - STRIPE_WH_PATH=${STRIPE_WH_PATH}
-    ports:
-      - "3000:3000"
 
   db:
     image: mariadb:10.5
