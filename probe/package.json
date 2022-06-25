@@ -22,7 +22,7 @@
     "express": "^4.17.1",
     "lighthouse": "^8.0.0",
     "morgan": "^1.10.0",
-    "node-fetch": "^2.6.1",
+    "node-fetch": "^2.6.7",
     "puppeteer": "^7.0.0",
     "superagent": "^6.1.0"
   },
