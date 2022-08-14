@@ -22,8 +22,6 @@ services:
       - api
     environment:
       - API=http://api:3000
-    ports:
-      - "8081:8081"
 
   api:
     build: ./backend
@@ -68,6 +66,8 @@ services:
       - STRIPE_ERROR_URL=${STRIPE_ERROR_URL}
       - STRIPE_WH_SECRET=${STRIPE_WH_SECRET}
       - STRIPE_WH_PATH=${STRIPE_WH_PATH}
+    ports:
+      - "8081:3333"
 
   db:
     image: mariadb:10.5
