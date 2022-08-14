@@ -15,14 +15,14 @@ require 'chronic_duration'
 #  push_notify             :boolean          default(TRUE)
 #  screenshot_content_type :string(255)
 #  screenshot_file_name    :string(255)
-#  screenshot_file_size    :integer
+#  screenshot_file_size    :bigint
 #  screenshot_updated_at   :datetime
 #  slack_channel           :string(255)
 #  slack_notify            :boolean          default(FALSE)
 #  slack_webhook           :string(255)
 #  uptime_keyword          :string(255)
 #  uptime_keyword_type     :string(255)
-#  uptime_status           :integer          default(0)
+#  uptime_status           :integer          default(1)
 #  url                     :string(255)
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
