@@ -1,13 +1,13 @@
-import { css } from 'lit-element';
+import { css } from 'lit';
 
 // eslint-disable-next-line import/prefer-default-export
 export const harStyles = css`
     .water-fall-chart {width: 100%; background-color: white; overflow: visible; font-size: 12px; line-height: 1em;}
     .water-fall-chart * {box-sizing: border-box;}
     .water-fall-chart button {cursor: pointer;}
-    
+
     .water-fall-holder {fill:#ccc;}
-    
+
     .water-fall-chart .left-fixed-holder {overflow: visible;}
     .water-fall-chart .marker-holder {width:100%;}
     .water-fall-chart .line-label-holder {cursor: pointer;}
@@ -17,7 +17,7 @@ export const harStyles = css`
     .water-fall-chart .line-holder.active .line-mark { opacity: 0.4;}
     .water-fall-chart .type-onload .line-holder  {stroke: #c0c0ff;}
     .water-fall-chart .type-oncontentload .line-holder  {stroke: #d888df;}
-    
+
     .water-fall-chart .labels {width:100%;}
     .water-fall-chart .labels .inner-label {pointer-events: none;}
     .water-fall-chart .time-block.active {opacity: 0.8;}
@@ -25,23 +25,23 @@ export const harStyles = css`
     .water-fall-chart .line-start {display: none; stroke-width:1; stroke-opacity:0.5; stroke: #000;}
     .water-fall-chart .line-end.active,
     .water-fall-chart .line-start.active {display: block;}
-    
+
     .left-fixed-holder .label-full-bg {fill: #fff; opacity: 0.9;}
-    
+
     .time-scale line {stroke:#0cc; stroke-width:1;}
     .time-scale line.sub-second-line {stroke: #ccc; opacity: 0.75; stroke-width:0.50;}
     .time-scale text {font-weight:bold;}
-    
+
     .row-item {cursor: pointer;}
     .row-item .even {fill: #ccc; opacity: 0.05;}
     .row-item .odd {fill: #000; opacity: 0.05;}
     .row-item:hover .odd,
     .row-item:hover .even {fill: #000; opacity: 0.1;}
-    
+
     .row-item:focus {outline: solid 1.5px #aaa; outline-offset: -1.5px}
     .row-item:focus .odd,
     .row-item:focus .even {fill: #000; opacity: 0.2; }
-    
+
     .row-item .rect-holder text {fill: #aaa}
     .row-item.status5xx .even {fill: #f66;}
     .row-item.status5xx .odd {fill: #f00;}
@@ -49,7 +49,7 @@ export const harStyles = css`
     .row-item.status4xx .odd {fill: #c00;}
     .row-item.status3xx .even {fill: #ff6;}
     .row-item.status3xx .odd {fill: #ff0;}
-    
+
     .row-item.status5xx .even,
     .row-item.status5xx .odd,
     .row-item.status4xx .even,
@@ -62,14 +62,14 @@ export const harStyles = css`
     .row-item.status4xx:hover .odd,
     .row-item.status3xx:hover .even,
     .row-item.status3xx:hover .odd {opacity: 0.5;}
-    
+
     .tooltip-holder {overflow: visible;}
     .tooltip * {padding: 0; margin:0;}
     .tooltip html {font-size: 10px; line-height: 1.2em;}
     .tooltip body {position: relative;}
     .tooltip-payload {position: absolute; top:0; left:0; padding: 0.25em; font-size: 10px; display: inline-block; color: black; background: rgba(255,255,255, 0.9); border: solid 1px #f0f0f0; word-break: break-all; overflow-wrap: break-word; transition: opacity 300ms;}
     .tooltip-payload.no-anim {transition: none;}
-    
+
     /** overlay animation settings **/
     .water-fall-chart .line-label-holder,
     .row-item,
@@ -77,9 +77,9 @@ export const harStyles = css`
     .time-scale line,
     .time-scale text {transition:transform 60ms;}
     .water-fall-chart.closing {transition-delay: 60ms;}
-    
+
     .labels { overflow: hidden;}
-    
+
     /*block colours for MIME types*/
     .block-css {fill: #a6d18f;}
     .block-iframe,
@@ -99,7 +99,7 @@ export const harStyles = css`
     .block-ajax {fill: #f00;} /*remove?*/
     .block-plain,
     .block-other {fill: #b3b3b3;}
-    
+
     /*block colours for Timing*/
     .block-blocked {fill: #aaa;}
     .block-dns {fill: #159588;}
@@ -109,13 +109,13 @@ export const harStyles = css`
     .block-wait {fill: #1ec659;}
     .block-receive {fill: #1eaaf1;}
     .block-undefined {fill: #0f0;}
-    
+
     /* Info overlay SVG - wrapper */
     .info-overlay-bg {fill: #fff; stroke: #cdcdcd;}
     .info-overlay-close-btn {fill: rgba(205, 205, 205, 0.8); transform: translate(-23px, -23px); cursor: pointer;}
     .info-overlay-close-btn text {fill: #111; pointer-events: none;}
     .info-overlay-close-btn:focus {border: solid 1px #36c;}
-    
+
     /* Info overlay SVG - timings tab */
     .info-overlay-holder .connect {border-right: solid 5px #fd9727; padding-right: 5px;}
     .info-overlay-holder .blocked {border-right: solid 5px #aaa; padding-right: 5px;}
@@ -124,7 +124,7 @@ export const harStyles = css`
     .info-overlay-holder .wait {border-right: solid 5px #1ec659; padding-right: 5px;}
     .info-overlay-holder .receive {border-right: solid 5px #1eaaf1; padding-right: 5px;}
     .info-overlay-holder .dns {border-right: solid 5px #159588; padding-right: 5px;}
-    
+
     /* Info overlay HTML - types */
     .type-css {background: #406B29;}/*a6d18f - 40%*/
     .type-iframe,
@@ -144,12 +144,12 @@ export const harStyles = css`
     .type-ajax {background: #CC0000;} /* f00 40%*/
     .type-plain,
     .type-other {background: #808080;} /*#b3b3b3 - 40%*/
-    
+
     /* Info overlay HTML - base */
     .info-overlay-holder * { padding: 0; margin:0; font-size: 12px;}
     .info-overlay-holder body { position: relative;  height: 450px; clear: both; padding: 0; margin:0; width:100%; background: #fff; color: #666;}
     .info-overlay-holder body .wrapper { height: 450px; width: 100%; overflow: scroll;}
-    
+
     /* Info overlay HTML - header */
     .info-overlay-holder header {position: relative; box-shadow: 0px 0px 2px 2px rgba(0,0,0,0.25);}
     .info-overlay-holder header,
@@ -173,13 +173,13 @@ export const harStyles = css`
     .info-overlay-holder button.copy-tab-data {position: absolute; top:0.5em; right: 0.5em; border: 0; margin: 0; border-radius: 1em; background: #e0e0e0;}
     .info-overlay-holder button.copy-tab-data:focus,
     .info-overlay-holder button.copy-tab-data:hover { background: #ccc; }
-    
+
     /* Info overlay HTML - content */
     .info-overlay-holder dt {float: left; clear: both; margin-top: 0.5em; width: 25%; text-align: right; font-weight: bold; }
     .info-overlay-holder dd {float: left; width:73%; margin: 0.5em 0 0 2%; padding: 0 0 0.5em 0;}
     .info-overlay-holder dt:after { content: ":"; }
     .info-overlay-holder pre {font-size: 11px; line-height: 23px;  border-radius: 0; background: #f6f3f3;}
-    
+
     .info-overlay-holder .tab {float: left; position: relative; width:100%; height: 350px; padding:12px 12px 24px;}
     .info-overlay-holder .tab h2 {font-size: 1.2em; margin:0.5em 0 0; padding: 0.5em 0 0.5em 1em; clear: both; border-top: solid 1px #efefef;}
     .info-overlay-holder .tab h2:first-child {border-top: 0; padding-top: 0;}
@@ -189,12 +189,12 @@ export const harStyles = css`
     .info-overlay-holder .tab.rendered-data {padding: 0;}
     .info-overlay-holder .tab.rendered-data pre {padding:12px 12px 24px;}
     .info-overlay-holder .tab.rendered-data pre > code {white-space: pre-wrap;}
-    
+
     /** Legend */
     .resource-legend { margin: 0; padding: 0; font-size: 0.75em; line-height: 1.5em; display: inline-block;}
     .resource-legend li {margin: 0 1em 0 0; padding: 0; white-space: nowrap; display: inline-block;}
     .resource-legend li:before {content:''; width: 1em; height: 1em; margin: 0 0.5em 0 0; vertical-align: text-top; display: inline-block; }
-    
+
     .resource-legend .legend-blocked:before { background: #aaa;}
     .resource-legend .legend-dns:before { background: #159588;}
     .resource-legend .legend-connect:before { background: #fd9727; }
@@ -202,11 +202,11 @@ export const harStyles = css`
     .resource-legend .legend-send:before { background: #b0bec5; }
     .resource-legend .legend-wait:before { background: #1ec659; }
     .resource-legend .legend-receive:before { background: #1eaaf1; }
-    
+
     .icon {
       fill: #666;
     }
-    
+
     .icon-4xx,
     .icon-5xx,
     .icon-no-cache,

@@ -1,4 +1,4 @@
-import { html, css } from 'lit-element';
+import { html, css } from 'lit';
 import '@material/mwc-icon-button';
 import { store } from '../../state/store';
 import { updateRoute } from '../../state/app/actions';

@@ -3,10 +3,12 @@ import { getRequestUrl, getResource } from '../../utilities/api';
 
 // ***** User account management
 
+export const fetchUserStart = createAction('USER_FETCH_START');
 export const fetchUserSuccess = createAction('USER_FETCH_SUCCESS');
 export const fetchUserError = createAction('USER_FETCH_ERROR');
 
 export const loadUser = () => async (dispatch) => {
+  dispatch(fetchUserStart());
   getResource({
     url: getRequestUrl('/users/-1', {}),
     method: 'GET',

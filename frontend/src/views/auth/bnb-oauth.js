@@ -1,4 +1,4 @@
-import { LitElement, css, html } from 'lit-element';
+import { LitElement, css, html } from 'lit';
 import '@material/mwc-button/mwc-button';
 import { getRequestUrl } from '../../utilities/api';
 import '../components/bnb-divider';
@@ -44,7 +44,7 @@ class BnbOAuth extends LitElement {
       #google {
         background-color: transparent;
         --mdc-theme-primary: #fff;
-        --mdc-theme-on-primary: var(--paper-grey-600);
+        --mdc-theme-on-primary: #757575;
       }
 
       @media (max-width: 500px) {

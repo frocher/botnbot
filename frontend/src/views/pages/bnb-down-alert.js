@@ -1,4 +1,4 @@
-import { LitElement, css, html } from 'lit-element';
+import { LitElement, css, html } from 'lit';
 import { createPopper } from '@popperjs/core';
 import { format, formatDistance } from 'date-fns';
 import '@material/mwc-icon';

@@ -1,5 +1,5 @@
-import { LitElement, css, html } from 'lit-element';
-import { classMap } from 'lit-html/directives/class-map';
+import { LitElement, css, html } from 'lit';
+import { classMap } from 'lit/directives/class-map.js';
 import { createPopper } from '@popperjs/core';
 import { tooltipStyles } from '../components/bnb-tooltip-styles';
 

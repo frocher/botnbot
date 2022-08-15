@@ -11,6 +11,9 @@ const accountReducer = (state = initial, action) => {
     case 'STRIPE_SUBSCRIPTION_UPDATE_SUCCESS':
       return { ...state, stripeSubscription: action.payload };
 
+    case 'USER_FETCH_START':
+      return { ...state, user: {} };
+
     case 'USER_FETCH_SUCCESS':
       return { ...state, user: action.payload };
 

@@ -1,4 +1,4 @@
-import { LitElement, css, html } from 'lit-element';
+import { LitElement, css, html } from 'lit';
 import '@material/mwc-icon-button';
 import '../components/bnb-card';
 import './bnb-budget';
@@ -56,11 +56,7 @@ class BnbBudgetCard extends LitElement {
   }
 
   renderCloseBtn() {
-    return this.canDelete ? html`<mwc-icon-button id="closeBtn" icon="close"></mwc-icon-button>` : html``;
-  }
-
-  firstUpdated() {
-    this.shadowRoot.getElementById('closeBtn').addEventListener('click', () => this.closeTapped());
+    return this.canDelete ? html`<mwc-icon-button id="closeBtn" icon="close" @click="${this.closeTapped}"></mwc-icon-button>` : html``;
   }
 
   closeTapped() {

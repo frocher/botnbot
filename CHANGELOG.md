@@ -5,10 +5,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Weekly report generation flag in account page.
 ### Changed
-- Bump packages versions.
+- Bump packages and bundles versions.
+- Page metrics deletion is now asynchronous
 ### Fixed
 - Chrome is not killed by probe when an exception is raised.
+- Incorrect text color on Google oauth button.
+- No rounding for carbon summary
+- Page deletion
+- Webpush notification switch status
 ## [1.2.0]
 ### Added
 - Ecoindex monitoring

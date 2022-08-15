@@ -1,4 +1,4 @@
-import { LitElement, css, html } from 'lit-element';
+import { LitElement, css, html } from 'lit';
 import '@material/mwc-ripple';
 import { connect } from 'pwa-helpers';
 import { store } from '../../state/store';

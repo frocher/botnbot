@@ -150,7 +150,6 @@ const appReducer = (state = initial, action) => {
       return {
         ...state,
         message: { text: 'Account informations have been updated', counter: state.message.counter + 1 },
-        route: '',
       };
 
     default:

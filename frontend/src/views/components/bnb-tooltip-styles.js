@@ -1,4 +1,4 @@
-import { css } from 'lit-element';
+import { css } from 'lit';
 
 // eslint-disable-next-line import/prefer-default-export
 export const tooltipStyles = css`

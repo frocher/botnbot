@@ -15,14 +15,14 @@ require 'chronic_duration'
 #  push_notify             :boolean          default(TRUE)
 #  screenshot_content_type :string(255)
 #  screenshot_file_name    :string(255)
-#  screenshot_file_size    :integer
+#  screenshot_file_size    :bigint
 #  screenshot_updated_at   :datetime
 #  slack_channel           :string(255)
 #  slack_notify            :boolean          default(FALSE)
 #  slack_webhook           :string(255)
 #  uptime_keyword          :string(255)
 #  uptime_keyword_type     :string(255)
-#  uptime_status           :integer          default(0)
+#  uptime_status           :integer          default(1)
 #  url                     :string(255)
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
@@ -174,25 +174,8 @@ class Page < ActiveRecord::Base
   end
 
   def destroy_metrics
-    # Destroy lighthouse metrics and reports
-    LighthouseMetrics.by_page(id).delete_all
-    metric = LighthouseMetrics.new page_id: id
-    metric.delete_reports
-
-    # Destroy uptime metrics and reports
-    UptimeMetrics.by_page(id).delete_all
-    metric = UptimeMetrics.new page_id: id
-    metric.delete_reports
-
-    # Destroy assets metrics and reports
-    AssetsMetrics.by_page(id).delete_all
-    metric = AssetsMetrics.new page_id: id
-    metric.delete_reports
-
-    # Destroy carbon metrics and reports
-    CarbonMetrics.by_page(id).delete_all
-    metric = CarbonMetrics.new page_id: id
-    metric.delete_reports
+    scheduler = Rufus::Scheduler.singleton
+    scheduler.in('5s', DestroyMetricsJob.new, { page_id: id })
   end
 
   private

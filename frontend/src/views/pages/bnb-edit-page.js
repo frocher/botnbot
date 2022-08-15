@@ -1,4 +1,4 @@
-import { LitElement, css, html } from 'lit-element';
+import { LitElement, css, html } from 'lit';
 import '@material/mwc-button';
 import '@material/mwc-dialog';
 import '@material/mwc-formfield';
@@ -111,13 +111,13 @@ class BnbEditPage extends connect(store)(BnbFormElement(LitElement)) {
           <h3>Notifications</h3>
           <bnb-card>
             <mwc-formfield label="by mail">
-              <mwc-switch id="mailNotify" ?checked="${this.mailNotify}"></mwc-switch>
+              <mwc-switch id="mailNotify" ?selected="${this.mailNotify}"></mwc-switch>
             </mwc-formfield>
             <mwc-formfield label="by push">
-              <mwc-switch id="pushNotify" ?checked="${this.pushNotify}"></mwc-switch>
+              <mwc-switch id="pushNotify" ?selected="${this.pushNotify}"></mwc-switch>
             </mwc-formfield>
             <mwc-formfield label="by Slack">
-              <mwc-switch id="slackNotify" ?checked="${this.slackNotify}"></mwc-switch>
+              <mwc-switch id="slackNotify" ?selected="${this.slackNotify}"></mwc-switch>
             </mwc-formfield>
             ${this.renderSlackInformations()}
           </bnb-card>
@@ -191,14 +191,14 @@ class BnbEditPage extends connect(store)(BnbFormElement(LitElement)) {
   }
 
   firstUpdated() {
-    this.shadowRoot.getElementById('slackNotify').addEventListener('change', () => this.slackNotifyChanged());
+    this.shadowRoot.getElementById('slackNotify').addEventListener('click', () => this.slackNotifyChanged());
     this.shadowRoot.getElementById('closeBtn').addEventListener('click', () => this.closeTapped());
     this.shadowRoot.getElementById('saveBtn').addEventListener('click', () => this.saveTapped());
     this.shadowRoot.getElementById('discardDlg').addEventListener('closed', (e) => this.discardDialogClosed(e.detail.action));
   }
 
   slackNotifyChanged() {
-    this.slackNotify = this.shadowRoot.getElementById('slackNotify').checked;
+    this.slackNotify = this.shadowRoot.getElementById('slackNotify').selected;
   }
 
   discardDialogClosed(action) {
@@ -234,9 +234,9 @@ class BnbEditPage extends connect(store)(BnbFormElement(LitElement)) {
       device,
       uptime_keyword: this.shadowRoot.getElementById('uptimeKeyword').value,
       uptime_keyword_type: uptimeKeywordType,
-      mail_notify: this.shadowRoot.getElementById('mailNotify').checked,
-      push_notify: this.shadowRoot.getElementById('pushNotify').checked,
-      slack_notify: this.shadowRoot.getElementById('slackNotify').checked,
+      mail_notify: this.shadowRoot.getElementById('mailNotify').selected,
+      push_notify: this.shadowRoot.getElementById('pushNotify').selected,
+      slack_notify: this.shadowRoot.getElementById('slackNotify').selected,
     };
 
     if (page.slack_notify) {
