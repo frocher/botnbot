@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const request = require('superagent');
+const sslRootCAs = require('ssl-root-cas').create();
 
 function checkKeyword(data, keyword, checkType) {
   return checkType === 'presence' ? data.indexOf(keyword) !== -1 : data.indexOf(keyword) === -1;
@@ -17,7 +18,9 @@ function doubleCheck() {
 }
 
 router.get('/', function (req, res) {
+
   request.get(req.query.url)
+    .ca(sslRootCAs)
     .set('Cache-Control', 'no-cache,no-store,must-revalidate,max-age=-1,private')
     .timeout({ response: 10000, deadline: 60000 })
     .end(function (err, result) {
