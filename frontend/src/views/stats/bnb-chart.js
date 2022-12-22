@@ -203,13 +203,13 @@ class BnbChart extends LitElement {
             });
             return `Total: ${Math.round(sum)}`;
           };
-        } else if (this.footer === 'mean') {
+        } else if (this.footer === 'average') {
           options.plugins.tooltip.callbacks.footer = (tooltipItems) => {
             let sum = 0;
             tooltipItems.forEach((tooltipItem) => {
               sum += tooltipItem.dataset.data[tooltipItem.dataIndex].y;
             });
-            return `Mean: ${Math.round(sum / tooltipItems.length)}`;
+            return `Average: ${Math.round(sum / tooltipItems.length)}`;
           };
         }
 

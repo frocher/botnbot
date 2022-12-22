@@ -12,7 +12,7 @@ const lighthouseKeys = {
   accessibility: 2,
   bestPractices: 3,
   seo: 4,
-  mean: 5,
+  average: 5,
 };
 
 const performanceKeys = {
@@ -67,7 +67,7 @@ const categories = [
         key: lighthouseKeys.seo, name: 'seo', color: '#E1BEE7', label: 'SEO', index: 4,
       },
       {
-        key: lighthouseKeys.mean, name: 'mean', color: '#D500F9', label: 'Mean', index: -1,
+        key: lighthouseKeys.average, name: 'average', color: '#D500F9', label: 'Average', index: -1,
       },
     ],
   },

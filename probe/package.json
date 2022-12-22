@@ -24,7 +24,8 @@
     "morgan": "^1.10.0",
     "node-fetch": "^2.6.7",
     "puppeteer": "^13.6.0",
-    "superagent": "^6.1.0"
+    "superagent": "^6.1.0",
+    "ssl-root-cas": "^1.2.1"
   },
   "devDependencies": {
     "eslint": "^8.14.0"

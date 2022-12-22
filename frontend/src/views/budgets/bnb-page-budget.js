@@ -96,7 +96,7 @@ class BnbPageBudget extends connect(store)(LitElement) {
     if (src.item >= data.length) {
       switch (src.category) {
         case categoryKeys.lightouse:
-          budgetData = { key: 'mean', values: this.createMeanData(data) };
+          budgetData = { key: 'average', values: this.createAverageData(data) };
           break;
         case categoryKeys.requests:
         case categoryKeys.bytes:
@@ -132,14 +132,14 @@ class BnbPageBudget extends connect(store)(LitElement) {
     return total;
   }
 
-  createMeanData(data) {
-    const mean = this.createTotalData(data);
+  createAverageData(data) {
+    const average = this.createTotalData(data);
     if (data.length > 0) {
-      for (let i = 0; i < mean.length; i += 1) {
-        mean[i].value = Math.round(mean[i].value / data.length);
+      for (let i = 0; i < average.length; i += 1) {
+        average[i].value = Math.round(average[i].value / data.length);
       }
     }
-    return mean;
+    return average;
   }
 
   budgetCloseTapped(e) {
