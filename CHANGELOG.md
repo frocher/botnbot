@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
+- Main README file.
 - Bump packages and bundles versions.
 - Minor texts updates.
 - [Backend] Bump to Rails 6.

@@ -4,10 +4,10 @@
 # Welcome to Botnbot 
 
 > Botnbot is an uptime and front-end performance monitoring tool.
-For more information about its features, visit [https://www.botnbot.com](https://www.botnbot.com).
+
 
 The Botnbot application is divided in 3 components :
-* [The front end](frontend/README.md) : the Single Page Application written with [LitElement](https://lit-element.polymer-project.org/) webcomponents.
+* [The front end](frontend/README.md) : the Single Page Application written with [LitElement](https://lit.dev/) webcomponents.
 * [The backend](backend/README.md) : the API and the core of the application.
 * [The probes](probe/README.md) : you can use as many probes as you want to measure your pages performance.
 
